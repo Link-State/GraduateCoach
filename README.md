@@ -40,8 +40,8 @@
 
 |응답||
 |----|----|
-|성공 시|메인 페이지로 리다이렉트|
-|실패 시|로그인 페이지 리다이렉트|
+|성공 시|대시보드 페이지로 이동|
+|실패 시|로그인 페이지로 리다이렉트|
 
 |(1) 응답 성공 시 - Thymeleaf|||
 |----|----|----|
@@ -125,8 +125,8 @@
 
 |응답||
 |----|----|
-|성공 시|로그인 페이지로 리다이렉트|
-|실패 시|회원가입 페이지 리다이렉트|
+|성공 시|로그인 페이지로 이동|
+|실패 시|회원가입 페이지로 리다이렉트|
 
 |(1) 응답 성공 시 - Thymeleaf|||
 |----|----|----|
@@ -162,7 +162,7 @@
 
 |응답||
 |----|:----:|
-|성공 시|웰컴페이지로 리다이렉트|
+|성공 시|웰컴페이지로 이동|
 |실패 시|-|
 
 <br>
@@ -171,4 +171,54 @@
 
 <br>
 
-### 
+### 대시보드
+
+> 대시보드 (페이지)
+
+|요청메소드|GET|
+|----|----|
+|URL|/dashboard|
+|HTML|dashboard.html|
+
+|응답||
+|----|:----:|
+|성공 시|대시보드 페이지로 이동|
+|실패 시|(로그인 안하고 접근 시) 로그인 페이지로 이동|
+
+|(1) 응답 성공 시 - Thymeleaf|||
+|----|----|----|
+|필드명|타입|설명|
+|univ|String|학교명|
+|major|String|전공명|
+|id|String|학번|
+|foreign_cert|Boolean|외국어 인증 여부|
+|comm_cert|Boolean|정보 인증 여부|
+|total_credit|Float|총 이수학점|
+|total_req_credit|Float|필요 이수학점|
+|jeon_tam_credit|Float|전공탐색 이수학점|
+|jeon_tam_req_credit|Float|전공탐색 필요학점|
+|pil_gyo_credit|Float|필수교양 이수학점|
+|pil_gyo_req_credit|Float|필수교양 필요학점|
+|dae_gyo_credit|Float|필수대학교양 이수학점|
+|dae_gyo_req_credit|Float|필수대학교양 필요학점|
+|seon_gyo_credit|Float|선택대학교양 이수학점|
+|seon_gyo_req_credit|Float|선택대학교양 필요학점|
+|advanced_credit|Float|3000단위 이상 과목 이수학점|
+|advanced_req_credit|Float|3000단위 이상 과목 필요학점|
+|jeon_pil_credit|Float|전공필수 이수학점|
+|jeon_pil_req_credit|Float|전공필수 필요학점|
+|jeon_seon_credit|Float|전공선택 이수학점|
+|jeon_seon_req_credit|Float|전공선택 필요학점|
+
+|(2) 응답 실패 시 - Thymeleaf|||
+|----|----|----|
+|필드명|타입|설명|
+|msg|String|실패 원인|
+
+<br>
+
+------
+
+<br>
+
+###
