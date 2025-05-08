@@ -47,8 +47,8 @@
 |univ|String|학교명|
 |major|String|전공명|
 |id|String|학번|
-|foreign|Boolean|외국어 인증 여부|
-|communication|Boolean|정보 인증 여부|
+|foreign_cert|Boolean|외국어 인증 여부|
+|comm_cert|Boolean|정보 인증 여부|
 |total_credit|Float|총 이수학점|
 |total_req_credit|Float|필요 이수학점|
 |jeon_tam_credit|Float|전공탐색 이수학점|
