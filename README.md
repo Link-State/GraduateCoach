@@ -7,6 +7,7 @@
 |요청메소드|GET|
 |----|----|
 |URL|/welcome|
+|HTML|welcome.html|
 
 <br>
 
@@ -21,6 +22,7 @@
 |요청메소드|GET|
 |----|----|
 |URL|/login|
+|HTML|login.html|
 
 <br>
 
@@ -84,6 +86,7 @@
 |요청메소드|GET|
 |----|----|
 |URL|/signup|
+|HTML|signup.html|
 
 |응답||
 |----|:----:|
