@@ -1,0 +1,105 @@
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.login-layout {
+  height: 100vh;
+  width: 100vw;
+  flex-direction: row;
+  display: flex;
+}
+
+.login-layout input {
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 12px 20px;
+}
+
+.login-layout input::placeholder {
+  color: #A0AEC0;
+}
+
+.subtitle {
+  color: #1DCD9F;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.login-left {
+  flex: 1;
+  padding: 60px 40px;
+  overflow: auto;
+}
+
+.login-box {
+  max-width: 500px;
+  width: 100%;
+}
+
+.logo-img {
+  width: 160px;
+  display: block;
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: normal;
+  color: #2D3748;
+}
+
+.login-btn {
+  background-color: #1DCD9F;
+  border: #1DCD9F solid 1px;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.login-btn:hover {
+  background-color: #fff;
+  border: #1DCD9F solid 1px;
+  padding: 12px;
+  border-radius: 12px;
+  color: #1DCD9F;
+  font-weight: 500;
+}
+
+.google-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  padding: 12px;
+  gap: 6px;
+}
+
+#rememberMe {
+  margin-right: 10px;
+}
+
+.link {
+  color: #1DCD9F;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* 오른쪽 이미지 */
+.login-right {
+  flex: 1;
+  overflow: hidden;
+}
+
+.login-right img {
+  height: 100vh;
+  /* width: 100%; */
+  object-fit: cover;
+}
