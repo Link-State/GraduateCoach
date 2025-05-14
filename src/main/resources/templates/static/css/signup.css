@@ -53,24 +53,42 @@ html, body {
 
 .next-step-btn, .signup-btn {
   background-color: #1DCD9F;
-  border: #1DCD9F solid 1px;
+  border: #1DCD9F solid 2px;
   padding: 12px;
   border-radius: 12px;
 }
 
 .signup-btn:hover, .next-step-btn:hover {
   background-color: #fff;
-  border: #1DCD9F solid 1px;
+  border: #1DCD9F solid 2px;
   padding: 12px;
   border-radius: 12px;
   color: #1DCD9F;
   font-weight: 500;
 }
 
-.google-btn, .goback-btn {
+.goback-btn {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #1DCD9F;
+  border: #1DCD9F solid 2px;
+  border-radius: 12px;
+  gap: 6px;
+  padding: 12px;
+}
+
+.goback-btn:hover {
+  background-color: #1DCD9F;
+  color: white;
+  border: #1DCD9F solid 2px;
+}
+
+.google-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: #6C757D solid 2px;
   border-radius: 12px;
   gap: 6px;
   padding: 12px;

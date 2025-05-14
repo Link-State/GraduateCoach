@@ -55,14 +55,14 @@ html, body {
 
 .login-btn {
   background-color: #1DCD9F;
-  border: #1DCD9F solid 1px;
+  border: #1DCD9F solid 2px;
   padding: 12px;
   border-radius: 12px;
 }
 
 .login-btn:hover {
   background-color: #fff;
-  border: #1DCD9F solid 1px;
+  border: #1DCD9F solid 2px;
   padding: 12px;
   border-radius: 12px;
   color: #1DCD9F;
@@ -73,6 +73,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+  border: #6C757D solid 2px;
   border-radius: 12px;
   padding: 12px;
   gap: 6px;
