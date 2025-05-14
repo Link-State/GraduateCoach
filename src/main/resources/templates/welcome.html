@@ -1,10 +1,103 @@
+<!-- src/main/resources/templates/intro.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome!</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: white;
+      font-family: 'Pretendard', sans-serif;
+      text-align: center;
+    }
+
+    .intro-wrapper {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* 세로 가운데 */
+      align-items: center;     /* 가로 가운데 */
+      text-align: center;
+    }
+
+
+    .intro-logo {
+      width: 120px;
+      margin: 0 auto 20px;
+    }
+
+    .intro-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #1DCD9F;
+    }
+
+    .intro-subtitle {
+      font-size: 1.2rem;
+      color: #818181;
+      margin-bottom: 40px;
+    }
+
+    .intro-btn {
+      width: 250px;
+      max-width: 100%;
+      margin: 10px auto;
+      font-size: 1.1rem;
+      border-radius: 12px;
+      padding: 12px 0;
+    }
+
+    .btn-primary {
+      background-color: #1DCD9F;
+      border: #1DCD9F solid 2px;
+      /* border: none; */
+    }
+    .btn-primary:hover {
+      background-color: #fff;
+      border: #1DCD9F solid 2px;
+      padding: 12px;
+      border-radius: 12px;
+      color: #1DCD9F;
+      font-weight: 500;
+    }
+
+    .btn-outline {
+      border: 2px solid #1DCD9F;
+      color: #1DCD9F;
+      background-color: white;
+    }
+
+    .btn-outline:hover {
+      background-color: #1DCD9F;
+      border: #1DCD9F solid 2px;
+      color: white;
+    }
+
+    @media (max-width: 576px) {
+      .intro-title {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="intro-wrapper">
+    <!-- 로고 -->
+    <img src="static/images/logo.png" alt="졸업 코치치 로고" class="intro-logo" />
+
+    <!-- 서브 문구 -->
+    <div class="intro-subtitle">졸업, 이제 쉽고 명확하게.</div>
+
+    <!-- 버튼 영역 -->
+    <div>
+      <a th:href="@{/login}" class="btn btn-primary intro-btn">로그인</a><br/>
+      <a th:href="@{/signup}" class="btn btn-outline intro-btn">회원가입</a><br/>
+      <a href="login.html">로그인</a>
+      <a href="signup.html">회원가입</a>
+    </div>
+  </div>
+
 </body>
 </html>
