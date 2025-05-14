@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Signup</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="static/css/signup.css" />
 </head>
 <body class="d-flex h-100">
@@ -15,7 +16,7 @@
         <img src="static/images/logo.png" alt="로고" class="logo-img mb-3" />
 
         <!-- 회원가입 폼 -->
-        <form id="signup-form" action="#" method="post" class="w-100 mt-4">
+        <form id="signup-form" action="#" method="post" class="w-100 mt-4" novalidate>
           <!-- STEP 1 -->
           <div id="step-1">
             <div class="row">
@@ -31,36 +32,49 @@
 
             <div class="mb-3">
               <label class="form-label">소속학교</label>
-              <input type="text" class="form-control" placeholder="학교 입력" />
+              <input type="text" class="form-control" placeholder="학교 입력" required />
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">학과</label>
-                <input type="text" class="form-control" placeholder="학과 입력" />
+                <input type="text" class="form-control" placeholder="학과 입력" required />
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label">학번</label>
-                <input type="text" class="form-control" placeholder="학번 입력" />
+                <input type="text" class="form-control" placeholder="학번 입력" required />
               </div>
             </div>
 
             <button type="button" class="btn btn-primary w-100 next-step-btn" onclick="goToStep2()">다음</button>
+            <div id="step1-error" class="text-danger mt-2" style="display: none;"></div>
           </div>
 
           <!-- STEP 2 -->
           <div id="step-2" style="display: none;">
-            <div class="mb-3">
+            <div class="mb-3 position-relative">
               <label class="form-label">비밀번호</label>
-              <input type="password" class="form-control" placeholder="비밀번호 입력" />
+              <input type="password" class="form-control" id="password" placeholder="비밀번호 입력" required />
+              <button type="button" class="btn btn-sm position-absolute top-50 end-0 pe-4 me-2 border-0 text-black-50"
+                      onclick="togglePasswordVisibility('password', this)">
+                <i class="fa-solid fa-eye"></i>
+              </button>
             </div>
-            <div class="mb-4">
+
+            <div class="mb-4 position-relative">
               <label class="form-label">비밀번호 확인</label>
-              <input type="password" class="form-control" placeholder="비밀번호 입력" />
+              <input type="password" class="form-control" id="passwordConfirm" placeholder="비밀번호 입력" required style="padding-right: 2.75rem"/>
+              <button type="button" class="btn btn-sm position-absolute top-50 end-0 me-2 pe-4 border-0 text-black-50"
+                      onclick="togglePasswordVisibility('passwordConfirm', this)">
+                <i class="fa-solid fa-eye"></i>
+              </button>
             </div>
+
 
             <button type="button" class="btn btn-outline-secondary w-100 mb-2 goback-btn" onclick="goToStep1()">이전</button>
             <button type="submit" class="btn btn-primary w-100 signup-btn">회원가입</button>
+            <div id="step2-error" class="text-danger mt-2" style="display: none;"></div>
+
             <button type="button" class="btn btn-outline-secondary w-100 google-btn mt-2">
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Icon" />
               구글 계정으로 가입
@@ -81,13 +95,73 @@
 
   <script>
     function goToStep2() {
-      document.getElementById("step-1").style.display = "none";
+      const step1 = document.getElementById("step-1");
+      const inputs = step1.querySelectorAll("input[required]");
+      const errorBox = document.getElementById("step1-error");
+      errorBox.style.display = "none";
+
+      let hasEmpty = false;
+      for (let input of inputs) {
+        input.classList.remove("is-invalid");
+        if (!input.value.trim()) {
+          hasEmpty = true;
+          input.classList.add("is-invalid");
+        }
+      }
+
+      if (hasEmpty) {
+        errorBox.textContent = "모든 필수 정보를 입력해주세요.";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      step1.style.display = "none";
       document.getElementById("step-2").style.display = "block";
     }
 
     function goToStep1() {
       document.getElementById("step-2").style.display = "none";
       document.getElementById("step-1").style.display = "block";
+      document.getElementById("step1-error").style.display = "none";
+    }
+
+    document.getElementById("signup-form").addEventListener("submit", function (e) {
+      const pw = document.getElementById("password");
+      const pwConfirm = document.getElementById("passwordConfirm");
+      const errorBox = document.getElementById("step2-error");
+
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+      pw.classList.remove("is-invalid");
+      pwConfirm.classList.remove("is-invalid");
+
+      if (!pw.value.trim() || !pwConfirm.value.trim()) {
+        e.preventDefault();
+        errorBox.textContent = "비밀번호를 모두 입력해주세요.";
+        errorBox.style.display = "block";
+        if (!pw.value.trim()) pw.classList.add("is-invalid");
+        if (!pwConfirm.value.trim()) pwConfirm.classList.add("is-invalid");
+        return;
+      }
+
+      if (pw.value !== pwConfirm.value) {
+        e.preventDefault();
+        errorBox.textContent = "비밀번호가 일치하지 않습니다.";
+        errorBox.style.display = "block";
+        pwConfirm.classList.add("is-invalid");
+        return;
+      }
+    });
+
+
+    function togglePasswordVisibility(inputId, button) {
+      const input = document.getElementById(inputId);
+      const icon = button.querySelector("i");
+      const isPassword = input.type === "password";
+
+      input.type = isPassword ? "text" : "password";
+      icon.classList.toggle("fa-eye", !isPassword);
+      icon.classList.toggle("fa-eye-slash", isPassword);
     }
   </script>
 </body>

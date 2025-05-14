@@ -20,7 +20,7 @@
         <p class="subtitle">졸업, 이제 쉽고 명확하게</p>
 
         <!-- 로그인 폼 -->
-        <form action="#" method="post" class="w-100 mt-4">
+        <form id="login-form" action="#" method="post" class="w-100 mt-4" novalidate>
           <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
             <input type="email" id="email" class="form-control" placeholder="이메일 주소 입력" required />
@@ -34,6 +34,8 @@
             <label class="form-check-label" for="rememberMe">비밀번호 기억</label>
           </div>
           <button type="submit" class="btn btn-primary w-100 login-btn">로그인</button>
+          <div id="login-error" class="text-danger mt-2" style="display: none;"></div>
+
           <button type="button" class="btn btn-outline-secondary w-100 google-btn mt-2">
             <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Icon" />
             구글 계정으로 로그인
@@ -53,6 +55,31 @@
       <img src="static/images/intro.jpg" alt="인트로 이미지" />
     </div>
   </div>
+
+  <script>
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const errorBox = document.getElementById("login-error");
+
+      // 초기화
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+      email.classList.remove("is-invalid");
+      password.classList.remove("is-invalid");
+
+      // 유효성 검사
+      if (!email.value.trim() || !password.value.trim()) {
+        e.preventDefault();
+        errorBox.textContent = "이메일과 비밀번호를 모두 입력해주세요.";
+        errorBox.style.display = "block";
+
+        if (!email.value.trim()) email.classList.add("is-invalid");
+        if (!password.value.trim()) password.classList.add("is-invalid");
+      }
+    });
+  </script>
+
 
 </body>
 </html>

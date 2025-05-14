@@ -42,7 +42,7 @@ html, body {
 }
 
 .logo-img {
-  width: 160px;
+  width: 120px;
   display: block;
   margin-bottom: 0;
 }
@@ -101,6 +101,5 @@ html, body {
 
 .login-right img {
   height: 100vh;
-  /* width: 100%; */
   object-fit: cover;
 }
