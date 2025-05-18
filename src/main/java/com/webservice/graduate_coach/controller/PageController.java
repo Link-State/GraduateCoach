@@ -1,6 +1,8 @@
 package com.webservice.graduate_coach.controller;
 
+import com.webservice.graduate_coach.param.UserType;
 import com.webservice.graduate_coach.service.StudentService;
+import com.webservice.graduate_coach.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,9 @@ import org.springframework.ui.Model;
 @RequiredArgsConstructor
 
 public class PageController {
+
+    private final UserService userService;
+    private final StudentService studentService;
 
     @GetMapping("/welcome")
     public String welcomePage(
@@ -37,18 +42,30 @@ public class PageController {
         return "signup";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboardPage(
+    @GetMapping("/student_dashboard")
+    public String studentDashboardPage(
             HttpSession session,
             Model model
     ) {
         // 로그인 세션 확인
-//        session.getAttribute("user");
-        if (true) {
+        Integer user_uid = (Integer) session.getAttribute("user");
+        UserType user_type = (UserType) session.getAttribute("user_type");
+
+        if (user_uid == null || user_type == null) {
             model.addAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "login";
         }
 
-        return "dashboard";
+        studentService.getDashBoard(user_uid, model);
+
+        return "student_dashboard";
+    }
+
+    @GetMapping("/academy_dashboard")
+    public String academyDashboardPage(
+            HttpSession session,
+            Model model
+    ) {
+        return "academy_dashboard";
     }
 }
