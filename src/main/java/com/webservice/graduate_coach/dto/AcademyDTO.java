@@ -8,11 +8,7 @@ import lombok.*;
 @Builder
 @ToString
 
-public class StudentDTO {
+public class AcademyDTO {
     private Integer UID;
-    private String studentNumber;
-    private Integer year;
-    private Boolean foreignCert;
-    private Boolean communicationCert;
     private Integer user;
 }

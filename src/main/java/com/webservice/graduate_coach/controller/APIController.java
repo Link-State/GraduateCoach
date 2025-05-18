@@ -1,6 +1,8 @@
 package com.webservice.graduate_coach.controller;
 
+import com.webservice.graduate_coach.entity.UserEntity;
 import com.webservice.graduate_coach.service.StudentService;
+import com.webservice.graduate_coach.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,9 @@ import org.springframework.ui.Model;
 
 public class APIController {
 
+    private final UserService userService;
+    private final StudentService studentService;
+
     @PostMapping("/login")
     public String loginRequest(
             @RequestParam(name="user_id") String user_id,
@@ -20,20 +25,12 @@ public class APIController {
             HttpSession session,
             Model model
     ) {
-        // 로그인 실패
+        // 로그인 실패 - 아이디 또는 비번 공백
         if (user_id.isEmpty() || user_pwd.isEmpty()) {
-            model.addAttribute("msg", "아이디 또는 비밀번호 없음");
             return "login";
         }
 
-        System.out.println(user_id);
-        System.out.println(user_pwd);
-        // 로그인 성공
-
-        // 로그인 세션 추가
-//        session.setAttribute("", );
-
-        return "dashboard";
+        return userService.loginUser(user_id, user_pwd, session, model);
     }
 
     @PostMapping("/signup")

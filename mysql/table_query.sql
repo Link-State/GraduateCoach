@@ -1,4 +1,26 @@
 
+-- 기존의 모든 테이블 삭제
+DROP TABLE IF EXISTS foreigncert;
+DROP TABLE IF EXISTS communicationcert;
+DROP TABLE IF EXISTS foundationmajor;
+DROP TABLE IF EXISTS foundationeducation;
+DROP TABLE IF EXISTS essentialgeneraleducation;
+DROP TABLE IF EXISTS optionalgeneraleducation;
+DROP TABLE IF EXISTS coursetype;
+DROP TABLE IF EXISTS earnmajor;
+DROP TABLE IF EXISTS studentscourse;
+DROP TABLE IF EXISTS studentsmajor;
+DROP TABLE IF EXISTS course;
+DROP TABLE IF EXISTS edugroup;
+DROP TABLE IF EXISTS major;
+DROP TABLE IF EXISTS graduate;
+DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS academy;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS university;
+
+-- 테이블 생성
 CREATE TABLE Academy
 (
   UID  INT NOT NULL AUTO_INCREMENT COMMENT '학사관리 고유번호',
@@ -12,7 +34,7 @@ CREATE TABLE CommunicationCert
   year       INT         NOT NULL COMMENT '신입학 연도',
   name       VARCHAR(64) NOT NULL COMMENT '자격명',
   score      INT         NULL     COMMENT '점수',
-  PRIMARY KEY (department, year)
+  PRIMARY KEY (department, year, name)
 ) COMMENT '정보 인증';
 
 CREATE TABLE Course
@@ -32,7 +54,7 @@ CREATE TABLE CourseType
   year   INT NOT NULL COMMENT '신입학 연도',
   type   INT NOT NULL COMMENT '기초=1, 전선=2, 전필=3',
   course INT NOT NULL COMMENT '강의 고유번호',
-  PRIMARY KEY (major, year)
+  PRIMARY KEY (major, year, course)
 ) COMMENT '과목 종별';
 
 CREATE TABLE Department
@@ -63,7 +85,7 @@ CREATE TABLE EssentialGeneralEducation
   department INT NOT NULL COMMENT '소속학부 고유번호',
   year       INT NOT NULL COMMENT '신입학 연도',
   course     INT NOT NULL COMMENT '강의 고유번호',
-  PRIMARY KEY (department, year)
+  PRIMARY KEY (department, year, course)
 ) COMMENT '대학교양 필수이수';
 
 CREATE TABLE ForeignCert
@@ -72,7 +94,7 @@ CREATE TABLE ForeignCert
   year       INT         NOT NULL COMMENT '신입학 연도',
   name       VARCHAR(64) NOT NULL COMMENT '자격명',
   score      INT         NULL     COMMENT '점수',
-  PRIMARY KEY (department, year)
+  PRIMARY KEY (department, year, name)
 ) COMMENT '외국어 인증';
 
 CREATE TABLE FoundationEducation
@@ -80,7 +102,7 @@ CREATE TABLE FoundationEducation
   department INT NOT NULL COMMENT '소속학부 고유번호',
   year       INT NOT NULL COMMENT '신입학 연도',
   course     INT NOT NULL COMMENT '강의 고유번호',
-  PRIMARY KEY (department, year)
+  PRIMARY KEY (department, year, course)
 ) COMMENT '필수교양';
 
 CREATE TABLE FoundationMajor
@@ -88,7 +110,7 @@ CREATE TABLE FoundationMajor
   department INT NOT NULL COMMENT '소속학부 고유번호',
   year       INT NOT NULL COMMENT '신입학 연도',
   course     INT NOT NULL COMMENT '강의 고유번호',
-  PRIMARY KEY (department, year)
+  PRIMARY KEY (department, year, course)
 ) COMMENT '전공탐색';
 
 CREATE TABLE Graduate
@@ -101,6 +123,8 @@ CREATE TABLE Graduate
   foundation_edu   INT  NOT NULL COMMENT '필요 교양기초 학점',
   general_edu      INT  NOT NULL COMMENT '필요 대학교양 학점',
   foundation_major INT  NOT NULL COMMENT '필요 전공탐색 학점',
+  optional_edu     INT  NOT NULL COMMENT '필요 선택교양 학점',
+  least_cut        INT  NOT NULL COMMENT '선택교양 최소 이수영역 수',
   PRIMARY KEY (department, year)
 ) COMMENT '졸업 요건';
 
@@ -117,13 +141,14 @@ CREATE TABLE OptionalGeneralEducation
   department INT NOT NULL COMMENT '소속학부 고유번호',
   year       INT NOT NULL COMMENT '신입학 연도',
   number     INT NOT NULL COMMENT '대학교양 영역번호',
-  PRIMARY KEY (department, year)
+  PRIMARY KEY (department, year, number)
 ) COMMENT '대학교양 선택이수 영역';
 
 CREATE TABLE Student
 (
   UID                INT         NOT NULL AUTO_INCREMENT COMMENT '학생 고유번호',
   id                 VARCHAR(64) NOT NULL COMMENT '학번',
+  year               INT         NOT NULL COMMENT '입학연도',
   foreign_cert       BOOL        NOT NULL COMMENT '외국어 인증 상태',
   communication_cert BOOL        NOT NULL COMMENT '정보 인증 상태',
   user               INT         NOT NULL COMMENT '유저 고유번호',
@@ -158,6 +183,7 @@ CREATE TABLE User
   UID        INT         NOT NULL AUTO_INCREMENT COMMENT '유저 고유번호',
   id         VARCHAR(64) NOT NULL COMMENT '유저 아이디',
   password   VARCHAR(64) NOT NULL COMMENT '유저 패스워드',
+  email      VARCHAR(64) NOT NULL COMMENT '이메일',
   university INT         NOT NULL COMMENT '소속대학 고유번호',
   PRIMARY KEY (UID)
 ) COMMENT '유저 정보';

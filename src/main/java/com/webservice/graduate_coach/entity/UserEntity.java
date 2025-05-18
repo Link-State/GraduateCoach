@@ -10,20 +10,16 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-@Entity(name="Student")
-
-public class StudentEntity {
+@Entity(name="User")
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer UID;
 
     @Column(name="id")
-    private String studentNumber;
-    private Integer year;
-    @Column(name="foreign_cert")
-    private Boolean foreignCert;
-    @Column(name="communication_cert")
-    private Boolean communicationCert;
-    private Integer user;
+    private String userId;
+    private String password;
+    private String email;
+    private Integer university;
 }
