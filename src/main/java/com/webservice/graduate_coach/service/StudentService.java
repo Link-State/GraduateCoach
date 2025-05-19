@@ -1,53 +1,50 @@
 package com.webservice.graduate_coach.service;
 
-import com.webservice.graduate_coach.dto.StudentDTO;
 import com.webservice.graduate_coach.entity.*;
-import com.webservice.graduate_coach.entity.id.*;
 import com.webservice.graduate_coach.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 
 public class StudentService {
     private final UserRepository userRepository;
-    private final UniversityRepository universityRepository;
     private final StudentRepository studentRepository;
-    private final DepartmentRepository departmentRepository;
-    private final StudentsMajorRepository studentMajorRepository;
-    private final MajorRepository majorRepository;
-    private final StudentsCourseRepository studentCourseRepository;
-    private final CourseRepository courseRepository;
-    private final EarnMajorRepository earnMajorRepository;
-    private final GraduateRepository graduateRepository;
-    private final CourseTypeRepository courseTypeRepository;
-    private final FoundationMajorRepository foundationMajorRepository;
-    private final FoundationEducationRepository foundationEducationRepository;
-    private final EssentialGeneralEducationRepository essentialGeneralEducationRepository;
-    private final OptionalGeneralEducationRepository optionalGeneralEducationRepository;
 
+    private final UniversityService universityService;
+    private final DepartmentService departmentService;
+    private final StudentsMajorService studentsMajorService;
+    private final StudentsCourseService studentsCourseService;
+    private final EarnMajorService earnMajorService;
+    private final GraduateService graduateService;
+    private final CourseTypeService courseTypeService;
+    private final FoundationMajorService foundationMajorService;
+    private final FoundationEducationService foundationEducationService;
+    private final EssentialGeneralEducationService essentialGeneralEducationService;
+    private final OptionalGeneralEducationService optionalGeneralEducationService;
 
-    public Boolean getDashBoard(Integer user_id, Model model) {
+    public StudentEntity getStudentByUser(Integer user_uid) {
+        return studentRepository.findByUser(user_uid);
+    }
+
+    public Boolean getDashBoard(Integer user_uid, Model model) {
         // 유저 정보 로드
-        Optional<UserEntity> result_user = userRepository.findById(user_id);
+        Optional<UserEntity> result_user = userRepository.findById(user_uid);
         if (result_user.isEmpty()) {
             return false;
         }
         UserEntity user = result_user.get();
 
         // 대학 정보 로드
-        Optional<UniversityEntity> result_univ = universityRepository.findById(user.getUID());
-        if (result_univ.isEmpty()) {
+        UniversityEntity univ = universityService.getUniversity(user.getUniversity());
+        if (univ == null) {
             return false;
         }
-        UniversityEntity univ = result_univ.get();
 
         // 학생 정보 로드
         StudentEntity student = studentRepository.findByUser(user.getUID());
@@ -55,56 +52,46 @@ public class StudentService {
             return false;
         }
 
-        // 학생 전공리스트 로드
-        List<StudentsMajorEntity> studentMajors = studentMajorRepository.findByIdStudent(student.getUID());
-        if (studentMajors.isEmpty()) {
+        // 제 1전공 정보 로드
+        MajorEntity major = studentsMajorService.getFirstMajor(student.getUID());
+        if (major == null) {
             return false;
         }
-        Integer majorId = studentMajors.getFirst().getMajor();
-
-        // 전공 정보 로드
-        Optional<MajorEntity> result_major = majorRepository.findById(majorId);
-        if (result_major.isEmpty()) {
-            return false;
-        }
-        MajorEntity major = result_major.get();
 
         // 학부 정보 로드
-        Optional<DepartmentEntity> result_dept = departmentRepository.findById(major.getDepartment());
-        if (result_dept.isEmpty()) {
+        DepartmentEntity dept = departmentService.getDepartment(major.getDepartment());
+        if (dept == null) {
             return false;
         }
-        DepartmentEntity dept = result_dept.get();
-
-        // 수강한 수업리스트 로드
-        List<StudentsCourseEntity> coursed = studentCourseRepository.findByIdStudent(student.getUID());
 
         // 졸업 요건 로드
-        Optional<GraduateEntity> result_graduate = graduateRepository.findById(new GraduateId(dept.getUID(), student.getYear()));
-        if (result_graduate.isEmpty()) {
+        GraduateEntity graduate = graduateService.getGraduate(student.getUID(), student.getYear());
+        if (graduate == null) {
             return false;
         }
-        GraduateEntity graduate = result_graduate.get();
 
         // 전공 이수 요건 로드
-        Optional<EarnMajorEntity> result_earnmajor = earnMajorRepository.findById(new EarnMajorId(majorId, student.getYear()));
-        if (result_earnmajor.isEmpty()) {
+        EarnMajorEntity earn_major = earnMajorService.getEarnMajor(major.getUID(), student.getYear());
+        if (earn_major == null) {
             return false;
         }
-        EarnMajorEntity earn_major = result_earnmajor.get();
 
-        // 전공필수 과목 로드
-        List<CourseTypeEntity> courseType = courseTypeRepository.findByIdMajorAndIdYearAndType(majorId, student.getYear(), 3);
-        Float req_jeonpil = 0f;
-        for (CourseTypeEntity e : courseType) {
-            Optional<CourseEntity> result_course = courseRepository.findById(e.getId().getCourse());
-            if (result_course.isEmpty()) {
-                continue;
-            }
-            CourseEntity course = result_course.get();
-            req_jeonpil += course.getCredit();
+        // 전공필수 과목목록 로드
+        List<CourseEntity> jeonpil_courses = courseTypeService.getCoursesDetail(major.getUID(), student.getYear(), 3);
+        if (jeonpil_courses == null) {
+            return false;
         }
 
+        // -- 전공필수 과목 총 학점 계산
+        Float req_jeonpil_credit = 0f;
+        for (CourseEntity e : jeonpil_courses) {
+            req_jeonpil_credit += e.getCredit();
+        }
+
+        // 수강한 수업목록 로드
+        List<CourseEntity> coursed = studentsCourseService.getCoursesDetail(student.getUID());
+
+        // 수강한 수업목록 순회 -> 각 이수학점 계산
         Float total_credit = 0f;
         Float advanced_credit = 0f;
         Float jeontam_credit = 0f;
@@ -113,61 +100,53 @@ public class StudentService {
         Float seongyo_credit = 0f;
         Float jeonseon_credit = 0f;
         Float jeonpil_credit = 0f;
-        for (StudentsCourseEntity e : coursed) {
-            Optional<CourseEntity> result_course = courseRepository.findById(e.getId().getCourse());
-            if (result_course.isEmpty()) {
-                return false;
-            }
-            CourseEntity course = result_course.get();
+        for (CourseEntity e : coursed) {
 
             // 전체 이수 학점
-            total_credit += course.getCredit();
+            total_credit += e.getCredit();
 
-            // 3000단위 이상 학점
-            if (course.getLevel() >= 3000) {
-                advanced_credit += course.getCredit();
+            // 3000단위 이상 과목 이수 학점
+            if (e.getLevel() >= 3000) {
+                advanced_credit += e.getCredit();
             }
 
             // 전공 학점
-            Optional<CourseTypeEntity> result_coursetype = courseTypeRepository.findById(new CourseTypeId(majorId, student.getYear(), course.getUID()));
-            if (result_coursetype.isPresent()) {
-                CourseTypeEntity coursetype = result_coursetype.get();
-                switch (coursetype.getType()) {
+            CourseTypeEntity course_type = courseTypeService.getCourse(major.getUID(), student.getYear(), e.getUID());
+            if (course_type != null) {
+                switch (course_type.getType()) {
                     // 전공 선택 학점
                     case 2 :
-                        jeonseon_credit += course.getCredit();
+                        jeonseon_credit += e.getCredit();
                         break;
                     // 전공 필수 학점
                     case 3 :
-                        jeonpil_credit += course.getCredit();
+                        jeonpil_credit += e.getCredit();
                         break;
                 }
             }
 
-            // 전탐 이수학점
-            Optional<FoundationMajorEntity> result_jeontam = foundationMajorRepository.findById(new FoundationMajorId(dept.getUID(), student.getYear(), course.getUID()));
-            if (result_jeontam.isPresent()) {
-                jeontam_credit += course.getCredit();
+            // 전공탐색 이수학점
+            Boolean isJeontam = foundationMajorService.isJeonTam(dept.getUID(), student.getYear(), e.getUID());
+            if (isJeontam) {
+                jeontam_credit += e.getCredit();
             }
 
-            // 필교 이수학점
-            Optional<FoundationEducationEntity> result_pilgyo = foundationEducationRepository.findById(new FoundationEducationId(dept.getUID(), student.getYear(), course.getUID()));
-            if (result_pilgyo.isPresent()) {
-                pilgyo_credit += course.getCredit();
+            // 필수교양 이수학점
+            Boolean isPilgyo = foundationEducationService.isPilGyo(dept.getUID(), student.getYear(), e.getUID());
+            if (isPilgyo) {
+                pilgyo_credit += e.getCredit();
             }
 
-            // 대교(필수) 이수학점
-            Optional<EssentialGeneralEducationEntity> result_daegyo = essentialGeneralEducationRepository.findById(new EssentialGeneralEducationId(dept.getUID(), student.getYear(), course.getUID()));
-            if (result_daegyo.isPresent()) {
-                daegyo_credit += course.getCredit();
+            // 대학교양(필수) 이수학점
+            Boolean isDaegyo = essentialGeneralEducationService.isDaeGyo(dept.getUID(), student.getYear(), e.getUID());
+            if (isDaegyo) {
+                daegyo_credit += e.getCredit();
             }
 
-            // 대교(선택) 이수학점
-            if (course.getNumber() != null) {
-                Optional<OptionalGeneralEducationEntity> result_seongyo = optionalGeneralEducationRepository.findById(new OptionalGeneralEducationId(dept.getUID(), student.getYear(), course.getNumber()));
-                if (result_seongyo.isPresent()) {
-                    seongyo_credit += course.getCredit();
-                }
+            // 대학교양(선택) 이수학점
+            Boolean isSeongyo = optionalGeneralEducationService.isSeonGyo(dept.getUID(), student.getYear(), e.getNumber());
+            if (isSeongyo) {
+                seongyo_credit += e.getCredit();
             }
         }
 
@@ -189,9 +168,9 @@ public class StudentService {
         model.addAttribute("advanced_credit", advanced_credit);
         model.addAttribute("advanced_req_credit", graduate.getTotalLevel());
         model.addAttribute("jeon_pil_credit", jeonpil_credit);
-        model.addAttribute("jeon_pil_req_credit", req_jeonpil);
+        model.addAttribute("jeon_pil_req_credit", req_jeonpil_credit);
         model.addAttribute("jeon_seon_credit", jeonseon_credit);
-        model.addAttribute("jeon_seon_req_credit", earn_major.getTotalCredit() - req_jeonpil);
+        model.addAttribute("jeon_seon_req_credit", earn_major.getTotalCredit() - req_jeonpil_credit);
 
         return true;
     }
