@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface StudentsMajorRepository extends JpaRepository<StudentsMajorEntity, StudentsMajorId> {
     List<StudentsMajorEntity> findByIdStudent(Integer student);
+    StudentsMajorEntity findByIdStudentAndIdMajorOrder(Integer student, Integer order);
 }
