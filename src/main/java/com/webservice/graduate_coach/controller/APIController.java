@@ -1,5 +1,6 @@
 package com.webservice.graduate_coach.controller;
-
+import com.webservice.graduate_coach.param.UserType;
+import com.webservice.graduate_coach.dto.UserDTO;
 import com.webservice.graduate_coach.entity.UserEntity;
 import com.webservice.graduate_coach.service.StudentService;
 import com.webservice.graduate_coach.service.UserService;
@@ -35,18 +36,41 @@ public class APIController {
 
     @PostMapping("/signup")
     public String signupRequest(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam("university") Integer university,
+            @RequestParam String major,
+            @RequestParam("id") String userId,
+            @RequestParam("pwd") String pwd,
+            @RequestParam("pwd_check") String pwdCheck,
+            @RequestParam(value = "type", required = false, defaultValue = "STUDENT") String userTypeStr,
             HttpSession session,
             Model model
     ) {
-        // 회원가입 실패
-        if (true) {
-            model.addAttribute("msg", "회원가입 실패임");
+        // 1) 비번 확인
+        if (!pwd.equals(pwdCheck)) {
+            model.addAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "signup";
         }
 
-        // 회원가입 성공
+        UserType userType = UserType.valueOf(userTypeStr.toUpperCase()); // 기본값 STUDENT
+        // 2) 회원가입 시도
+        UserDTO dto = new UserDTO();
+        dto.setName(name);
+        dto.setUserId(userId);
+        dto.setPassword(pwd);
+        dto.setEmail(email);
+        dto.setUniversity(university);
+        dto.setMajor(major);
+        dto.setType(userType); // STUDENT or ACADEMY
 
+        boolean ok = userService.register(dto);
+        if (!ok) {
+            model.addAttribute("msg", "이미 존재하는 아이디입니다.");
+            return "signup";
+        }
 
+        model.addAttribute("success_signup_msg", "회원가입 성공! 로그인 해주세요.");
         return "login";
     }
 
