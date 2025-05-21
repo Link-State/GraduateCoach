@@ -5,21 +5,30 @@ import com.webservice.graduate_coach.entity.AcademyEntity;
 import com.webservice.graduate_coach.entity.StudentEntity;
 import com.webservice.graduate_coach.entity.UserEntity;
 import com.webservice.graduate_coach.param.UserType;
+import com.webservice.graduate_coach.repository.AcademyRepository;
+import com.webservice.graduate_coach.repository.StudentRepository;
 import com.webservice.graduate_coach.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 
-public class UserService {
-    private final UserRepository userRepository;
-
+public class UserService implements UserDetailsService {
     private final StudentService studentService;
+    private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
+    private final AcademyRepository academyRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AcademyService academyService;
 
     public UserEntity addUser(UserDTO user) {
@@ -32,6 +41,41 @@ public class UserService {
         return userRepository.save(entity);
     }
 
+    public boolean register(UserDTO dto) {
+        // 1) 아이디 중복 체크
+        if (userRepository.existsByUserId(dto.getUserId())) {
+            return false;
+        }
+
+        // 2) 비밀번호 암호화 후 UserEntity 저장
+        UserEntity user = UserEntity.builder()
+                .userId(dto.getUserId())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .email(dto.getEmail())
+                .university(dto.getUniversity())
+                .build();
+        user = userRepository.save(user);
+
+        // 3) 학생/학사팀 프로필 생성
+        if (dto.getType() == UserType.STUDENT) {
+            StudentEntity student = StudentEntity.builder()
+                    .user(user.getUID())
+                    .studentNumber(dto.getUserId())
+                    .communicationCert(false)  // 기본값 false 또는 0
+                    .foreignCert(false)        // 기본값 false 또는 0
+                    .year(LocalDate.now().getYear())  // 예: 현재 연도
+                    .build();
+            studentRepository.save(student);
+        } else if (dto.getType() == UserType.ACADEMY) {
+            AcademyEntity academy = AcademyEntity.builder()
+                    .user(user.getUID())
+                    .build();
+            academyRepository.save(academy);
+        }
+
+        return true;
+    }
+    
     public UserEntity getUser(Integer uid) {
         Optional<UserEntity> user = userRepository.findById(uid);
         return user.orElse(null);
@@ -80,5 +124,19 @@ public class UserService {
             return UserType.ACADEMY;
         }
         return UserType.UNKNOWN;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new UsernameNotFoundException("해당 유저를 찾을 수 없습니다: " + userId);
+        }
+
+        return User.builder()
+                .username(user.getUserId())
+                .password(user.getPassword()) // 이미 암호화된 비밀번호
+                .roles("USER") // 필요시 "STUDENT", "ACADEMY"로 구분 가능
+                .build();
     }
 }

@@ -17,32 +17,39 @@
 
         <!-- 회원가입 폼 -->
         <form id="signup-form" action="#" method="post" class="w-100 mt-4" novalidate>
+          <input type="hidden" name="type" value="STUDENT" />
           <!-- STEP 1 -->
           <div id="step-1">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">이름</label>
-                <input type="text" class="form-control" placeholder="이름 입력" required />
+                <input type="text" class="form-control" name="name" placeholder="이름 입력" required />
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label">이메일</label>
-                <input type="email" class="form-control" placeholder="이메일 주소 입력" required />
+                <input type="email" class="form-control" name="email" placeholder="이메일 주소 입력" required />
               </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">소속학교</label>
-              <input type="text" class="form-control" placeholder="학교 입력" required />
+              <select class="form-control" name="university" required>
+                <option value="">학교 선택</option>
+                <option value="1">서울대학교</option>
+                <option value="2">고려대학교</option>
+                <option value="3">연세대학교</option>
+                <!-- 예시입니다. 필요에 따라 학교 추가해주세요. -->
+              </select>
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">학과</label>
-                <input type="text" class="form-control" placeholder="학과 입력" required />
+                <input type="text" class="form-control" name="major" placeholder="학과 입력" required />
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label">학번</label>
-                <input type="text" class="form-control" placeholder="학번 입력" required />
+                <input type="text" class="form-control" name="id" placeholder="학번 입력" required />
               </div>
             </div>
 
@@ -54,7 +61,7 @@
           <div id="step-2" style="display: none;">
             <div class="mb-3 position-relative">
               <label class="form-label">비밀번호</label>
-              <input type="password" class="form-control" id="password" placeholder="비밀번호 입력" required />
+              <input type="password" class="form-control" name="pwd" id="password" placeholder="비밀번호 입력" required />
               <button type="button" class="btn btn-sm position-absolute top-50 end-0 pe-4 me-2 border-0 text-black-50"
                       onclick="togglePasswordVisibility('password', this)">
                 <i class="fa-solid fa-eye"></i>
@@ -63,7 +70,7 @@
 
             <div class="mb-4 position-relative">
               <label class="form-label">비밀번호 확인</label>
-              <input type="password" class="form-control" id="passwordConfirm" placeholder="비밀번호 입력" required style="padding-right: 2.75rem"/>
+              <input type="password" class="form-control" name="pwd_check" id="passwordConfirm" placeholder="비밀번호 입력" required style="padding-right: 2.75rem"/>
               <button type="button" class="btn btn-sm position-absolute top-50 end-0 me-2 pe-4 border-0 text-black-50"
                       onclick="togglePasswordVisibility('passwordConfirm', this)">
                 <i class="fa-solid fa-eye"></i>
