@@ -28,10 +28,6 @@ public class StudentService {
     private final EssentialGeneralEducationService essentialGeneralEducationService;
     private final OptionalGeneralEducationService optionalGeneralEducationService;
 
-    public StudentEntity getStudentByUser(Integer user_uid) {
-        return studentRepository.findByUser(user_uid);
-    }
-
     public Boolean getDashBoard(Integer user_uid, Model model) {
         // 유저 정보 로드
         Optional<UserEntity> result_user = userRepository.findById(user_uid);
@@ -74,18 +70,6 @@ public class StudentService {
         EarnMajorEntity earn_major = earnMajorService.getEarnMajor(major.getUID(), student.getYear());
         if (earn_major == null) {
             return false;
-        }
-
-        // 전공필수 과목목록 로드
-        List<CourseEntity> jeonpil_courses = courseTypeService.getCoursesDetail(major.getUID(), student.getYear(), 3);
-        if (jeonpil_courses == null) {
-            return false;
-        }
-
-        // -- 전공필수 과목 총 학점 계산
-        Float req_jeonpil_credit = 0f;
-        for (CourseEntity e : jeonpil_courses) {
-            req_jeonpil_credit += e.getCredit();
         }
 
         // 수강한 수업목록 로드
@@ -144,7 +128,7 @@ public class StudentService {
             }
 
             // 대학교양(선택) 이수학점
-            Boolean isSeongyo = optionalGeneralEducationService.isSeonGyo(dept.getUID(), student.getYear(), e.getNumber());
+            Boolean isSeongyo = optionalGeneralEducationService.isSeonGyo(dept.getUID(), student.getYear(), e.getUID(), e.getNumber());
             if (isSeongyo) {
                 seongyo_credit += e.getCredit();
             }
@@ -157,20 +141,20 @@ public class StudentService {
         model.addAttribute("comm_cert", student.getCommunicationCert());
         model.addAttribute("total_credit", total_credit);
         model.addAttribute("total_req_credit", graduate.getTotalCredit());
-        model.addAttribute("jeon_tam_credit", jeontam_credit);
-        model.addAttribute("jeon_tam_req_credit", graduate.getFoundationMajor());
-        model.addAttribute("pil_gyo_credit", pilgyo_credit);
-        model.addAttribute("pil_gyo_req_credit", graduate.getFoundationEdu());
-        model.addAttribute("dae_gyo_credit", daegyo_credit);
-        model.addAttribute("dae_gyo_req_credit", graduate.getGeneralEdu());
-        model.addAttribute("seon_gyo_credit", seongyo_credit);
-        model.addAttribute("seon_gyo_req_credit", graduate.getOptionalEdu());
+        model.addAttribute("jeontam_credit", jeontam_credit);
+        model.addAttribute("jeontam_req_credit", graduate.getFoundationMajor());
+        model.addAttribute("pilgyo_credit", pilgyo_credit);
+        model.addAttribute("pilgyo_req_credit", graduate.getFoundationEdu());
+        model.addAttribute("daegyo_credit", daegyo_credit);
+        model.addAttribute("daegyo_req_credit", graduate.getGeneralEdu());
+        model.addAttribute("seongyo_credit", seongyo_credit);
+        model.addAttribute("seongyo_req_credit", graduate.getOptionalEdu());
         model.addAttribute("advanced_credit", advanced_credit);
         model.addAttribute("advanced_req_credit", graduate.getTotalLevel());
-        model.addAttribute("jeon_pil_credit", jeonpil_credit);
-        model.addAttribute("jeon_pil_req_credit", req_jeonpil_credit);
-        model.addAttribute("jeon_seon_credit", jeonseon_credit);
-        model.addAttribute("jeon_seon_req_credit", earn_major.getTotalCredit() - req_jeonpil_credit);
+        model.addAttribute("jeonpil_credit", jeonpil_credit);
+        model.addAttribute("jeonpil_req_credit", earn_major.getReqMajorCredit());
+        model.addAttribute("jeonseon_credit", jeonseon_credit);
+        model.addAttribute("jeonseon_req_credit", earn_major.getOptMajorCredit());
 
         return true;
     }

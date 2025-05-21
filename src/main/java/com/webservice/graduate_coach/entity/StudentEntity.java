@@ -21,9 +21,9 @@ public class StudentEntity {
     @Column(name="id")
     private String studentNumber;
     private Integer year;
-    @Column(name="foreign_cert")
-    private Boolean foreignCert;
-    @Column(name="communication_cert")
-    private Boolean communicationCert;
     private Integer user;
+    @Column(name="foreign_cert")
+    private Integer foreignCert;
+    @Column(name="comm_cert")
+    private Integer communicationCert;
 }

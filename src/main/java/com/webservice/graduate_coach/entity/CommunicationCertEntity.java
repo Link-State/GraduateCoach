@@ -1,8 +1,6 @@
 package com.webservice.graduate_coach.entity;
 
-import com.webservice.graduate_coach.entity.id.CommunicationCertId;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -15,7 +13,12 @@ import lombok.*;
 @Entity(name="Communicationcert")
 
 public class CommunicationCertEntity {
-    @EmbeddedId
-    private CommunicationCertId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer UID;
+
+    private String name;
     private Integer score;
+    private Integer department;
+    private Integer year;
 }

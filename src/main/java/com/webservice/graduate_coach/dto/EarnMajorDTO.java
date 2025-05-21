@@ -11,5 +11,6 @@ import lombok.*;
 public class EarnMajorDTO {
     private Integer major;
     private Integer year;
-    private Float totalCredit;
+    private Float reqMajorCredit;
+    private Float optMajorCredit;
 }
