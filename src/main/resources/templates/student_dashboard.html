@@ -37,7 +37,7 @@
         <div class="col-md-4">
           <div class="card profile-card h-100 p-4 text-center">
             <div class="profile-icon mb-3 d-flex justify-content-center">
-              <div th:if="${user.profileImage == null}" class="profile-placeholder rounded-circle d-flex justify-content-center align-items-center">
+              <div th:if="${user?.profileImage == null}" class="profile-placeholder rounded-circle d-flex justify-content-center align-items-center">
                 <i class="fa-solid fa-user fa-2x text-secondary"></i>
               </div>
             </div>

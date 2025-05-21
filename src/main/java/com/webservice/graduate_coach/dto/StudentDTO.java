@@ -12,7 +12,7 @@ public class StudentDTO {
     private Integer UID;
     private String studentNumber;
     private Integer year;
-    private Boolean foreignCert;
-    private Boolean communicationCert;
     private Integer user;
+    private Integer foreignCert;
+    private Integer communicationCert;
 }

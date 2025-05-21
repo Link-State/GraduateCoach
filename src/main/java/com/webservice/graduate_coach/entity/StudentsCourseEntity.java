@@ -17,4 +17,5 @@ public class StudentsCourseEntity {
     @EmbeddedId
     private StudentsCourseId id;
     private Float grade;
+    private Integer state;
 }

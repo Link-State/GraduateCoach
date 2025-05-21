@@ -37,9 +37,6 @@ public class CourseTypeService {
     //
     public List<CourseTypeEntity> getCourses(Integer major_uid, Integer year, Integer type) {
         List<CourseTypeEntity> courses = courseTypeRepository.findByIdMajorAndIdYearAndType(major_uid, year, type);
-        if (courses.isEmpty()) {
-            return null;
-        }
         return courses;
     }
 

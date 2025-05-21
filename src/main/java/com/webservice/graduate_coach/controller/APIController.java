@@ -2,6 +2,7 @@ package com.webservice.graduate_coach.controller;
 import com.webservice.graduate_coach.param.UserType;
 import com.webservice.graduate_coach.dto.UserDTO;
 import com.webservice.graduate_coach.entity.UserEntity;
+import com.webservice.graduate_coach.service.AcademyService;
 import com.webservice.graduate_coach.service.StudentService;
 import com.webservice.graduate_coach.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -18,21 +19,7 @@ public class APIController {
 
     private final UserService userService;
     private final StudentService studentService;
-
-    @PostMapping("/login")
-    public String loginRequest(
-            @RequestParam(name="user_id") String user_id,
-            @RequestParam(name="user_pwd") String user_pwd,
-            HttpSession session,
-            Model model
-    ) {
-        // 로그인 실패 - 아이디 또는 비번 공백
-        if (user_id.isEmpty() || user_pwd.isEmpty()) {
-            return "login";
-        }
-
-        return userService.loginUser(user_id, user_pwd, session, model);
-    }
+    private final AcademyService academyService;
 
     @PostMapping("/signup")
     public String signupRequest(
@@ -80,7 +67,30 @@ public class APIController {
             Model model
     ) {
         // 로그인 세션 삭제
-//        session.removeAttribute("");
+        session.removeAttribute("user");
+        session.removeAttribute("user_type");
         return "welcome";
+    }
+
+    @PostMapping("/academy_dashboard")
+    public String academyDashboardPage(
+            @RequestParam(name="department") Integer dept,
+            @RequestParam(name="year") Integer year,
+            @RequestParam(name="major") Integer major,
+            HttpSession session,
+            Model model
+    ) {
+        // 로그인 세션 확인
+        Integer user_uid = (Integer) session.getAttribute("user");
+        UserType user_type = (UserType) session.getAttribute("user_type");
+
+        if (user_uid == null || user_type == null) {
+            model.addAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            return "login";
+        }
+
+        academyService.getDashBoard(user_uid, dept, year, major, model);
+
+        return "academy_dashboard";
     }
 }
