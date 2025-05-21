@@ -1,33 +1,29 @@
-/* 네비게이션 바 전체 */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Pretendard', sans-serif;
+}
+
 .navbar-container {
-    border: 1px solid #C0C9D5;
-    border-radius: 12px;
-    background-color: white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    margin: 40px;
-    padding: 3px 30px;
+  background-color: white;
+  border: 1px solid #C0C9D5;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  padding: 16px 24px;
+  margin-bottom: 40px;
 }
 
-/* 로고 이미지 크기 조정 */
 .logo-img {
-    width: 150px;
-    height: 50px;
-    margin-left: 50px;
+  width: 150px;
+  height: 50px;
+  margin-left: 50px;
 }
 
-.logo-text {
-  font-weight: 800;
-  font-size: 1.2rem;
-  line-height: 1.2;
-  color: #1DCD9F;
-}
-
-/* 메뉴 링크 스타일 */
 .nav-links a {
   text-decoration: none;
   padding: 8px 16px;
   border: 1px solid #d4d4d4;
-  border-radius: 8px;
+  border-radius: 12px;
   color: #333;
   font-weight: 500;
   transition: background 0.2s ease;
@@ -45,14 +41,61 @@
 
 .card {
   border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
 
-.profile-card i.fa-user {
-  font-size: 80px;
+.profile-card {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.settings-icon {
-  margin-top: 10px;
-  cursor: pointer;
+.profile-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.profile-placeholder {
+  width: 100px;
+  height: 100px;
+  background-color: #ced4da;
+}
+
+.chart-wrapper {
+  /* width: 100%; */
+  width: 240px;
+  height: 240px;
+  /* aspect-ratio: 1 / 1; */
+}
+
+.mini-chart-wrapper {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.chart-header-wrapper {
+  position: relative;
+}
+
+.chart-header-wrapper .chart-detail-link {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.chart-header-wrapper .chart-detail-link:hover {
+  text-decoration: underline;
+}
+
+#creditDonutChart {
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }

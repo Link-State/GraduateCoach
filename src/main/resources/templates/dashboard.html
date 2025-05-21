@@ -4,89 +4,165 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="static/css/dashboard.css" />
 </head>
-<body>
-    <!-- 네비게이션 바 -->
-    <header class="navbar-container">
-        <div class="navbar-inner container-fluid d-flex justify-content-between align-items-center py-3">
-            <!-- 로고 -->
-            <div class="logo d-flex align-items-center">
-            <img src="static/images/logo3.png" alt="로고" class="logo-img me-2" />
-            </div>
 
-            <!-- 메뉴 -->
-            <nav class="nav-links d-flex gap-3">
-                <a href="#" class="nav-item">대시보드</a>
-                <a href="#" class="nav-item">커뮤니티</a>
-                <a href="#" class="nav-item">마이페이지</a>
-                <a href="#" class="nav-item logout">로그아웃</a>
-            </nav>
+<body>
+  <div class="dashboard-wrapper container my-5">
+    <!-- 네비게이션 바 -->
+    <header class="navbar-container mb-4 px-4 py-3 shadow-sm">
+      <div class="d-flex justify-content-between align-items-center">
+        <!-- 로고 -->
+        <div class="d-flex align-items-center">
+          <img src="static/images/logo3.png" alt="로고" class="logo-img me-2" />
         </div>
+        <!-- 메뉴 -->
+        <nav class="nav-links d-flex gap-3">
+          <a href="#" class="nav-item">대시보드</a>
+          <a href="#" class="nav-item">커뮤니티</a>
+          <a href="#" class="nav-item">마이페이지</a>
+          <a href="#" class="nav-item logout">로그아웃</a>
+        </nav>
+      </div>
     </header>
 
-    <main class="dashboard container my-5">
-        <div class="row g-4">     
-            <!-- 사용자 프로필 카드 -->
-            <div class="col-md-4">
-                <div class="card profile-card p-4 text-center">
-                    <div class="profile-icon mb-3">
-                    <i class="fa-solid fa-user fa-5x text-secondary"></i>
-                    </div>
-                    <h5 class="fw-bold">사용자ID</h5>
-                    <div class="text-muted">전공</div>
-                    <div class="text-muted mb-3">학번</div>
-                    <div class="settings-icon">
-                    <i class="fa-solid fa-gear fa-lg text-secondary"></i>
-                    </div>
-                </div>
+    <!-- 대시보드 -->
+    <main class="dashboard">
+        <!-- 1번째 행 -->
+      <div class="row g-4 align-items-stretch">
+        <!-- 사용자 프로필 카드 -->
+        <div class="col-md-4">
+          <div class="card profile-card h-100 p-4 text-center">
+            <div class="profile-icon mb-3 d-flex justify-content-center">
+              <div th:if="${user.profileImage == null}" class="profile-placeholder rounded-circle d-flex justify-content-center align-items-center">
+                <i class="fa-solid fa-user fa-2x text-secondary"></i>
+              </div>
             </div>
-
-            <!-- 학점 이수 현황 카드 -->
-            <div class="col-md-8">
-                <div class="card credit-card p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                    <h5 class="fw-bold">학점 이수 현황</h5>
-                    <a href="#" class="text-muted small">자세히 &gt;</a>
-                    </div>
-
-                    <div class="row">
-                    <!-- 도넛 그래프 -->
-                    <div class="col-md-6 text-center">
-                        <canvas id="creditDonutChart" width="150" height="150"></canvas>
-                        <div class="mt-2 fw-bold text-success fs-4">70%</div>
-                        <div class="text-muted small">이수 확정 비율</div>
-                    </div>
-
-                    <!-- 이수 정보 텍스트 -->
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">전체 이수 학점</label>
-                            <input type="text" class="form-control" value="95" disabled />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">졸업 기준 학점</label>
-                            <input type="text" class="form-control" value="135" disabled />
-                        </div>
-                        <div class="row">
-                            <div class="mb-3">
-                                <label class="form-label">졸업 인증 (외국어)</label>
-                                <input type="text" class="form-control" value="Y/N" disabled />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">졸업 인증 (정보)</label>
-                                <input type="text" class="form-control" value="Y/N" disabled />
-                            </div>
-                        </div>
-                        
-                    </div>
-                    </div>
-
-                </div>
+            <h5 class="fw-bold">사용자ID</h5>
+            <div class="text-muted">전공</div>
+            <div class="text-muted mb-3">학번</div>
+            <div class="settings-icon">
+              <i class="fa-solid fa-gear fa-lg text-secondary"></i>
             </div>
+          </div>
         </div>
-    </main>
-</body>
 
+        <!-- 학점 이수 현황 카드 -->
+        <div class="col-md-8">
+          <div class="card credit-card h-100 p-4">
+            <div class="chart-header-wrapper position-relative mb-3">
+              <h5 class="fw-bold text-center">학점 이수 현황</h5>
+              <a href="#" class="chart-detail-link">자세히 &gt;</a>
+            </div>
+
+            <div class="row d-flex justify-content-around align-items-start mb-3">
+              <!-- 도넛 그래프 -->
+              <div class="chart-wrapper mx-auto">
+                <canvas id="creditDonutChart"></canvas>
+              </div>
+
+              <!-- 학점 정보 -->
+              <div class="col-md-6">
+                <div class="mb-3 col-md-6">
+                  <label class="form-label">전체 이수 학점</label>
+                  <input type="text" class="form-control" value="95" disabled />
+                </div>
+                <div class="mb-3 col-md-6">
+                  <label class="form-label">졸업 기준 학점</label>
+                  <input type="text" class="form-control" value="135" disabled />
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">졸업 인증 (외국어)</label>
+                    <input type="text" class="form-control" value="Y/N" disabled />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">졸업 인증 (정보)</label>
+                    <input type="text" class="form-control" value="Y/N" disabled />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2번째 행 -->
+        <div class="row g-4 align-items-stretch mt-1">
+            <!-- 전공 및 3000단위 이수 카드 -->
+            <div class="col-md-6">
+                <div class="card h-100 p-4">
+                    <h5 class="fw-bold text-center mb-3">전공 & 3000단위 이수</h5>
+                    <div class="d-flex justify-content-around flex-wrap gap-3">
+                        <!-- 전공필수 -->
+                        <div class="text-center">
+                            <div class="mini-chart-wrapper">
+                                <canvas id="majorRequiredChart"></canvas>
+                            </div>
+                            <div class="mt-2 small text-muted">전공필수 (7/9)</div>
+                        </div>
+                            
+                        <!-- 전공선택 -->
+                        <div class="text-center">
+                            <div class="mini-chart-wrapper">
+                                <canvas id="majorElectiveChart"></canvas>
+                            </div>
+                            <div class="mt-2 small text-muted">전공선택 (24/27)</div>
+                        </div>
+
+                        <!-- 3000단위 이상 -->
+                        <div class="text-center">
+                            <div class="mini-chart-wrapper">
+                                <canvas id="level3000Chart"></canvas>
+                            </div>
+                            <div class="mt-2 small text-muted">3000단위 이상 (31/45)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 교양 이수 카드 -->
+            <div class="col-md-6">
+              <div class="card h-100 p-4">
+                <h5 class="fw-bold text-center mb-3">교양 이수 현황</h5>
+                <div class="d-flex justify-content-around flex-wrap gap-3">    
+                  <!-- 교양기초 -->
+                  <div class="text-center">
+                    <div class="mini-chart-wrapper">
+                      <canvas id="basicElectiveChart"></canvas>
+                    </div>
+                    <div class="mt-2 small text-muted">교양기초 (22/22)</div>
+                  </div>
+
+                  <!-- 대학교양 -->
+                  <div class="text-center">
+                    <div class="mini-chart-wrapper">
+                      <canvas id="generalElectiveChart"></canvas>
+                    </div>
+                    <div class="mt-2 small text-muted">대학교양 (15/20)</div>
+                  </div>
+
+                  <!-- 전공탐색 -->
+                  <div class="text-center">
+                    <div class="mini-chart-wrapper">
+                      <canvas id="explorationElectiveChart"></canvas>
+                    </div>
+                    <div class="mt-2 small text-muted">전공탐색 (12/21)</div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+        </div>
+
+    </main>
+  </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="static/js/dashboard.js"></script>
+  
+</body>
 </html>
