@@ -6,17 +6,18 @@
   <title>Signup</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="static/css/signup.css" />
+  <link rel="stylesheet" th:href="@{/css/signup.css}" />
+  
 </head>
 <body class="d-flex h-100">
   <div class="container-fluid signup-layout d-flex p-0">
     <!-- 왼쪽 회원가입 폼 -->
     <div class="signup-left d-flex flex-column justify-content-center align-items-center">
       <div class="signup-box">
-        <img src="static/images/logo.png" alt="로고" class="logo-img mb-3" />
+        <img th:src="@{/images/logo.png}" alt="로고" class="logo-img mb-3" />
 
         <!-- 회원가입 폼 -->
-        <form id="signup-form" action="#" method="post" class="w-100 mt-4" novalidate>
+        <form id="signup-form" th:action="@{/signup}" method="post" class="w-100 mt-4" novalidate>
           <input type="hidden" name="type" value="STUDENT" />
           <!-- STEP 1 -->
           <div id="step-1">
@@ -81,13 +82,14 @@
             <button type="button" class="btn btn-outline-secondary w-100 mb-2 goback-btn" onclick="goToStep1()">이전</button>
             <button type="submit" class="btn btn-primary w-100 signup-btn">회원가입</button>
             <div id="step2-error" class="text-danger mt-2" style="display: none;"></div>
+            <!-- <div th:if="${msg}" class="text-danger mt-2" th:text="${msg}"></div> -->
 
             <button type="button" class="btn btn-outline-secondary w-100 google-btn mt-2">
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Icon" />
               구글 계정으로 가입
             </button>
             <p class="mt-4 text-muted small">
-              이미 계정이 있으신가요? <a href="login.html" class="link">로그인</a> 
+              이미 계정이 있으신가요? <a th:href="@{/login}" class="link">로그인</a> 
             </p>
           </div>
         </form>
@@ -96,7 +98,7 @@
 
     <!-- 오른쪽 이미지 -->
     <div class="signup-right">
-      <img src="static/images/intro.jpg" alt="인트로 이미지" />
+      <img th:src="@{/images/intro.jpg}" alt="인트로 이미지" />
     </div>
   </div>
 

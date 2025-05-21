@@ -84,7 +84,7 @@
 <body>
   <div class="intro-wrapper">
     <!-- 로고 -->
-    <img src="static/images/logo.png" alt="졸업 코치 로고" class="intro-logo" />
+    <img th:src="@{/images/logo.png}" alt="졸업 코치 로고" class="intro-logo" />
 
     <!-- 서브 문구 -->
     <div class="intro-subtitle">졸업, 이제 쉽고 명확하게.</div>
@@ -93,8 +93,6 @@
     <div>
       <a th:href="@{/login}" class="btn btn-primary intro-btn">로그인</a><br/>
       <a th:href="@{/signup}" class="btn btn-outline intro-btn">회원가입</a><br/>
-      <a href="login.html">로그인</a>
-      <a href="signup.html">회원가입</a>
     </div>
   </div>
 

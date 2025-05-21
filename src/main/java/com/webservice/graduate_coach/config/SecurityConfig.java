@@ -26,7 +26,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/welcome", "/login", "/signup", "/css/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/student_dashboard", true)
                         .permitAll()
                 )
+                // .formLogin(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/welcome")
