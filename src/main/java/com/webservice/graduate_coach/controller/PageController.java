@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/")
@@ -64,14 +65,14 @@ public class PageController {
     @GetMapping("/academy_dashboard")
     public String academyDashboardPage(
             HttpSession session,
-            Model model
+            RedirectAttributes model
     ) {
         // 로그인 세션 확인
         Integer user_uid = (Integer) session.getAttribute("user");
         UserType user_type = (UserType) session.getAttribute("user_type");
 
         if (user_uid == null || user_type == null) {
-            model.addAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "login";
         }
 

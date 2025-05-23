@@ -8,6 +8,7 @@ import com.webservice.graduate_coach.repository.EssentialGeneralEducationReposit
 import com.webservice.graduate_coach.repository.OptionalGeneralEducationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,5 +42,34 @@ public class OptionalGeneralEducationService {
             numbers.add(e.getId().getNumber());
         }
         return numbers;
+    }
+
+    @Transactional
+    public String editNumbers(Integer department, Integer year, List<Integer> numbers) {
+        List<OptionalGeneralEducationEntity> seongyo = optionalGeneralEducationRepository.findByIdDepartmentAndIdYear(department, year);
+        for (OptionalGeneralEducationEntity e : seongyo) {
+            optionalGeneralEducationRepository.deleteById(e.getId());
+        }
+
+        for (Integer n : numbers) {
+            OptionalGeneralEducationEntity entity = OptionalGeneralEducationEntity.builder()
+                    .id(new OptionalGeneralEducationId(department, year, n))
+                    .build();
+            optionalGeneralEducationRepository.save(entity);
+        }
+
+        List<Integer> current_numbers = getNumbers(department, year);
+        String complete_msg = "";
+        for (Integer n : numbers) {
+            if (!current_numbers.contains(n)) {
+                complete_msg += ("이수영역 '" + n + "'이 변경되지 않았습니다.\n");
+            }
+        }
+
+        if (complete_msg.isEmpty()) {
+            complete_msg += "이수영역이 변경되었습니다.";
+        }
+
+        return complete_msg;
     }
 }
