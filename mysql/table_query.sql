@@ -30,11 +30,12 @@ CREATE TABLE Academy
 
 CREATE TABLE CommunicationCert
 (
-  UID        INT         NOT NULL AUTO_INCREMENT COMMENT '정보인증 고유번호',
-  name       VARCHAR(64) NOT NULL COMMENT '자격명',
-  score      INT         NULL     COMMENT '점수',
-  department INT         NOT NULL COMMENT '소속학부 고유번호',
-  year       INT         NOT NULL COMMENT '신입학 연도',
+  UID        INT          NOT NULL AUTO_INCREMENT COMMENT '정보인증 고유번호',
+  name       VARCHAR(64)  NOT NULL COMMENT '자격명',
+  descript   VARCHAR(128) NOT NULL COMMENT '인증기준',
+  score      INT          NULL     COMMENT '점수',
+  department INT          NOT NULL COMMENT '소속학부 고유번호',
+  year       INT          NOT NULL COMMENT '신입학 연도',
   PRIMARY KEY (UID)
 ) COMMENT '정보 인증';
 
@@ -92,11 +93,12 @@ CREATE TABLE EssentialGeneralEducation
 
 CREATE TABLE ForeignCert
 (
-  UID        INT         NOT NULL AUTO_INCREMENT COMMENT '외국어인증 고유번호',
-  name       VARCHAR(64) NOT NULL COMMENT '자격명',
-  score      INT         NULL     COMMENT '점수',
-  department INT         NOT NULL COMMENT '소속학부 고유번호',
-  year       INT         NOT NULL COMMENT '신입학 연도',
+  UID        INT          NOT NULL AUTO_INCREMENT COMMENT '외국어인증 고유번호',
+  name       VARCHAR(64)  NOT NULL COMMENT '자격명',
+  descript   VARCHAR(128) NOT NULL COMMENT '인증기준',
+  score      INT          NULL     COMMENT '점수',
+  department INT          NOT NULL COMMENT '소속학부 고유번호',
+  year       INT          NOT NULL COMMENT '신입학 연도',
   PRIMARY KEY (UID)
 ) COMMENT '외국어 인증';
 

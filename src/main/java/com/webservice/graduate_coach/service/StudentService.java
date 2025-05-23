@@ -15,6 +15,8 @@ import java.util.Optional;
 public class StudentService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
+    private final ForeignCertRepository foreignCertRepository;
+    private final CommunicationCertRepository communicationCertRepository;
 
     private final UniversityService universityService;
     private final DepartmentService departmentService;
@@ -46,6 +48,18 @@ public class StudentService {
         StudentEntity student = studentRepository.findByUser(user.getUID());
         if (student == null) {
             return false;
+        }
+
+        // 외국어인증 로드
+        ForeignCertEntity foreign = null;
+        if (student.getForeignCert() != null) {
+            foreign = foreignCertRepository.findById(student.getForeignCert()).orElse(null);
+        }
+
+        // 정보인증 로드
+        CommunicationCertEntity comm = null;
+        if (student.getCommunicationCert() != null) {
+            comm = communicationCertRepository.findById(student.getCommunicationCert()).orElse(null);
         }
 
         // 제 1전공 정보 로드
@@ -137,8 +151,8 @@ public class StudentService {
         model.addAttribute("univ", univ.getName());
         model.addAttribute("major", major.getName());
         model.addAttribute("id", student.getStudentNumber());
-        model.addAttribute("foreign_cert", student.getForeignCert());
-        model.addAttribute("comm_cert", student.getCommunicationCert());
+        model.addAttribute("foreign_cert", foreign);
+        model.addAttribute("comm_cert", comm);
         model.addAttribute("total_credit", total_credit);
         model.addAttribute("total_req_credit", graduate.getTotalCredit());
         model.addAttribute("jeontam_credit", jeontam_credit);

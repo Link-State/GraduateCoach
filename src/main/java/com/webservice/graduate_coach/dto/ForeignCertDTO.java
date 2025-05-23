@@ -11,7 +11,8 @@ import lombok.*;
 public class ForeignCertDTO {
     private Integer UID;
     private String name;
-    private Integer score;
+    private String descript;
+    private Float score;
     private Integer department;
     private Integer year;
 }

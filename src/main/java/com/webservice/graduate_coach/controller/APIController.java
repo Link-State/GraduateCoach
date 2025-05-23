@@ -5,11 +5,16 @@ import com.webservice.graduate_coach.entity.UserEntity;
 import com.webservice.graduate_coach.service.AcademyService;
 import com.webservice.graduate_coach.service.StudentService;
 import com.webservice.graduate_coach.service.UserService;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/")
