@@ -381,6 +381,7 @@
 |type|Integer|1=교양기초, 2=대학교양, 3=전공탐색, 4=전공필수|
 |department|Integer|학부 고유번호|
 |year|Integer|입학연도|
+|major|Integer|전공 고유번호|
 |courses|List&lt;Integer&gt;|강의 고유번호 리스트 (form태그 내 모든 checkbox들의 name 값을 courses)|
 
 <br>
@@ -426,6 +427,7 @@
 |필드명|타입|설명|
 |department|Integer|학부 고유번호|
 |year|Integer|입학연도|
+|major|Integer|전공 고유번호|
 |daegyo_credit|Integer|대학교양 학점|
 |pilgyo_credit|Integer|필수교양 학점|
 |advanced_credit|Integer|3000단위이상과목 필요학점|
@@ -476,7 +478,7 @@
 |필드명|타입|설명|
 |department|Integer|학부 고유번호|
 |year|Integer|입학연도|
-|numbers|List&lt;Integer&gt;|이수영역번호 리스트 (form태그 내 모든 checkbox들의 name 값을 courses)|
+|numbers|List&lt;Integer&gt;|이수영역번호 리스트 (form태그 내 모든 checkbox들의 name 값을 numbers)|
 
 <br>
 
@@ -568,7 +570,7 @@
 |----|----|----|
 |필드명|타입|설명|
 |type|Integer|1=외국어인증, 2=정보인증|
-|courses|List&lt;Integer&gt;|외국어/정보인증 고유번호 리스트 (해당 form태그 내 모든 checkbox들의 name 값을 courses)|
+|certs|List&lt;Integer&gt;|외국어/정보인증 고유번호 리스트 (해당 form태그 내 모든 checkbox들의 name 값을 certs)|
 
 <br>
 
