@@ -6,6 +6,7 @@ import com.webservice.graduate_coach.entity.id.CourseTypeId;
 import com.webservice.graduate_coach.repository.CourseTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,5 +79,18 @@ public class CourseTypeService {
             return null;
         }
         return courses_detail;
+    }
+
+    @Transactional
+    public String deleteCourses(Integer major, Integer year, List<Integer> courses) {
+        if (courses.isEmpty()) {
+            return "삭제할 과목을 선택해주세요.";
+        }
+
+        for (Integer id : courses) {
+            courseTypeRepository.deleteById(new CourseTypeId(major, year, id));
+        }
+
+        return courses.size() + "개의 전공과목이 삭제되었습니다.";
     }
 }

@@ -5,7 +5,9 @@ import com.webservice.graduate_coach.entity.FoundationEducationEntity;
 import com.webservice.graduate_coach.entity.id.FoundationEducationId;
 import com.webservice.graduate_coach.repository.FoundationEducationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +35,17 @@ public class FoundationEducationService {
             }
         }
         return courses;
+    }
+
+    @Transactional
+    public String deleteCourses(Integer department, Integer year, List<Integer> courses) {
+        if (courses.isEmpty()) {
+            return "삭제할 과목을 선택해주세요.";
+        }
+
+        for (Integer id : courses) {
+            foundationEducationRepository.deleteById(new FoundationEducationId(department, year, id));
+        }
+        return courses.size() + "개의 교양필수 과목이 삭제되었습니다.";
     }
 }
