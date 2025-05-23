@@ -275,9 +275,9 @@
 |필드명|타입|설명|
 |department_list|List&lt;DepartmentEntity&gt;|학부/학과 목록|
 |major_list|List&lt;MajorEntity&gt;|전공 목록|
-|selected_dept|DepartmentEntity|검색한 학부/학과|
-|selected_major|MajorEntity|검색한 전공|
-|selected_year|Integer|검색한 연도|
+|selected_dept|DepartmentEntity|검색한 학부/학과 (기본값)|
+|selected_major|MajorEntity|검색한 전공 (기본값)|
+|selected_year|Integer|검색한 연도 (기본값)|
 |pilgyo_list|List&lt;CourseEntity&gt;|교양기초 과목 리스트|
 |daegyo_list|List&lt;CourseEntity&gt;|대학교양(필수) 과목 리스트|
 |seongyo_number_list|List&lt;Integer&gt;|대학교양(선택) 이수영역 번호 리스트|
