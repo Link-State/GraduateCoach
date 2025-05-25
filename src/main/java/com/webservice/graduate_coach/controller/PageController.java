@@ -1,15 +1,17 @@
 package com.webservice.graduate_coach.controller;
 
+import com.webservice.graduate_coach.dto.CommunicationCertDTO;
+import com.webservice.graduate_coach.dto.ForeignCertDTO;
 import com.webservice.graduate_coach.param.UserType;
-import com.webservice.graduate_coach.service.AcademyService;
-import com.webservice.graduate_coach.service.StudentService;
-import com.webservice.graduate_coach.service.UserService;
+import com.webservice.graduate_coach.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -20,6 +22,9 @@ public class PageController {
     private final UserService userService;
     private final StudentService studentService;
     private final AcademyService academyService;
+    private final ForeignCertService foreignCertService;
+    private final CommunicationCertService communicationCertService;
+
 
     @GetMapping("/welcome")
     public String welcomePage(
@@ -64,19 +69,32 @@ public class PageController {
 
     @GetMapping("/academy_dashboard")
     public String academyDashboardPage(
+            @RequestParam Integer department,
+            @RequestParam Integer year,
+            @RequestParam Integer major,
             HttpSession session,
-            RedirectAttributes model
+            Model model
     ) {
         // 로그인 세션 확인
         Integer user_uid = (Integer) session.getAttribute("user");
         UserType user_type = (UserType) session.getAttribute("user_type");
 
         if (user_uid == null || user_type == null) {
-            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            model.addAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "login";
         }
+        // 1) 기존 대시보드 데이터
+        academyService.getDashBoard(user_uid, department, year, major, model);
 
-        Boolean result = academyService.getDashBoard(user_uid, model);
+        // 2) 외국어/정보 인증 리스트
+        List<ForeignCertDTO> foreignList = foreignCertService.getForeignCerts(department, year);
+        List<CommunicationCertDTO> commList  = communicationCertService.getCommunicationCerts(department, year);
+        model.addAttribute("ForeignCertList", foreignList);
+        model.addAttribute("CommunicationCertList"   , commList);
+
+        // 3) 폼 바인딩용 빈 DTO
+        model.addAttribute("ForeignCertDTO"   , new ForeignCertDTO());
+        model.addAttribute("CommunicationCertDTO", new CommunicationCertDTO());
 
         return "academy_dashboard";
     }
