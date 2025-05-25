@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"></html>
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" th:herf="@{/css/academy-dashboard.css}">
+        <link rel="stylesheet" th:href="@{/css/academy_dashboard.css}">
     </head>
     <body>
         <!-- nav -->
@@ -12,7 +12,7 @@
                 <ul class="user-info">
                     <li>uid</li>
                     <li>1234</li>
-                    <li><a herf="#"><input type="button" name="btn" value="logout"></a></li>
+                    <li><a th:href="@{/logout}"><input type="button" name="btn" value="logout"></a></li>
                 </ul>
             </nav>
         </div>
@@ -20,23 +20,23 @@
         <!-- 검색 -->
         <div class="big_box">
             <h3 class="title">연도별 졸업요건 검색</h3>
-            <form id="main_search" action="#" method="post">
+            <form id="search_dashboard">
                 <div>
                     <p class="input_name">입학연도</p>
-                    <input type="text" name="year" placeholder="연도 입력">
+                    <input type="text" id="year" placeholder="연도 입력" onkeydown="if (event.keyCode==13) { form.submit(); }">
                 </div>
                 <div>
                     <p class="input_name">학부/학과</p>
-                    <input type="text" name="department">
+                    <input type="text" id="department" onkeydown="if (event.keyCode==13) { form.submit(); }">
                 </div>
                 <div>
                     <p class="input_name">전공</p>
-                    <input type="text" name="major">
+                    <input type="text" id="major" onkeydown="if (event.keyCode==13) { form.submit(); }">
                 </div>
             </form>
         </div>
         <!-- 결과 -->
-        <div>
+        <div th:fragment="search_result" id="show_result">
             <!-- 졸업요건 - 수업 -->
             <div class="big_box">
                 <h3 class="title">졸업요건 - 수업</h3>
@@ -52,14 +52,16 @@
                                 <tr>
                                     <th>교과명</th>
                                     <th>학정번호</th>
-                                    <th>학점단위</th>
+                                    <th>학점</th>
+                                    <th>단위</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>123</td>
-                                    <td>456</td>
-                                    <td>789</td>
+                                <tr th:each="pilgyo : ${pilgyo_list}">
+                                    <td th:text="{pilgyo.name}"></td>
+                                    <td th:text="{pilgyo.code}"></td>
+                                    <td th:text="{pilgyo.credit}"></td>
+                                    <td th:text="{pilgyo.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -77,26 +79,74 @@
                                 <tr>
                                     <th>교과명</th>
                                     <th>학정번호</th>
-                                    <th>학점단위</th>
+                                    <th>학점</th>
+                                    <th>단위</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>123</td>
-                                    <td>456</td>
-                                    <td>789</td>
+                                <tr th:each="daegyo : ${daegyo_list}">
+                                    <td th:text="{daegyo.name}"></td>
+                                    <td th:text="{daegyo.code}"></td>
+                                    <td th:text="{daegyo.credit}"></td>
+                                    <td th:text="{daegyo.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
                     </details>
                 </div>
                 <!-- 전공탐색 -->
-                <div>
-
+                <div class="table_box">
+                    <details open>
+                        <summary class="table_title">
+                            <p>대학교양</p>
+                            <button class="btn-opn-mod" id="btn-opn-mod3">편집</button>
+                        </summary>
+                        <table class="tbl">
+                            <thead>
+                                <tr>
+                                    <th>교과명</th>
+                                    <th>학정번호</th>
+                                    <th>학점</th>
+                                    <th>단위</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="jeontam : ${jeontam_list}">
+                                    <td th:text="{jeontam.name}"></td>
+                                    <td th:text="{jeontam.code}"></td>
+                                    <td th:text="{jeontam.credit}"></td>
+                                    <td th:text="{jeontam.level}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </details>
                 </div>
                 <!-- 전공필수 -->
-                <div>
-
+                <div class="table_box">
+                    <details open>
+                        <summary class="table_title">
+                            <p>대학교양</p>
+                            <button class="btn-opn-mod" id="btn-opn-mod4">편집</button>
+                        </summary>
+                        <table class="tbl">
+                            <thead>
+                                <tr>
+                                    <th>교과명</th>
+                                    <th>학정번호</th>
+                                    <th>학점</th>
+                                    <th>단위</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="jeonpil : ${jeonpil_list}">
+                                    <td th:text="{jeonpil.name}"></td>
+                                    <td th:text="{jeonpil.code}"></td>
+                                    <td th:text="{jeonpil.credit}"></td>
+                                    <td th:text="{jeonpil.level}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </details>
                 </div>
             </div>
             <!-- 졸업요건 - 영역별 이수학점 -->
@@ -106,30 +156,30 @@
                     <button id="btn-opn-mod5">편집</button>
                     <div class="nnl">
                         <div class="namenum">
-                            <p class="numtitle">대학교양</p>
-                            <p class="numbox" th:text="#">111</p>
-                        </div>
-                        <div class="namenum">
                             <p class="numtitle">교양기초</p>
-                            <p class="numbox" th:text="#">222</p>
+                            <p class="numbox" th:text="${pilgyo_req_credit}">???</p>
                         </div>
                         <div class="namenum">
-                            <p class="numtitle">3000단위 이상</p>
-                            <p class="numbox" th:text="#">333</p>
+                            <p class="numtitle">교양필수</p>
+                            <p class="numbox" th:text="${daegyo_req_credit}">???</p>
+                        </div>
+                        <div class="namenum">
+                            <p class="numtitle">교양선택</p>
+                            <p class="numbox" th:text="${seongyo_req_credit}"></p>
                         </div>
                     </div>
                     <div class="nnl">
                         <div class="namenum">
-                            <p class="numtitle">전공필수</p>
-                            <p class="numbox" th:text="#">111</p>
+                            <p class="numtitle">3000단위 이상</p>
+                            <p class="numbox" th:text="${advanced_req_credit}"></p>
                         </div>
                         <div class="namenum">
                             <p class="numtitle">전공탐색</p>
-                            <p class="numbox" th:text="#">111</p>
+                            <p class="numbox" th:text="${jeontam_req_credit}">???</p>
                         </div>
                         <div class="namenum">
-                            <p class="numtitle">전공선택</p>
-                            <p class="numbox" th:text="#">111</p>
+                            <p class="numtitle">전공최소이수학점</p>
+                            <p class="numbox" th:text="${jeonseon_req_credit + jeonpil_req_credit}"></p>
                         </div>
                     </div>
                     <div class="area-box">
@@ -137,11 +187,8 @@
                         <div class="area-table">
                             <table>
                                 <tbody>
-                                    <tr>
-                                        <td>1. aaaa</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2. bbbb</td>
+                                    <tr th:each="slist : ${seongyo_number_list}">
+                                        <td th:text="${slist.number + '. ' + slist.name}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -166,9 +213,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>123</td>
-                                    <td>456</td>
+                                <tr th:each="comm : ${comm_cert_list}">
+                                    <td th:text="${comm.name}"></td>
+                                    <td th:text="${comm.score}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -178,7 +225,7 @@
                     <details open>
                         <summary class="table_title">
                             <p>외국어 인증</p>
-                            <button class="btn-opn-mod" id="btn-opn-mod6">편집</button>
+                            <button class="btn-opn-mod" id="btn-opn-mod7">편집</button>
                         </summary>
                         <table class="tbl">
                             <thead>
@@ -188,9 +235,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>123</td>
-                                    <td>456</td>
+                                <tr th:each="foreign : ${foreign_cert_list}">
+                                    <td th:text="${foreign.name}"></td>
+                                    <td th:text="${foreign.score}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -206,12 +253,13 @@
                 
             </div>
         </div>
+
         <div class="modal" id="modal2">
             <div class="modal-body" id="modal-body2">
                 <button class="btn-clo-mod" id="btn-clo-mod2">X</button>
                 <h2>modal2</h2>
             </div>
         </div>
-        <script src="static/js/academy-dashboard.js"></script>
+        <script src="static/js/academy_dashboard.js"></script>
     </body>
 </html>

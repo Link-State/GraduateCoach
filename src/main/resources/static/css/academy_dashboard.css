@@ -94,6 +94,9 @@ details{
     border: 1px solid black;
     margin: 0 auto;
 }
+.tbl th, .tbl td {
+    border: 1px solid black;
+}
 .tbl>thead{
     background-color: lightgray;
 }
