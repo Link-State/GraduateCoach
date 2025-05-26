@@ -35,7 +35,7 @@ public class CommunicationCertService {
     @Transactional
     public boolean deleteCommunicationCerts(List<Integer> ids) {
         try {
-            repo.deleteAllByIdIn(ids);
+            repo.deleteAllByUIDIn(ids);
             return true;
         } catch (Exception ex) {
             return false;

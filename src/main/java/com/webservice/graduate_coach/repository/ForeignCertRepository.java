@@ -11,5 +11,5 @@ import java.util.List;
 public interface ForeignCertRepository extends JpaRepository<ForeignCertEntity, Integer> {
     List<ForeignCertEntity> findByDepartmentAndYear(Integer department, Integer year);
     @Transactional
-    void deleteAllByIdIn(List<Integer> ids);
+    void deleteAllByUIDIn(List<Integer> ids);
 }
