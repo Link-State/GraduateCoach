@@ -69,9 +69,6 @@ public class PageController {
 
     @GetMapping("/academy_dashboard")
     public String academyDashboardPage(
-            @RequestParam Integer department,
-            @RequestParam Integer year,
-            @RequestParam Integer major,
             HttpSession session,
             Model model
     ) {
@@ -83,18 +80,24 @@ public class PageController {
             model.addAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "login";
         }
-        // 1) 기존 대시보드 데이터
-        academyService.getDashBoard(user_uid, department, year, major, model);
 
-        // 2) 외국어/정보 인증 리스트
-        List<ForeignCertDTO> foreignList = foreignCertService.getForeignCerts(department, year);
-        List<CommunicationCertDTO> commList  = communicationCertService.getCommunicationCerts(department, year);
-        model.addAttribute("ForeignCertList", foreignList);
-        model.addAttribute("CommunicationCertList"   , commList);
+        // 리다이렉트 시, 기존 대시보드 사용
+        if (model.getAttribute("redirected") != null) {
+            return "academy_dashboard";
+        }
 
-        // 3) 폼 바인딩용 빈 DTO
-        model.addAttribute("ForeignCertDTO"   , new ForeignCertDTO());
-        model.addAttribute("CommunicationCertDTO", new CommunicationCertDTO());
+        // 1) 새로운 대시보드 데이터
+        Boolean result = academyService.getDashBoard(user_uid, model);
+
+//         // 2) 외국어/정보 인증 리스트
+//        List<ForeignCertDTO> foreignList = foreignCertService.getForeignCerts(department, year);
+//        List<CommunicationCertDTO> commList  = communicationCertService.getCommunicationCerts(department, year);
+//        model.addAttribute("ForeignCertList", foreignList);
+//        model.addAttribute("CommunicationCertList"   , commList);
+//
+//        // 3) 폼 바인딩용 빈 DTO
+//        model.addAttribute("ForeignCertDTO"   , new ForeignCertDTO());
+//        model.addAttribute("CommunicationCertDTO", new CommunicationCertDTO());
 
         return "academy_dashboard";
     }
