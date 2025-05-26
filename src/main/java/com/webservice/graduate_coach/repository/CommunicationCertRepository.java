@@ -11,5 +11,5 @@ import java.util.List;
 public interface CommunicationCertRepository extends JpaRepository<CommunicationCertEntity, Integer> {
     List<CommunicationCertEntity> findByDepartmentAndYear(Integer department, Integer year);
     @Transactional
-    void deleteAllByIdIn(List<Integer> ids);
+    void deleteAllByUIDIn(List<Integer> ids);
 }
