@@ -90,7 +90,7 @@ public class APIController {
         // 로그인 세션 삭제
         session.removeAttribute("user");
         session.removeAttribute("user_type");
-        return "welcome";
+        return "redirect:welcome";
     }
 
     @PostMapping("/academy_dashboard")
@@ -107,7 +107,7 @@ public class APIController {
 
         if (user_uid == null || user_type == null) {
             model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
-            return "login";
+            return "redirect:login";
         }
 
         academyService.getDashBoard(user_uid, dept, year, major, model);
@@ -126,6 +126,12 @@ public class APIController {
             RedirectAttributes model
     ) {
         Integer user_uid = (Integer) session.getAttribute("user");
+        if (user_uid == null) {
+            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            return "redirect:login";
+        }
+
+        model.addFlashAttribute("redirected", true);
 
         if (courses == null) {
             model.addFlashAttribute("exclude_course_msg", "삭제할 과목을 선택해주세요.");
@@ -151,7 +157,7 @@ public class APIController {
         };
 
         model.addFlashAttribute("exclude_course_msg", complete_msg);
-        Boolean result = academyService.getDashBoard(user_uid, department, year, major, model);
+        academyService.getDashBoard(user_uid, department, year, major, model);
 
         return "redirect:academy_dashboard";
     }
@@ -171,13 +177,19 @@ public class APIController {
             RedirectAttributes model
             ) {
         Integer user_uid = (Integer) session.getAttribute("user");
+        if (user_uid == null) {
+            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            return "redirect:login";
+        }
+
+        model.addFlashAttribute("redirected", true);
 
         String complete_msg1 = graduateService.editCredit(department, year, pilgyo_credit, daegyo_credit, jeontam_credit, advanced_credit);
         String complete_msg2 = earnMajorService.editCredit(major, year, jeonpil_credit, jeonseon_credit);
         String complete_msg = complete_msg1 + complete_msg2;
 
         model.addFlashAttribute("edit_credit_msg", complete_msg);
-        Boolean result = academyService.getDashBoard(user_uid, department, year, major, model);
+        academyService.getDashBoard(user_uid, department, year, major, model);
 
         return "redirect:academy_dashboard";
     }
@@ -192,15 +204,22 @@ public class APIController {
             RedirectAttributes model
     ) {
         Integer user_uid = (Integer) session.getAttribute("user");
+        if (user_uid == null) {
+            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            return "redirect:login";
+        }
+
+        model.addFlashAttribute("redirected", true);
 
         if (numbers == null) {
             model.addFlashAttribute("edit_number_msg", "허용할 이수영역번호를 선택해주세요.");
+            academyService.getDashBoard(user_uid, department, year, major, model);
             return "redirect:academy_dashboard";
         }
 
         String complete_msg = optionalGeneralEducationService.editNumbers(department, year, numbers);
         model.addFlashAttribute("edit_number_msg", complete_msg);
-        Boolean result = academyService.getDashBoard(user_uid, department, year, major, model);
+        academyService.getDashBoard(user_uid, department, year, major, model);
 
         return "redirect:academy_dashboard";
     }
@@ -237,6 +256,7 @@ public class APIController {
         }
 
         model.addFlashAttribute("add_cert_msg", completeMsg);
+        model.addFlashAttribute("redirected", true);
         // 다시 대시보드 로드
         academyService.getDashBoard(userUid, department, year, major, model);
         return "redirect:academy_dashboard";
@@ -258,6 +278,9 @@ public class APIController {
             model.addFlashAttribute("msg", "로그인이 필요합니다.");
             return "redirect:login";
         }
+
+        model.addFlashAttribute("redirected", true);
+
         if (certs == null || certs.isEmpty()) {
             model.addFlashAttribute("delete_cert_msg", "삭제할 인증을 선택해주세요.");
             academyService.getDashBoard(userUid, department, year, major, model);

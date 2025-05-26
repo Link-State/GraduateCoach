@@ -1,12 +1,15 @@
 package com.webservice.graduate_coach.service;
 
 import com.webservice.graduate_coach.entity.*;
+import com.webservice.graduate_coach.param.CourseNumber;
 import com.webservice.graduate_coach.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +34,7 @@ public class AcademyService {
     private final CommunicationCertRepository communicationCertRepository;
 
     public Boolean getDashBoard(Integer user_id, Model model) {
-        return getDashBoard(user_id, 1, 2025, 1, model);
+        return getDashBoard(user_id, 1, 2022, 1, model);
     }
     public Boolean getDashBoard(Integer user_id, Integer dp, Integer year, Integer mj, Model model) {
         // 유저 정보 로드
@@ -88,7 +91,45 @@ public class AcademyService {
         List<CourseEntity> daegyo = essentialGeneralEducationService.getDaegyos(dept, year);
 
         // 대학교양 이수영역 번호목록 로드
-        List<Integer> seongyo = optionalGeneralEducationService.getNumbers(dept, year);
+        List<Integer> seongyo_numbers = optionalGeneralEducationService.getNumbers(dept, year);
+        List<CourseNumber> seongyo = new ArrayList<CourseNumber>();
+        for (Integer n : seongyo_numbers) {
+            switch (n) {
+                case 1 :
+                    seongyo.add(new CourseNumber(n, "문학과예술"));
+                    break;
+                case 2 :
+                    seongyo.add(new CourseNumber(n, "인간과역사"));
+                    break;
+                case 3 :
+                    seongyo.add(new CourseNumber(n, "가치와윤리"));
+                    break;
+                case 4 :
+                    seongyo.add(new CourseNumber(n, "언어와표현"));
+                    break;
+                case 5 :
+                    seongyo.add(new CourseNumber(n, "국가와사회"));
+                    break;
+                case 6 :
+                    seongyo.add(new CourseNumber(n, "지역과세계"));
+                    break;
+                case 7 :
+                    seongyo.add(new CourseNumber(n, "논리와수리"));
+                    break;
+                case 8 :
+                    seongyo.add(new CourseNumber(n, "자연과우주"));
+                    break;
+                case 9 :
+                    seongyo.add(new CourseNumber(n, "생명과환경"));
+                    break;
+                case 10 :
+                    seongyo.add(new CourseNumber(n, "정보와기술"));
+                    break;
+                case 11 :
+                    seongyo.add(new CourseNumber(n, "체육과건강"));
+                    break;
+            }
+        }
 
         // 전공탐색 과목목록 로드
         List<CourseEntity> jeontam = foundationMajorService.getJeontams(dept, year);
@@ -103,26 +144,37 @@ public class AcademyService {
         // 정보인증 목록
         List<CommunicationCertEntity> comm_certs = communicationCertRepository.findByDepartmentAndYear(dept, year);
 
-        model.addAttribute("department_list", department_list);
-        model.addAttribute("major_list", major_list);
-        model.addAttribute("selected_dept", hasDepartment);
-        model.addAttribute("selected_major", hasMajor);
-        model.addAttribute("selected_year", year);
-        model.addAttribute("pilgyo_list", pilgyo);
-        model.addAttribute("daegyo_list", daegyo);
-        model.addAttribute("seongyo_number_list", seongyo);
-        model.addAttribute("jeontam_list", jeontam);
-        model.addAttribute("jeonpil_list", jeonpil);
-        model.addAttribute("jeonseon_list", jeonseon);
-        model.addAttribute("pilgyo_req_credit", graduate.getFoundationEdu());
-        model.addAttribute("daegyo_req_credit", graduate.getGeneralEdu());
-        model.addAttribute("seongyo_req_credit", graduate.getOptionalEdu());
-        model.addAttribute("jeontam_req_credit", graduate.getFoundationMajor());
-        model.addAttribute("advanced_req_credit", graduate.getTotalLevel());
-        model.addAttribute("jeonpil_req_credit", earn_major.getReqMajorCredit());
-        model.addAttribute("jeonseon_req_credit", earn_major.getOptMajorCredit());
-        model.addAttribute("foreign_cert_list", foreign_certs);
-        model.addAttribute("comm_cert_list", comm_certs);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("department_list", department_list);
+        params.put("major_list", major_list);
+        params.put("selected_dept", hasDepartment);
+        params.put("selected_major", hasMajor);
+        params.put("selected_year", year);
+        params.put("pilgyo_list", pilgyo);
+        params.put("daegyo_list", daegyo);
+        params.put("seongyo_number_list", seongyo);
+        params.put("jeontam_list", jeontam);
+        params.put("jeonpil_list", jeonpil);
+        params.put("jeonseon_list", jeonseon);
+        params.put("pilgyo_req_credit", graduate.getFoundationEdu());
+        params.put("daegyo_req_credit", graduate.getGeneralEdu());
+        params.put("seongyo_req_credit", graduate.getOptionalEdu());
+        params.put("jeontam_req_credit", graduate.getFoundationMajor());
+        params.put("advanced_req_credit", graduate.getTotalLevel());
+        params.put("jeonpil_req_credit", earn_major.getReqMajorCredit());
+        params.put("jeonseon_req_credit", earn_major.getOptMajorCredit());
+        params.put("foreign_cert_list", foreign_certs);
+        params.put("comm_cert_list", comm_certs);
+
+        if (model instanceof RedirectAttributes attr) {
+            for (String key : params.keySet()) {
+                attr.addFlashAttribute(key, params.get(key));
+            }
+        } else {
+            for (String key : params.keySet()) {
+                model.addAttribute(key, params.get(key));
+            }
+        }
 
         return true;
     }
