@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"></html>
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" th:href="@{/css/academy_dashboard.css}">
+        <link rel="stylesheet" href="academy_dashboard.css">
     </head>
     <body>
         <!-- nav -->
@@ -30,15 +30,11 @@
                 </div>
                 <div>
                     <p class="input_name">학부/학과</p>
-                    <select name="department">
-                        <option th:each="dept : ${department_list}" th:value="${dept.UID}" th:text="${dept.name}"></option>
-                    </select>
+                    <input type="text" id="department" placeholder="" required>
                 </div>
                 <div>
                     <p class="input_name">전공</p>
-                    <select name="major">
-                        <option th:each="mj : ${major_list}" th:value="${mj.UID}" th:text="${mj.name}"></option>
-                    </select>
+                    <input type="text" id="major" placeholder="" required>
                 </div>
                 <button type="submit" style="display: none;"></button>
             </form>
@@ -66,10 +62,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="pilgyo : ${pilgyo_list}">
-                                    <td th:text="${pilgyo.name}"></td>
-                                    <td th:text="${pilgyo.code}"></td>
-                                    <td th:text="${pilgyo.credit}"></td>
-                                    <td th:text="${pilgyo.level}"></td>
+                                    <td th:text="{pilgyo.name}"></td>
+                                    <td th:text="{pilgyo.code}"></td>
+                                    <td th:text="{pilgyo.credit}"></td>
+                                    <td th:text="{pilgyo.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -93,10 +89,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="daegyo : ${daegyo_list}">
-                                    <td th:text="${daegyo.name}"></td>
-                                    <td th:text="${daegyo.code}"></td>
-                                    <td th:text="${daegyo.credit}"></td>
-                                    <td th:text="${daegyo.level}"></td>
+                                    <td th:text="{daegyo.name}"></td>
+                                    <td th:text="{daegyo.code}"></td>
+                                    <td th:text="{daegyo.credit}"></td>
+                                    <td th:text="{daegyo.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -120,10 +116,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="jeontam : ${jeontam_list}">
-                                    <td th:text="${jeontam.name}"></td>
-                                    <td th:text="${jeontam.code}"></td>
-                                    <td th:text="${jeontam.credit}"></td>
-                                    <td th:text="${jeontam.level}"></td>
+                                    <td th:text="{jeontam.name}"></td>
+                                    <td th:text="{jeontam.code}"></td>
+                                    <td th:text="{jeontam.credit}"></td>
+                                    <td th:text="{jeontam.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -147,10 +143,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="jeonpil : ${jeonpil_list}">
-                                    <td th:text="${jeonpil.name}"></td>
-                                    <td th:text="${jeonpil.code}"></td>
-                                    <td th:text="${jeonpil.credit}"></td>
-                                    <td th:text="${jeonpil.level}"></td>
+                                    <td th:text="{jeonpil.name}"></td>
+                                    <td th:text="{jeonpil.code}"></td>
+                                    <td th:text="{jeonpil.credit}"></td>
+                                    <td th:text="{jeonpil.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -164,39 +160,42 @@
                     <button id="btn-opn-mod5">편집</button>
                     <div class="nnl">
                         <div class="namenum">
-                            <p class="numtitle">교양기초</p>
+                            <p class="numtitle">필수교양</p>
                             <p class="numbox" th:text="${pilgyo_req_credit}">--</p>
                         </div>
                         <div class="namenum">
-                            <p class="numtitle">교양필수</p>
+                            <p class="numtitle">대학교양</p>
                             <p class="numbox" th:text="${daegyo_req_credit}">--</p>
                         </div>
                         <div class="namenum">
-                            <p class="numtitle">교양선택</p>
-                            <p class="numbox" th:text="${seongyo_req_credit}">--</p>
+                            <p class="numtitle">3000단위 이상</p>
+                            <p class="numbox" th:text="${advanced_req_credit}">--</p>
                         </div>
                     </div>
                     <div class="nnl">
                         <div class="namenum">
-                            <p class="numtitle">3000단위 이상</p>
-                            <p class="numbox" th:text="${advanced_req_credit}">--</p>
+                            <p class="numtitle">전공필수</p>
+                            <p class="numbox" th:text="${jeonpil_req_credit}">--</p>
                         </div>
                         <div class="namenum">
                             <p class="numtitle">전공탐색</p>
                             <p class="numbox" th:text="${jeontam_req_credit}">--</p>
                         </div>
                         <div class="namenum">
-                            <p class="numtitle">전공최소이수학점</p>
-                            <p class="numbox" th:text="${jeonseon_req_credit} + ${jeonpil_req_credit}"></p>
+                            <p class="numtitle">전공선택</p>
+                            <p class="numbox" th:text="${jeonseon_req_credit}">--</p>
                         </div>
                     </div>
                     <div class="area-box">
-                        <p class="numtitle">대학교양 이수영역</p>
+                        <div class="area-title">
+                            <p class="numtitle">대학교양 이수영역</p>
+                            <button id="btn-opn-mod6">편집</button>
+                        </div>
                         <div class="area-table">
                             <table>
                                 <tbody>
                                     <tr th:each="slist : ${seongyo_number_list}">
-                                        <td th:text="${slist.number} + '. ' + ${slist.name}"></td>
+                                        <td th:text="${slist.number + '. ' + slist.name}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -211,7 +210,7 @@
                     <details open>
                         <summary class="table_title">
                             <p>자격증</p>
-                            <button class="btn-opn-mod" id="btn-opn-mod6">편집</button>
+                            <button class="btn-opn-mod" id="btn-opn-mod7">편집</button>
                         </summary>
                         <table class="tbl">
                             <thead>
@@ -233,7 +232,7 @@
                     <details open>
                         <summary class="table_title">
                             <p>외국어 인증</p>
-                            <button class="btn-opn-mod" id="btn-opn-mod7">편집</button>
+                            <button class="btn-opn-mod" id="btn-opn-mod8">편집</button>
                         </summary>
                         <table class="tbl">
                             <thead>
@@ -254,7 +253,7 @@
             </div>
         </div>
         <!-- 모달 팝업 -->
-         <!-- 교양 기초 -->
+         <!-- 1교양 기초 -->
         <div class="modal" id="modal1">
             <div class="modal-body" id="edit_pilgyo">
                 <button class="btn-clo-mod" id="btn-clo-mod1">X</button>
@@ -262,14 +261,14 @@
                 <form class="search_style" id="pilgyo_search">
                     <div>
                         <p class="input_name">강의명</p>
-                        <input type="text" id="pilgyo_name" onkeydown="if (event.keyCode==13) { form.submit(); }">
+                        <input type="text" id="pilgyo_name">
                     </div>
                     <div>
                         <p class="input_name">학정번호</p>
-                        <input type="text" id="pilgyo_code  " onkeydown="if (event.keyCode==13) { form.submit(); }">
+                        <input type="text" id="pilgyo_code">
                     </div>
                 </form>
-                <div class="table_box_mrg">
+                <div class="table_box_mod">
                     <div class="table_title">
                         <p>교양기초</p>
                     </div>
@@ -290,18 +289,99 @@
                 </div>
             </div>
         </div>
+        <!-- 5영역별 이수학점 -->
         <div class="modal" id="modal5">
-            <div class="modal-body" id="modal-body5">
+            <div class="modal-body-a" id="modal-body5">
                 <button class="btn-clo-mod" id="btn-clo-mod5">X</button>
                 <h2>편집</h2>
+                <form id="edit_credit">
+                    <div class="num-box">
+                        <div class="nnl">
+                            <div class="namenum">
+                                <p class="numtitle">필수교양</p>
+                                <input class="numbox" id="pilgyo_edit" th:value="${pilgyo_req_credit}"></input>
+                            </div>
+                            <div class="namenum">
+                                <p class="numtitle">대학교양</p>
+                                <input class="numbox" id="daegyo_edit" th:value="${daegyo_req_credit}"></input>
+                            </div>
+                            <div class="namenum">
+                                <p class="numtitle">3000단위 이상</p>
+                                <input class="numbox" id="advanced_edit" th:value="${advanced_req_credit}"></input>
+                            </div>
+                        </div>
+                        <div class="nnl">
+                            <div class="namenum">
+                                <p class="numtitle">전공필수</p>
+                                <input class="numbox" id="jeonpil_edit" th:value="${jeonpil_req_credit}"></input>
+                            </div>
+                            <div class="namenum">
+                                <p class="numtitle">전공탐색</p>
+                                <input class="numbox" id="jeontam_edit" th:value="${jeontam_req_credit}"></input>
+                            </div>
+                            <div class="namenum">
+                                <p class="numtitle">전공선택</p>
+                                <input class="numbox" id="jeonseon_edit" th:value="${jeonseon_req_credit}"></input>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <button type="submit">저장</button>
+                </form>
             </div>
         </div>
+        <!-- 6대학교양 이수영역 -->
         <div class="modal" id="modal6">
-            <div class="modal-body" id="modal-body6">
+            <div class="modal-body-b" id="modal-body6">
+                <button class="btn-clo-mod" id="btn-clo-mod6">X</button>
+                <h2>대학교양 이수영역 편집</h2>
+                <div class="area-box-mod">
+                    <br>
+                    <div class="area-table">
+                        <table>
+                            <tbody>
+                                <tr th:each="slist : ${seongyo_number_list}">
+                                    <td></td>
+                                    <td th:text="${slist.number + '. ' + slist.name}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 7자격증 -->
+        <div class="modal" id="modal7">
+            <div class="modal-body" id="modal-body7">
                 <button class="btn-clo-mod" id="btn-clo-mod7">X</button>
                 <h2>자격증 편집</h2>
+                <form class="search_style" id="insert_comm">
+                    <div>
+                        <p class="input_name">자격명</p>
+                        <input type="text" id="comm_name">
+                    </div>
+                    <div>
+                        <p class="input_name">인증기준</p>
+                        <input type="text" id="comm_score">
+                    </div>
+                </form>
+                <div class="table_box_mod">
+                    <table class="tbl">
+                        <thead>
+                            <tr>
+                                <th>작격명</th>
+                                <th>인증기준</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <script th:src="@{js/academy_dashboard.js}"></script>
+        <script src="academy_dashboard.js"></script>
     </body>
 </html>

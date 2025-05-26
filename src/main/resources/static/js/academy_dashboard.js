@@ -35,18 +35,45 @@ btnCloseModal1.addEventListener("click", ()=>{
     document.body.classList.remove('modal-open');
 });
 
-// modal2 control
-const modal2 = document.querySelector('#modal5');
-const btnOpenModal2 = document.querySelector('#btn-opn-mod5');
-const btnCloseModal2 = document.querySelector('#btn-clo-mod5');
-btnOpenModal2.addEventListener("click", ()=>{
-    modal2.style.display="flex";
+// modal5 control
+const modal5 = document.querySelector('#modal5');
+const btnOpenModal5 = document.querySelector('#btn-opn-mod5');
+const btnCloseModal5 = document.querySelector('#btn-clo-mod5');
+btnOpenModal5.addEventListener("click", ()=>{
+    modal5.style.display="flex";
     document.body.classList.add('modal-open');
 });
-btnCloseModal2.addEventListener("click", ()=>{
-    modal2.style.display="none"
+btnCloseModal5.addEventListener("click", ()=>{
+    modal5.style.display="none"
     document.body.classList.remove('modal-open');
 });
+
+// modal6 control
+const modal6 = document.querySelector('#modal6');
+const btnOpenModal6 = document.querySelector('#btn-opn-mod6');
+const btnCloseModal6 = document.querySelector('#btn-clo-mod6');
+btnOpenModal6.addEventListener("click", ()=>{
+    modal6.style.display="flex";
+    document.body.classList.add('modal-open');
+});
+btnCloseModal6.addEventListener("click", ()=>{
+    modal6.style.display="none"
+    document.body.classList.remove('modal-open');
+});
+
+// modal7 control
+const modal7 = document.querySelector('#modal7');
+const btnOpenModal7 = document.querySelector('#btn-opn-mod7');
+const btnCloseModal7 = document.querySelector('#btn-clo-mod7');
+btnOpenModal7.addEventListener("click", ()=>{
+    modal7.style.display="flex";
+    document.body.classList.add('modal-open');
+});
+btnCloseModal7.addEventListener("click", ()=>{
+    modal7.style.display="none"
+    document.body.classList.remove('modal-open');
+});
+
 
 // main_dashboard_search
 document.getElementById("search_dashboard").addEventListener("submit", function(e) {

@@ -44,7 +44,7 @@ nav>ul>li{
     margin: 60px auto 0 auto;
     padding-bottom: 10px;
 }
-.table_box_mrg{
+.table_box_mod{
     background-color: lightgray;
     border-top: 3px solid green;
     width: 95%;
@@ -125,7 +125,7 @@ nav>ul>li{
 }
 #btn-opn-mod5{
     position: relative;
-    left: 250px;
+    left: 310px;
 }
 .nnl{
     margin: 20px 0;
@@ -140,7 +140,7 @@ nav>ul>li{
     font-size: 20px;
 }
 .numbox{
-    width: 140px;
+    width: 180px;
     padding: 10px 0;
     vertical-align: middle;
     border: 1px solid black;
@@ -148,13 +148,25 @@ nav>ul>li{
     font-size: 25px;
 }
 .area-box{
-    margin-left: 455px;
+    margin-left: 395px;
+}
+.area-box-mod{
+    display: flex;
+    justify-content: center;
+    margin-top:30px;
+    max-height: 60%;
+    overflow-y: auto;
+}
+.area-title{
+    display: flex;
+    align-items: center;
+    gap: 85px;
+    margin-bottom: 5px;
 }
 .area-table{
     width: 300px;
     background-color: lightgray;
     padding: 10px;
-
 }
 
 
@@ -181,6 +193,38 @@ body.modal-open {
 
     width:60%;
     height:80%;
+
+    padding:5px;
+
+    text-align: center;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+
+    transform:translateY(-50%); 
+}
+.modal-body-a{
+    position:absolute;
+    top:50%;
+
+    width:60%;
+    height:50%;
+
+    padding:5px;
+
+    text-align: center;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+
+    transform:translateY(-50%); 
+}
+.modal-body-b{
+    position:absolute;
+    top:50%;
+
+    width:60%;
+    height:50%;
 
     padding:5px;
 
