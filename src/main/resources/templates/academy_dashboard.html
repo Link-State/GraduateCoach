@@ -12,6 +12,8 @@
                 <ul class="user-info">
                     <li>uid</li>
                     <li>1234</li>
+                    <li></li>
+                    <li></li>
                     <li><a th:href="@{/logout}"><input type="button" name="btn" value="logout"></a></li>
                 </ul>
             </nav>
@@ -20,19 +22,21 @@
         <!-- 검색 -->
         <div class="big_box">
             <h3 class="title">연도별 졸업요건 검색</h3>
-            <form id="search_dashboard">
+            <div id="custom-alert" style="display:none; background:#ffe6e6; border:1px solid red; padding:10px; color:red; margin-top:10px;"></div>
+            <form class="search_style" id="search_dashboard">
                 <div>
                     <p class="input_name">입학연도</p>
-                    <input type="text" id="year" placeholder="연도 입력" onkeydown="if (event.keyCode==13) { form.submit(); }">
+                    <input type="text" id="year" placeholder="" required>
                 </div>
                 <div>
                     <p class="input_name">학부/학과</p>
-                    <input type="text" id="department" onkeydown="if (event.keyCode==13) { form.submit(); }">
+                    <input type="text" id="department" placeholder="" required>
                 </div>
                 <div>
                     <p class="input_name">전공</p>
-                    <input type="text" id="major" onkeydown="if (event.keyCode==13) { form.submit(); }">
+                    <input type="text" id="major" placeholder="" required>
                 </div>
+                <button type="submit" style="display: none;"></button>
             </form>
         </div>
         <!-- 결과 -->
@@ -157,25 +161,25 @@
                     <div class="nnl">
                         <div class="namenum">
                             <p class="numtitle">교양기초</p>
-                            <p class="numbox" th:text="${pilgyo_req_credit}">???</p>
+                            <p class="numbox" th:text="${pilgyo_req_credit}">--</p>
                         </div>
                         <div class="namenum">
                             <p class="numtitle">교양필수</p>
-                            <p class="numbox" th:text="${daegyo_req_credit}">???</p>
+                            <p class="numbox" th:text="${daegyo_req_credit}">--</p>
                         </div>
                         <div class="namenum">
                             <p class="numtitle">교양선택</p>
-                            <p class="numbox" th:text="${seongyo_req_credit}"></p>
+                            <p class="numbox" th:text="${seongyo_req_credit}">--</p>
                         </div>
                     </div>
                     <div class="nnl">
                         <div class="namenum">
                             <p class="numtitle">3000단위 이상</p>
-                            <p class="numbox" th:text="${advanced_req_credit}"></p>
+                            <p class="numbox" th:text="${advanced_req_credit}">--</p>
                         </div>
                         <div class="namenum">
                             <p class="numtitle">전공탐색</p>
-                            <p class="numbox" th:text="${jeontam_req_credit}">???</p>
+                            <p class="numbox" th:text="${jeontam_req_credit}">--</p>
                         </div>
                         <div class="namenum">
                             <p class="numtitle">전공최소이수학점</p>
@@ -246,20 +250,54 @@
             </div>
         </div>
         <!-- 모달 팝업 -->
+         <!-- 교양 기초 -->
         <div class="modal" id="modal1">
-            <div class="modal-body" id="modal-body1">
+            <div class="modal-body" id="edit_pilgyo">
                 <button class="btn-clo-mod" id="btn-clo-mod1">X</button>
                 <h2>과목 편집</h2>
-                
+                <form class="search_style" id="pilgyo_search">
+                    <div>
+                        <p class="input_name">강의명</p>
+                        <input type="text" id="pilgyo_name" onkeydown="if (event.keyCode==13) { form.submit(); }">
+                    </div>
+                    <div>
+                        <p class="input_name">학정번호</p>
+                        <input type="text" id="pilgyo_code  " onkeydown="if (event.keyCode==13) { form.submit(); }">
+                    </div>
+                </form>
+                <div class="table_box_mrg">
+                    <div class="table_title">
+                        <p>교양기초</p>
+                    </div>
+                    <table class="tbl">
+                        <thead>
+                            <tr>
+                                <th>edit</th>
+                                <th>학정번호</th>
+                                <th>학점</th>
+                                <th>단위</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
-        <div class="modal" id="modal2">
-            <div class="modal-body" id="modal-body2">
-                <button class="btn-clo-mod" id="btn-clo-mod2">X</button>
-                <h2>modal2</h2>
+        <div class="modal" id="modal5">
+            <div class="modal-body" id="modal-body5">
+                <button class="btn-clo-mod" id="btn-clo-mod5">X</button>
+                <h2>편집</h2>
             </div>
         </div>
-        <script src="static/js/academy_dashboard.js"></script>
+        <div class="modal" id="modal6">
+            <div class="modal-body" id="modal-body6">
+                <button class="btn-clo-mod" id="btn-clo-mod7">X</button>
+                <h2>자격증 편집</h2>
+            </div>
+        </div>
+        <script th:src="@{js/academy_dashboard.js}"></script>
     </body>
 </html>
