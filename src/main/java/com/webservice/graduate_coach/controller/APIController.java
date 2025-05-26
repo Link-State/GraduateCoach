@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.webservice.graduate_coach.dto.ForeignCertDTO;
+import com.webservice.graduate_coach.dto.CommunicationCertDTO;
 
 import java.util.List;
 
@@ -36,6 +38,9 @@ public class APIController {
     private final OptionalGeneralEducationService optionalGeneralEducationService;
     private final FoundationMajorService foundationMajorService;
     private final CourseTypeService courseTypeService;
+    private final ForeignCertService foreignCertService;
+    private final CommunicationCertService communicationCertService;
+
 
     @PostMapping("/signup")
     public String signupRequest(
@@ -197,6 +202,81 @@ public class APIController {
         model.addFlashAttribute("edit_number_msg", complete_msg);
         Boolean result = academyService.getDashBoard(user_uid, department, year, major, model);
 
+        return "redirect:academy_dashboard";
+    }
+
+    @PostMapping("/add-cert")
+    public String addCert(
+            @RequestParam Integer department,
+            @RequestParam Integer year,
+            @RequestParam Integer major,
+            @RequestParam("cert_type") Integer certType,
+            @RequestParam String name,
+            @RequestParam String descript,
+            @RequestParam Float score,
+            HttpSession session,
+            RedirectAttributes model
+    ) {
+        Integer userUid = (Integer) session.getAttribute("user");
+        if (userUid == null) {
+            model.addFlashAttribute("msg", "로그인이 필요합니다.");
+            return "redirect:login";
+        }
+
+        String completeMsg;
+        if (certType == 1) {
+            ForeignCertDTO dto = new ForeignCertDTO(null, name, descript, score, department, year);
+            completeMsg = foreignCertService.addForeignCert(dto)
+                    ? "외국어 인증 추가 성공"
+                    : "외국어 인증 추가 실패";
+        } else {
+            CommunicationCertDTO dto = new CommunicationCertDTO(null, name, descript, score, department, year);
+            completeMsg = communicationCertService.addCommunicationCert(dto)
+                    ? "정보 인증 추가 성공"
+                    : "정보 인증 추가 실패";
+        }
+
+        model.addFlashAttribute("add_cert_msg", completeMsg);
+        // 다시 대시보드 로드
+        academyService.getDashBoard(userUid, department, year, major, model);
+        return "redirect:academy_dashboard";
+    }
+
+    // --- 인증 삭제 ---
+    @PostMapping("/delete-cert")
+    public String deleteCert(
+            @RequestParam Integer department,
+            @RequestParam Integer year,
+            @RequestParam Integer major,
+            @RequestParam("type") Integer certType,
+            @RequestParam(name="certs", required=false) List<Integer> certs,
+            HttpSession session,
+            RedirectAttributes model
+    ) {
+        Integer userUid = (Integer) session.getAttribute("user");
+        if (userUid == null) {
+            model.addFlashAttribute("msg", "로그인이 필요합니다.");
+            return "redirect:login";
+        }
+        if (certs == null || certs.isEmpty()) {
+            model.addFlashAttribute("delete_cert_msg", "삭제할 인증을 선택해주세요.");
+            academyService.getDashBoard(userUid, department, year, major, model);
+            return "redirect:academy_dashboard";
+        }
+
+        String completeMsg;
+        if (certType == 1) {
+            completeMsg = foreignCertService.deleteForeignCerts(certs)
+                    ? "외국어 인증 삭제 성공"
+                    : "외국어 인증 삭제 실패";
+        } else {
+            completeMsg = communicationCertService.deleteCommunicationCerts(certs)
+                    ? "정보 인증 삭제 성공"
+                    : "정보 인증 삭제 실패";
+        }
+
+        model.addFlashAttribute("delete_cert_msg", completeMsg);
+        academyService.getDashBoard(userUid, department, year, major, model);
         return "redirect:academy_dashboard";
     }
 }

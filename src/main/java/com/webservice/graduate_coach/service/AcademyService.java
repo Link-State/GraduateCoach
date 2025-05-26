@@ -30,10 +30,10 @@ public class AcademyService {
     private final ForeignCertRepository foreignCertRepository;
     private final CommunicationCertRepository communicationCertRepository;
 
-    public Boolean getDashBoard(Integer user_id, RedirectAttributes model) {
+    public Boolean getDashBoard(Integer user_id, Model model) {
         return getDashBoard(user_id, 1, 2025, 1, model);
     }
-    public Boolean getDashBoard(Integer user_id, Integer dp, Integer year, Integer mj, RedirectAttributes model) {
+    public Boolean getDashBoard(Integer user_id, Integer dp, Integer year, Integer mj, Model model) {
         // 유저 정보 로드
         Optional<UserEntity> result_user = userRepository.findById(user_id);
         if (result_user.isEmpty()) {
@@ -103,26 +103,26 @@ public class AcademyService {
         // 정보인증 목록
         List<CommunicationCertEntity> comm_certs = communicationCertRepository.findByDepartmentAndYear(dept, year);
 
-        model.addFlashAttribute("department_list", department_list);
-        model.addFlashAttribute("major_list", major_list);
-        model.addFlashAttribute("selected_dept", hasDepartment);
-        model.addFlashAttribute("selected_major", hasMajor);
-        model.addFlashAttribute("selected_year", year);
-        model.addFlashAttribute("pilgyo_list", pilgyo);
-        model.addFlashAttribute("daegyo_list", daegyo);
-        model.addFlashAttribute("seongyo_number_list", seongyo);
-        model.addFlashAttribute("jeontam_list", jeontam);
-        model.addFlashAttribute("jeonpil_list", jeonpil);
-        model.addFlashAttribute("jeonseon_list", jeonseon);
-        model.addFlashAttribute("pilgyo_req_credit", graduate.getFoundationEdu());
-        model.addFlashAttribute("daegyo_req_credit", graduate.getGeneralEdu());
-        model.addFlashAttribute("seongyo_req_credit", graduate.getOptionalEdu());
-        model.addFlashAttribute("jeontam_req_credit", graduate.getFoundationMajor());
-        model.addFlashAttribute("advanced_req_credit", graduate.getTotalLevel());
-        model.addFlashAttribute("jeonpil_req_credit", earn_major.getReqMajorCredit());
-        model.addFlashAttribute("jeonseon_req_credit", earn_major.getOptMajorCredit());
-        model.addFlashAttribute("foreign_cert_list", foreign_certs);
-        model.addFlashAttribute("comm_cert_list", comm_certs);
+        model.addAttribute("department_list", department_list);
+        model.addAttribute("major_list", major_list);
+        model.addAttribute("selected_dept", hasDepartment);
+        model.addAttribute("selected_major", hasMajor);
+        model.addAttribute("selected_year", year);
+        model.addAttribute("pilgyo_list", pilgyo);
+        model.addAttribute("daegyo_list", daegyo);
+        model.addAttribute("seongyo_number_list", seongyo);
+        model.addAttribute("jeontam_list", jeontam);
+        model.addAttribute("jeonpil_list", jeonpil);
+        model.addAttribute("jeonseon_list", jeonseon);
+        model.addAttribute("pilgyo_req_credit", graduate.getFoundationEdu());
+        model.addAttribute("daegyo_req_credit", graduate.getGeneralEdu());
+        model.addAttribute("seongyo_req_credit", graduate.getOptionalEdu());
+        model.addAttribute("jeontam_req_credit", graduate.getFoundationMajor());
+        model.addAttribute("advanced_req_credit", graduate.getTotalLevel());
+        model.addAttribute("jeonpil_req_credit", earn_major.getReqMajorCredit());
+        model.addAttribute("jeonseon_req_credit", earn_major.getOptMajorCredit());
+        model.addAttribute("foreign_cert_list", foreign_certs);
+        model.addAttribute("comm_cert_list", comm_certs);
 
         return true;
     }
