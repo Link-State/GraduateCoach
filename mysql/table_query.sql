@@ -1,7 +1,5 @@
 
 -- 기존의 모든 테이블 삭제
-DROP TABLE IF EXISTS foreigncert;
-DROP TABLE IF EXISTS communicationcert;
 DROP TABLE IF EXISTS foundationmajor;
 DROP TABLE IF EXISTS foundationeducation;
 DROP TABLE IF EXISTS essentialgeneraleducation;
@@ -13,9 +11,11 @@ DROP TABLE IF EXISTS studentsmajor;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS edugroup;
 DROP TABLE IF EXISTS major;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS foreigncert;
+DROP TABLE IF EXISTS communicationcert;
 DROP TABLE IF EXISTS graduate;
 DROP TABLE IF EXISTS department;
-DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS academy;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS university;
@@ -30,11 +30,13 @@ CREATE TABLE Academy
 
 CREATE TABLE CommunicationCert
 (
-  department INT         NOT NULL COMMENT '소속학부 고유번호',
-  year       INT         NOT NULL COMMENT '신입학 연도',
-  name       VARCHAR(64) NOT NULL COMMENT '자격명',
-  score      INT         NULL     COMMENT '점수',
-  PRIMARY KEY (department, year, name)
+  UID        INT          NOT NULL AUTO_INCREMENT COMMENT '정보인증 고유번호',
+  name       VARCHAR(64)  NOT NULL COMMENT '자격명',
+  descript   VARCHAR(128) NOT NULL COMMENT '인증기준',
+  score      INT          NULL     COMMENT '점수',
+  department INT          NOT NULL COMMENT '소속학부 고유번호',
+  year       INT          NOT NULL COMMENT '신입학 연도',
+  PRIMARY KEY (UID)
 ) COMMENT '정보 인증';
 
 CREATE TABLE Course
@@ -52,8 +54,8 @@ CREATE TABLE CourseType
 (
   major  INT NOT NULL COMMENT '소속전공 고유번호',
   year   INT NOT NULL COMMENT '신입학 연도',
-  type   INT NOT NULL COMMENT '기초=1, 전선=2, 전필=3',
   course INT NOT NULL COMMENT '강의 고유번호',
+  type   INT NOT NULL COMMENT '기초=1, 전선=2, 전필=3',
   PRIMARY KEY (major, year, course)
 ) COMMENT '과목 종별';
 
@@ -67,9 +69,10 @@ CREATE TABLE Department
 
 CREATE TABLE EarnMajor
 (
-  major        INT   NOT NULL COMMENT '소속전공 고유번호',
-  year         INT   NOT NULL COMMENT '신입학 연도',
-  total_credit FLOAT NOT NULL COMMENT '필요 전공 이수학점',
+  major            INT   NOT NULL COMMENT '소속전공 고유번호',
+  year             INT   NOT NULL COMMENT '신입학 연도',
+  opt_major_credit FLOAT NOT NULL COMMENT '필요 전공선택 이수학점',
+  req_major_credit FLOAT NOT NULL COMMENT '필요 전공필수 이수학점',
   PRIMARY KEY (major, year)
 ) COMMENT '전공 이수 요건';
 
@@ -90,11 +93,13 @@ CREATE TABLE EssentialGeneralEducation
 
 CREATE TABLE ForeignCert
 (
-  department INT         NOT NULL COMMENT '소속학부 고유번호',
-  year       INT         NOT NULL COMMENT '신입학 연도',
-  name       VARCHAR(64) NOT NULL COMMENT '자격명',
-  score      INT         NULL     COMMENT '점수',
-  PRIMARY KEY (department, year, name)
+  UID        INT          NOT NULL AUTO_INCREMENT COMMENT '외국어인증 고유번호',
+  name       VARCHAR(64)  NOT NULL COMMENT '자격명',
+  descript   VARCHAR(128) NOT NULL COMMENT '인증기준',
+  score      INT          NULL     COMMENT '점수',
+  department INT          NOT NULL COMMENT '소속학부 고유번호',
+  year       INT          NOT NULL COMMENT '신입학 연도',
+  PRIMARY KEY (UID)
 ) COMMENT '외국어 인증';
 
 CREATE TABLE FoundationEducation
@@ -146,12 +151,12 @@ CREATE TABLE OptionalGeneralEducation
 
 CREATE TABLE Student
 (
-  UID                INT         NOT NULL AUTO_INCREMENT COMMENT '학생 고유번호',
-  id                 VARCHAR(64) NOT NULL COMMENT '학번',
-  year               INT         NOT NULL COMMENT '입학연도',
-  foreign_cert       BOOL        NOT NULL COMMENT '외국어 인증 상태',
-  communication_cert BOOL        NOT NULL COMMENT '정보 인증 상태',
-  user               INT         NOT NULL COMMENT '유저 고유번호',
+  UID          INT         NOT NULL AUTO_INCREMENT COMMENT '학생 고유번호',
+  id           VARCHAR(64) NOT NULL COMMENT '학번',
+  year         INT         NOT NULL COMMENT '입학연도',
+  user         INT         NOT NULL COMMENT '유저 고유번호',
+  foreign_cert INT         NULL     COMMENT '외국어인증 고유번호',
+  comm_cert    INT         NULL     COMMENT '정보인증 고유번호',
   PRIMARY KEY (UID)
 ) COMMENT '학생 정보';
 
@@ -160,6 +165,7 @@ CREATE TABLE StudentsCourse
   student INT   NOT NULL COMMENT '학생 고유번호',
   course  INT   NOT NULL COMMENT '강의 고유번호',
   grade   FLOAT NOT NULL COMMENT '성적',
+  state   INT   NOT NULL COMMENT '상태',
   PRIMARY KEY (student, course)
 ) COMMENT '이수 강의';
 
@@ -307,4 +313,14 @@ ALTER TABLE EssentialGeneralEducation
   ADD CONSTRAINT FK_Course_TO_EssentialGeneralEducation
     FOREIGN KEY (course)
     REFERENCES Course (UID);
+
+ALTER TABLE Student
+  ADD CONSTRAINT FK_ForeignCert_TO_Student
+    FOREIGN KEY (foreign_cert)
+    REFERENCES ForeignCert (UID);
+
+ALTER TABLE Student
+  ADD CONSTRAINT FK_CommunicationCert_TO_Student
+    FOREIGN KEY (comm_cert)
+    REFERENCES CommunicationCert (UID);
 

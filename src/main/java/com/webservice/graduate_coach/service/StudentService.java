@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ import java.util.Optional;
 public class StudentService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
+    private final ForeignCertRepository foreignCertRepository;
+    private final CommunicationCertRepository communicationCertRepository;
 
     private final UniversityService universityService;
     private final DepartmentService departmentService;
@@ -27,10 +30,6 @@ public class StudentService {
     private final FoundationEducationService foundationEducationService;
     private final EssentialGeneralEducationService essentialGeneralEducationService;
     private final OptionalGeneralEducationService optionalGeneralEducationService;
-
-    public StudentEntity getStudentByUser(Integer user_uid) {
-        return studentRepository.findByUser(user_uid);
-    }
 
     public Boolean getDashBoard(Integer user_uid, Model model) {
         // 유저 정보 로드
@@ -50,6 +49,18 @@ public class StudentService {
         StudentEntity student = studentRepository.findByUser(user.getUID());
         if (student == null) {
             return false;
+        }
+
+        // 외국어인증 로드
+        ForeignCertEntity foreign = null;
+        if (student.getForeignCert() != null) {
+            foreign = foreignCertRepository.findById(student.getForeignCert()).orElse(null);
+        }
+
+        // 정보인증 로드
+        CommunicationCertEntity comm = null;
+        if (student.getCommunicationCert() != null) {
+            comm = communicationCertRepository.findById(student.getCommunicationCert()).orElse(null);
         }
 
         // 제 1전공 정보 로드
@@ -76,18 +87,6 @@ public class StudentService {
             return false;
         }
 
-        // 전공필수 과목목록 로드
-        List<CourseEntity> jeonpil_courses = courseTypeService.getCoursesDetail(major.getUID(), student.getYear(), 3);
-        if (jeonpil_courses == null) {
-            return false;
-        }
-
-        // -- 전공필수 과목 총 학점 계산
-        Float req_jeonpil_credit = 0f;
-        for (CourseEntity e : jeonpil_courses) {
-            req_jeonpil_credit += e.getCredit();
-        }
-
         // 수강한 수업목록 로드
         List<CourseEntity> coursed = studentsCourseService.getCoursesDetail(student.getUID());
 
@@ -100,6 +99,19 @@ public class StudentService {
         Float seongyo_credit = 0f;
         Float jeonseon_credit = 0f;
         Float jeonpil_credit = 0f;
+
+        List<CourseEntity> pilgyo_list = new ArrayList<>();
+        List<CourseEntity> daegyo_list = new ArrayList<>();
+        List<CourseEntity> seongyo_list = new ArrayList<>();
+        List<CourseEntity> jeontam_list = new ArrayList<>();
+        List<CourseEntity> advanced_list = new ArrayList<>();
+        List<CourseEntity> jeonpil_list = new ArrayList<>();
+        List<CourseEntity> jeonseon_list = new ArrayList<>();
+        List<CourseEntity> recom_pilgyo_list = new ArrayList<>();
+        List<CourseEntity> recom_daegyo_list = new ArrayList<>();
+        List<CourseEntity> recom_jeontam_list = new ArrayList<>();
+        List<CourseEntity> recom_jeonpil_list = new ArrayList<>();
+
         for (CourseEntity e : coursed) {
 
             // 전체 이수 학점
@@ -108,6 +120,7 @@ public class StudentService {
             // 3000단위 이상 과목 이수 학점
             if (e.getLevel() >= 3000) {
                 advanced_credit += e.getCredit();
+                advanced_list.add(e);
             }
 
             // 전공 학점
@@ -117,10 +130,12 @@ public class StudentService {
                     // 전공 선택 학점
                     case 2 :
                         jeonseon_credit += e.getCredit();
+                        jeonseon_list.add(e);
                         break;
                     // 전공 필수 학점
                     case 3 :
                         jeonpil_credit += e.getCredit();
+                        jeonpil_list.add(e);
                         break;
                 }
             }
@@ -129,48 +144,95 @@ public class StudentService {
             Boolean isJeontam = foundationMajorService.isJeonTam(dept.getUID(), student.getYear(), e.getUID());
             if (isJeontam) {
                 jeontam_credit += e.getCredit();
+                jeontam_list.add(e);
             }
 
             // 필수교양 이수학점
             Boolean isPilgyo = foundationEducationService.isPilGyo(dept.getUID(), student.getYear(), e.getUID());
             if (isPilgyo) {
                 pilgyo_credit += e.getCredit();
+                pilgyo_list.add(e);
             }
 
             // 대학교양(필수) 이수학점
             Boolean isDaegyo = essentialGeneralEducationService.isDaeGyo(dept.getUID(), student.getYear(), e.getUID());
             if (isDaegyo) {
                 daegyo_credit += e.getCredit();
+                daegyo_list.add(e);
             }
 
             // 대학교양(선택) 이수학점
-            Boolean isSeongyo = optionalGeneralEducationService.isSeonGyo(dept.getUID(), student.getYear(), e.getNumber());
+            Boolean isSeongyo = optionalGeneralEducationService.isSeonGyo(dept.getUID(), student.getYear(), e.getUID(), e.getNumber());
             if (isSeongyo) {
                 seongyo_credit += e.getCredit();
+                seongyo_list.add(e);
+            }
+        }
+
+        // 이수 필요한 필수교양 과목목록
+        List<CourseEntity> pilgyo = foundationEducationService.getPilgyos(dept.getUID(), student.getYear());
+        for (CourseEntity e : pilgyo) {
+            if (!pilgyo_list.contains(e)) {
+                recom_pilgyo_list.add(e);
+            }
+        }
+
+        // 이수 필요한 대학교양(필수) 과목목록
+        List<CourseEntity> daegyo = essentialGeneralEducationService.getDaegyos(dept.getUID(), student.getYear());
+        for (CourseEntity e : daegyo) {
+            if (!pilgyo_list.contains(e)) {
+                recom_daegyo_list.add(e);
+            }
+        }
+
+        // 이수 필요한 전공탐색 과목목록
+        List<CourseEntity> jeontam = foundationMajorService.getJeontams(dept.getUID(), student.getYear());
+        for (CourseEntity e : jeontam) {
+            if (!pilgyo_list.contains(e)) {
+                recom_jeontam_list.add(e);
+            }
+        }
+
+        // 이수 필요한 전공필수 과목목록
+        List<CourseEntity> jeonpil = courseTypeService.getCoursesDetail(major.getUID(), student.getYear(), 3);
+        for (CourseEntity e : jeonpil) {
+            if (!pilgyo_list.contains(e)) {
+                recom_jeonpil_list.add(e);
             }
         }
 
         model.addAttribute("univ", univ.getName());
         model.addAttribute("major", major.getName());
         model.addAttribute("id", student.getStudentNumber());
-        model.addAttribute("foreign_cert", student.getForeignCert());
-        model.addAttribute("comm_cert", student.getCommunicationCert());
+        model.addAttribute("foreign_cert", foreign);
+        model.addAttribute("comm_cert", comm);
         model.addAttribute("total_credit", total_credit);
         model.addAttribute("total_req_credit", graduate.getTotalCredit());
-        model.addAttribute("jeon_tam_credit", jeontam_credit);
-        model.addAttribute("jeon_tam_req_credit", graduate.getFoundationMajor());
-        model.addAttribute("pil_gyo_credit", pilgyo_credit);
-        model.addAttribute("pil_gyo_req_credit", graduate.getFoundationEdu());
-        model.addAttribute("dae_gyo_credit", daegyo_credit);
-        model.addAttribute("dae_gyo_req_credit", graduate.getGeneralEdu());
-        model.addAttribute("seon_gyo_credit", seongyo_credit);
-        model.addAttribute("seon_gyo_req_credit", graduate.getOptionalEdu());
+        model.addAttribute("jeontam_credit", jeontam_credit);
+        model.addAttribute("jeontam_req_credit", graduate.getFoundationMajor());
+        model.addAttribute("pilgyo_credit", pilgyo_credit);
+        model.addAttribute("pilgyo_req_credit", graduate.getFoundationEdu());
+        model.addAttribute("daegyo_credit", daegyo_credit);
+        model.addAttribute("daegyo_req_credit", graduate.getGeneralEdu());
+        model.addAttribute("seongyo_credit", seongyo_credit);
+        model.addAttribute("seongyo_req_credit", graduate.getOptionalEdu());
         model.addAttribute("advanced_credit", advanced_credit);
         model.addAttribute("advanced_req_credit", graduate.getTotalLevel());
-        model.addAttribute("jeon_pil_credit", jeonpil_credit);
-        model.addAttribute("jeon_pil_req_credit", req_jeonpil_credit);
-        model.addAttribute("jeon_seon_credit", jeonseon_credit);
-        model.addAttribute("jeon_seon_req_credit", earn_major.getTotalCredit() - req_jeonpil_credit);
+        model.addAttribute("jeonpil_credit", jeonpil_credit);
+        model.addAttribute("jeonpil_req_credit", earn_major.getReqMajorCredit());
+        model.addAttribute("jeonseon_credit", jeonseon_credit);
+        model.addAttribute("jeonseon_req_credit", earn_major.getOptMajorCredit());
+        model.addAttribute("pilgyo_list", pilgyo_list);
+        model.addAttribute("daegyo_list", daegyo_list);
+        model.addAttribute("seongyo_list", seongyo_list);
+        model.addAttribute("jeontam_list", jeontam_list);
+        model.addAttribute("advanced_list", advanced_list);
+        model.addAttribute("jeonpil_list", jeonpil_list);
+        model.addAttribute("jeonseon_list", jeonseon_list);
+        model.addAttribute("recom_pilgyo_list", recom_pilgyo_list);
+        model.addAttribute("recom_daegyo_list", recom_daegyo_list);
+        model.addAttribute("recom_jeontam_list", recom_jeontam_list);
+        model.addAttribute("recom_jeonpil_list", recom_jeonpil_list);
 
         return true;
     }

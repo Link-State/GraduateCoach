@@ -12,4 +12,5 @@ public class StudentsCourseDTO {
     private Integer student;
     private Integer course;
     private Float grade;
+    private Integer state;
 }

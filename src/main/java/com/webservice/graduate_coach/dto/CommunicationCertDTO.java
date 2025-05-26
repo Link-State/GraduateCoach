@@ -9,8 +9,10 @@ import lombok.*;
 @ToString
 
 public class CommunicationCertDTO {
+    private Integer UID;
+    private String name;
+    private String descript;
+    private Float score;
     private Integer department;
     private Integer year;
-    private String name;
-    private Integer score;
 }

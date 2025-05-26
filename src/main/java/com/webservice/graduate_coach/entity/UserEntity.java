@@ -18,7 +18,7 @@ public class UserEntity {
     private Integer UID;
 
     @Column(name="id")
-    private String userId;
+    private String userid;
     private String password;
     private String email;
     private Integer university;

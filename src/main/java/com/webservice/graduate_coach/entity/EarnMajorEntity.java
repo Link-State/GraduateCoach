@@ -16,5 +16,6 @@ import lombok.*;
 public class EarnMajorEntity {
     @EmbeddedId
     private EarnMajorId id;
-    private Float totalCredit;
+    private Float reqMajorCredit;
+    private Float optMajorCredit;
 }

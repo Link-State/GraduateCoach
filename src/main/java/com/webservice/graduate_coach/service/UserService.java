@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
 
     public UserEntity addUser(UserDTO user) {
         var entity = UserEntity.builder()
-                .userId(user.getUserId())
+                .userid(user.getUserId())
                 .password(user.getPassword())
                 .email(user.getEmail())
                 .university(user.getUniversity())
@@ -43,13 +43,13 @@ public class UserService implements UserDetailsService {
 
     public boolean register(UserDTO dto) {
         // 1) 아이디 중복 체크
-        if (userRepository.existsByUserId(dto.getUserId())) {
+        if (userRepository.existsByUserid(dto.getUserId())) {
             return false;
         }
 
         // 2) 비밀번호 암호화 후 UserEntity 저장
         UserEntity user = UserEntity.builder()
-                .userId(dto.getUserId())
+                .userid(dto.getUserId())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .email(dto.getEmail())
                 .university(dto.getUniversity())
@@ -61,8 +61,8 @@ public class UserService implements UserDetailsService {
             StudentEntity student = StudentEntity.builder()
                     .user(user.getUID())
                     .studentNumber(dto.getUserId())
-                    .communicationCert(false)  // 기본값 false 또는 0
-                    .foreignCert(false)        // 기본값 false 또는 0
+                    .communicationCert(null)  // 기본값 false 또는 0
+                    .foreignCert(null)        // 기본값 false 또는 0
                     .year(LocalDate.now().getYear())  // 예: 현재 연도
                     .build();
             studentRepository.save(student);
@@ -75,20 +75,9 @@ public class UserService implements UserDetailsService {
 
         return true;
     }
-    
-    public UserEntity getUser(Integer uid) {
-        Optional<UserEntity> user = userRepository.findById(uid);
-        return user.orElse(null);
-    }
 
-    public String loginUser(String userId, String password, HttpSession session, Model model) {
-        UserEntity user = userRepository.findByUserIdAndPassword(userId, password);
-
-        // 로그인 실패
-        if (user == null) {
-            model.addAttribute("msg", "아이디 또는 비밀번호가 다릅니다.");
-            return "login";
-        }
+    public String login(String userId, HttpSession session) {
+        UserEntity user = userRepository.findByUserid(userId);
 
         // 유저 종류 판별 (학생 or 학사팀)
         UserType userType = checkUserType(user.getUID());
@@ -99,24 +88,22 @@ public class UserService implements UserDetailsService {
 
         // 로그인 시도한 유저가 학생 유저일 경우,
         if (userType == UserType.STUDENT) {
-            Boolean result = studentService.getDashBoard(user.getUID(), model);
-            return "student_dashboard";
+            return "/student_dashboard";
         }
 
         // 로그인 시도한 유저가 학사팀 유저일 경우,
         if (userType == UserType.ACADEMY) {
-            Boolean result = academyService.getDashBoard(user.getUID(), model);
-            return "academy_dashboard";
+            return "/academy_dashboard";
         }
 
         // 나머지는 로그인 페이지로 리다이렉트
-        return "login";
+        return "/login";
     }
 
     // 유저 타입 판별
     public UserType checkUserType(Integer user) {
-        StudentEntity student = studentService.getStudentByUser(user);
-        AcademyEntity academy = academyService.getAcademyByUser(user);
+        StudentEntity student = studentRepository.findByUser(user);
+        AcademyEntity academy = academyRepository.findByUser(user);
         if (student != null && academy == null) {
             return UserType.STUDENT;
         }
@@ -128,13 +115,13 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUserId(userId);
+        UserEntity user = userRepository.findByUserid(userId);
         if (user == null) {
             throw new UsernameNotFoundException("해당 유저를 찾을 수 없습니다: " + userId);
         }
 
         return User.builder()
-                .username(user.getUserId())
+                .username(user.getUserid())
                 .password(user.getPassword()) // 이미 암호화된 비밀번호
                 .roles("USER") // 필요시 "STUDENT", "ACADEMY"로 구분 가능
                 .build();
