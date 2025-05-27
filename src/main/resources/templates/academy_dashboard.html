@@ -104,7 +104,7 @@
                 <div class="table_box">
                     <details open>
                         <summary class="table_title">
-                            <p>대학교양</p>
+                            <p>전공탐색</p>
                             <button class="btn-opn-mod" id="btn-opn-mod3">편집</button>
                         </summary>
                         <table class="tbl">
@@ -131,7 +131,7 @@
                 <div class="table_box">
                     <details open>
                         <summary class="table_title">
-                            <p>대학교양</p>
+                            <p>전공필수</p>
                             <button class="btn-opn-mod" id="btn-opn-mod4">편집</button>
                         </summary>
                         <table class="tbl">
@@ -321,7 +321,7 @@
                             <td th:text="${pilgyo.name}"></td>
                             <td th:text="${pilgyo.code}"></td>
                             <td th:text="${pilgyo.credit}"></td>
-                            <td><button id="delete_pilgyo">del</button></td>
+                            <td><button class="delete_pilgyo">del</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -443,7 +443,7 @@
                 <table class="tbl">
                     <thead>
                         <tr>
-                            <th>작격명</th>
+                            <th>자격명</th>
                             <th>인증기준</th>
                             <th>점수</th>
                             <th></th>
@@ -453,7 +453,7 @@
                         <tr th:each="comm : ${comm_cert_list}" th:attr="data-uid=${comm.UID}">
                             <td th:text="${comm.name}"></td>
                             <td th:text="${comm.descript}"></td>
-                            <td><button id="delete_comm">del</button>
+                            <td><button class="delete_comm">del</button></td>
                         </tr>
                     </tbody>
                 </table>

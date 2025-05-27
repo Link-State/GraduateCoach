@@ -45,8 +45,19 @@ document.addEventListener("click", function (e) {
         closeModal();
     }
 
+    // mod8
+        if (target.matches("#btn-opn-mod8")) {
+            document.querySelector("#modal8").style.display = "flex";
+            document.body.classList.add('modal-open');
+        }
+        if (target.matches("#btn-clo-mod8")) {
+            document.querySelector("#modal8").style.display = "none";
+            document.body.classList.remove('modal-open');
+            closeModal();
+        }
+
     // delete pilgyo
-    if (e.target.id === "delete_pilgyo") {
+    if (target.classList.contains("delete_pilgyo")) {
         const row = e.target.closest("tr");
         const uid = row.dataset.uid;
 
@@ -82,7 +93,7 @@ document.addEventListener("click", function (e) {
     }
 
     // delete comm
-    if (e.target.id === "delete_comm") {
+    if (target.classList.contains("delete_comm")) {
         const row = e.target.closest("tr");
         const uid = row.dataset.uid;
 
