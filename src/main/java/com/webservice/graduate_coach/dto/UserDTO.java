@@ -16,9 +16,7 @@ public class UserDTO {
     private String email;
     private Integer university;
     @Getter
-    private UserType type;
-    @Getter
-    private String major;
+    private Integer major;
     @Getter
     private String Name;
 

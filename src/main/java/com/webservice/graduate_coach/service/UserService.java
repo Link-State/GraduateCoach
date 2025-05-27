@@ -3,10 +3,13 @@ package com.webservice.graduate_coach.service;
 import com.webservice.graduate_coach.dto.UserDTO;
 import com.webservice.graduate_coach.entity.AcademyEntity;
 import com.webservice.graduate_coach.entity.StudentEntity;
+import com.webservice.graduate_coach.entity.StudentsMajorEntity;
 import com.webservice.graduate_coach.entity.UserEntity;
+import com.webservice.graduate_coach.entity.id.StudentsMajorId;
 import com.webservice.graduate_coach.param.UserType;
 import com.webservice.graduate_coach.repository.AcademyRepository;
 import com.webservice.graduate_coach.repository.StudentRepository;
+import com.webservice.graduate_coach.repository.StudentsMajorRepository;
 import com.webservice.graduate_coach.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final AcademyRepository academyRepository;
+    private final StudentsMajorRepository studentsMajorRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AcademyService academyService;
 
@@ -56,22 +60,22 @@ public class UserService implements UserDetailsService {
                 .build();
         user = userRepository.save(user);
 
-        // 3) 학생/학사팀 프로필 생성
-        if (dto.getType() == UserType.STUDENT) {
-            StudentEntity student = StudentEntity.builder()
-                    .user(user.getUID())
-                    .studentNumber(dto.getUserId())
-                    .communicationCert(null)  // 기본값 false 또는 0
-                    .foreignCert(null)        // 기본값 false 또는 0
-                    .year(LocalDate.now().getYear())  // 예: 현재 연도
-                    .build();
-            studentRepository.save(student);
-        } else if (dto.getType() == UserType.ACADEMY) {
-            AcademyEntity academy = AcademyEntity.builder()
-                    .user(user.getUID())
-                    .build();
-            academyRepository.save(academy);
-        }
+        // 3) 학생 프로필 생성
+        StudentEntity student = StudentEntity.builder()
+                .user(user.getUID())
+                .studentNumber(dto.getUserId())
+                .communicationCert(null)  // 기본값 null
+                .foreignCert(null)        // 기본값 null
+                .year(2022)  // 예: 2022년도
+                .build();
+        student = studentRepository.save(student);
+
+        // 4) 전공 생성
+        StudentsMajorEntity std_major = StudentsMajorEntity.builder()
+                .id(new StudentsMajorId(student.getUID(), 1))
+                .major(dto.getMajor())
+                .build();
+        std_major = studentsMajorRepository.save(std_major);
 
         return true;
     }

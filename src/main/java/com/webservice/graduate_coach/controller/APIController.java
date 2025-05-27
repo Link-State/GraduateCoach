@@ -1,14 +1,14 @@
 package com.webservice.graduate_coach.controller;
+import com.webservice.graduate_coach.dto.StudentDTO;
+import com.webservice.graduate_coach.entity.MajorEntity;
+import com.webservice.graduate_coach.entity.UniversityEntity;
 import com.webservice.graduate_coach.entity.id.CourseTypeId;
 import com.webservice.graduate_coach.entity.id.EssentialGeneralEducationId;
 import com.webservice.graduate_coach.entity.id.FoundationEducationId;
 import com.webservice.graduate_coach.entity.id.FoundationMajorId;
 import com.webservice.graduate_coach.param.UserType;
 import com.webservice.graduate_coach.dto.UserDTO;
-import com.webservice.graduate_coach.repository.CourseTypeRepository;
-import com.webservice.graduate_coach.repository.EssentialGeneralEducationRepository;
-import com.webservice.graduate_coach.repository.FoundationEducationRepository;
-import com.webservice.graduate_coach.repository.FoundationMajorRepository;
+import com.webservice.graduate_coach.repository.*;
 import com.webservice.graduate_coach.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +40,8 @@ public class APIController {
     private final CourseTypeService courseTypeService;
     private final ForeignCertService foreignCertService;
     private final CommunicationCertService communicationCertService;
+    private final UniversityRepository universityRepository;
+    private final MajorService majorService;
 
 
     @PostMapping("/signup")
@@ -47,7 +49,7 @@ public class APIController {
             @RequestParam String name,
             @RequestParam String email,
             @RequestParam("university") Integer university,
-            @RequestParam String major,
+            @RequestParam Integer major,
             @RequestParam("id") String userId,
             @RequestParam("pwd") String pwd,
             @RequestParam("pwd_check") String pwdCheck,
@@ -63,18 +65,29 @@ public class APIController {
 
         UserType userType = UserType.valueOf(userTypeStr.toUpperCase()); // 기본값 STUDENT
         // 2) 회원가입 시도
-        UserDTO dto = new UserDTO();
-        dto.setName(name);
-        dto.setUserId(userId);
-        dto.setPassword(pwd);
-        dto.setEmail(email);
-        dto.setUniversity(university);
-        dto.setMajor(major);
-        dto.setType(userType); // STUDENT or ACADEMY
+        UserDTO user_dto = new UserDTO();
+        user_dto.setUserId(userId);
+        user_dto.setPassword(pwd);
+        user_dto.setEmail(email);
+        user_dto.setUniversity(university);
+        user_dto.setMajor(major);
+        user_dto.setName(name);
 
-        boolean ok = userService.register(dto);
+        boolean ok = userService.register(user_dto);
         if (!ok) {
+            List<UniversityEntity> university_list = universityRepository.findAll();
+            List<MajorEntity> major_list = majorService.getMajorsByUniv(1);
+
+            model.addAttribute("university_list", university_list);
+            model.addAttribute("major_list", major_list);
+            model.addAttribute("name", name);
+            model.addAttribute("email", email);
+            model.addAttribute("univ", university);
+            model.addAttribute("major", major);
+            model.addAttribute("id", userId);
+            model.addAttribute("pwd", pwd);
             model.addAttribute("msg", "이미 존재하는 아이디입니다.");
+
             return "signup";
         }
 
