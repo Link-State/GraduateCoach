@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"></html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="academy_dashboard.css">
+        <link rel="stylesheet" href="/src/main/resources/static/css/academy_dashboard.css">
     </head>
     <body>
         <!-- nav -->
         <div class="big_box">
             <nav>
-                <img id="top_logo" th:src="@{/images/logo.png}">
+                <img id="top_logo" th:src="@{/images/logo.png}" />
                 <ul class="user-info">
                     <li>uid</li>
                     <li>1234</li>
@@ -40,7 +40,8 @@
             </form>
         </div>
         <!-- 결과 -->
-        <div th:fragment="search_result" id="show_result">
+        <div id="show_result" th:insert="fragments :: search_result"></div>
+        <div th:fragment="search_result">
             <!-- 졸업요건 - 수업 -->
             <div class="big_box">
                 <h3 class="title">졸업요건 - 수업</h3>
@@ -62,10 +63,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="pilgyo : ${pilgyo_list}">
-                                    <td th:text="{pilgyo.name}"></td>
-                                    <td th:text="{pilgyo.code}"></td>
-                                    <td th:text="{pilgyo.credit}"></td>
-                                    <td th:text="{pilgyo.level}"></td>
+                                    <td th:text="${pilgyo.name}"></td>
+                                    <td th:text="${pilgyo.code}"></td>
+                                    <td th:text="${pilgyo.credit}"></td>
+                                    <td th:text="${pilgyo.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -89,10 +90,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="daegyo : ${daegyo_list}">
-                                    <td th:text="{daegyo.name}"></td>
-                                    <td th:text="{daegyo.code}"></td>
-                                    <td th:text="{daegyo.credit}"></td>
-                                    <td th:text="{daegyo.level}"></td>
+                                    <td th:text="${daegyo.name}"></td>
+                                    <td th:text="${daegyo.code}"></td>
+                                    <td th:text="${daegyo.credit}"></td>
+                                    <td th:text="${daegyo.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -116,10 +117,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="jeontam : ${jeontam_list}">
-                                    <td th:text="{jeontam.name}"></td>
-                                    <td th:text="{jeontam.code}"></td>
-                                    <td th:text="{jeontam.credit}"></td>
-                                    <td th:text="{jeontam.level}"></td>
+                                    <td th:text="${jeontam.name}"></td>
+                                    <td th:text="${jeontam.code}"></td>
+                                    <td th:text="${jeontam.credit}"></td>
+                                    <td th:text="${jeontam.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -143,10 +144,10 @@
                             </thead>
                             <tbody>
                                 <tr th:each="jeonpil : ${jeonpil_list}">
-                                    <td th:text="{jeonpil.name}"></td>
-                                    <td th:text="{jeonpil.code}"></td>
-                                    <td th:text="{jeonpil.credit}"></td>
-                                    <td th:text="{jeonpil.level}"></td>
+                                    <td th:text="${jeonpil.name}"></td>
+                                    <td th:text="${jeonpil.code}"></td>
+                                    <td th:text="${jeonpil.credit}"></td>
+                                    <td th:text="${jeonpil.level}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -299,29 +300,29 @@
                         <div class="nnl">
                             <div class="namenum">
                                 <p class="numtitle">필수교양</p>
-                                <input class="numbox" id="pilgyo_edit" th:value="${pilgyo_req_credit}"></input>
+                                <input class="numbox" id="pilgyo_edit" th:value="${pilgyo_req_credit}">
                             </div>
                             <div class="namenum">
                                 <p class="numtitle">대학교양</p>
-                                <input class="numbox" id="daegyo_edit" th:value="${daegyo_req_credit}"></input>
+                                <input class="numbox" id="daegyo_edit" th:value="${daegyo_req_credit}">
                             </div>
                             <div class="namenum">
                                 <p class="numtitle">3000단위 이상</p>
-                                <input class="numbox" id="advanced_edit" th:value="${advanced_req_credit}"></input>
+                                <input class="numbox" id="advanced_edit" th:value="${advanced_req_credit}">
                             </div>
                         </div>
                         <div class="nnl">
                             <div class="namenum">
                                 <p class="numtitle">전공필수</p>
-                                <input class="numbox" id="jeonpil_edit" th:value="${jeonpil_req_credit}"></input>
+                                <input class="numbox" id="jeonpil_edit" th:value="${jeonpil_req_credit}">
                             </div>
                             <div class="namenum">
                                 <p class="numtitle">전공탐색</p>
-                                <input class="numbox" id="jeontam_edit" th:value="${jeontam_req_credit}"></input>
+                                <input class="numbox" id="jeontam_edit" th:value="${jeontam_req_credit}">
                             </div>
                             <div class="namenum">
                                 <p class="numtitle">전공선택</p>
-                                <input class="numbox" id="jeonseon_edit" th:value="${jeonseon_req_credit}"></input>
+                                <input class="numbox" id="jeonseon_edit" th:value="${jeonseon_req_credit}">
                             </div>
                         </div>
                     </div>
@@ -382,6 +383,6 @@
                 </div>
             </div>
         </div>
-        <script src="academy_dashboard.js"></script>
+        <script src="/src/main/resources/static/js/academy_dashboard.js"></script>
     </body>
 </html>
