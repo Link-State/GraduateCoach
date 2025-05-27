@@ -26,7 +26,7 @@
           <a href="#" class="nav-item">대시보드</a>
           <a href="#" class="nav-item">커뮤니티</a>
           <a href="#" class="nav-item">마이페이지</a>
-          <a href="#" class="nav-item logout">로그아웃</a>
+          <a th:href="@{/logout}" class="nav-item logout">로그아웃</a>
         </nav>
       </div>
     </header>
@@ -43,9 +43,9 @@
                 <i class="fa-solid fa-user fa-2x text-secondary"></i>
               </div>
             </div>
-            <h5 class="fw-bold">사용자ID</h5>
-            <div class="text-muted">전공</div>
-            <div class="text-muted mb-3">학번</div>
+            <h5 class="fw-bold" th:text="${user}">사용자ID</h5>
+            <div class="text-muted" th:text="${major}">전공</div>
+            <div class="text-muted mb-3" th:text="${id}">학번</div>
             <div class="settings-icon">
               <i class="fa-solid fa-gear fa-lg text-secondary"></i>
             </div>
