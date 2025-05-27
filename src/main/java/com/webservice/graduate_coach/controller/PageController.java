@@ -2,7 +2,11 @@ package com.webservice.graduate_coach.controller;
 
 import com.webservice.graduate_coach.dto.CommunicationCertDTO;
 import com.webservice.graduate_coach.dto.ForeignCertDTO;
+import com.webservice.graduate_coach.entity.MajorEntity;
+import com.webservice.graduate_coach.entity.UniversityEntity;
 import com.webservice.graduate_coach.param.UserType;
+import com.webservice.graduate_coach.repository.MajorRepository;
+import com.webservice.graduate_coach.repository.UniversityRepository;
 import com.webservice.graduate_coach.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,8 @@ public class PageController {
     private final UserService userService;
     private final StudentService studentService;
     private final AcademyService academyService;
+    private final UniversityRepository universityRepository;
+    private final MajorService majorService;
     private final ForeignCertService foreignCertService;
     private final CommunicationCertService communicationCertService;
 
@@ -47,6 +53,11 @@ public class PageController {
             HttpSession session,
             Model model
     ) {
+        List<UniversityEntity> university_list = universityRepository.findAll();
+        List<MajorEntity> major_list = majorService.getMajorsByUniv(1);
+
+        model.addAttribute("university_list", university_list);
+        model.addAttribute("major_list", major_list);
         return "signup";
     }
 
