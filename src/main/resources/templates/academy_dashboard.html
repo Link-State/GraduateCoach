@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/src/main/resources/static/css/academy_dashboard.css">
+        <link rel="stylesheet" href="@{css/academy_dashboard.css}">
     </head>
     <body>
         <!-- nav -->
@@ -40,7 +40,7 @@
             </form>
         </div>
         <!-- 결과 -->
-        <div id="show_result" th:insert="fragments :: search_result"></div>
+        <div id="show_result" th:insert="this :: search_result"></div>
         <div th:fragment="search_result">
             <!-- 졸업요건 - 수업 -->
             <div class="big_box">
@@ -218,11 +218,13 @@
                                 <tr>
                                     <th>자격명</th>
                                     <th>인증기준</th>
+                                    <th>점수</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="comm : ${comm_cert_list}">
                                     <td th:text="${comm.name}"></td>
+                                    <td th:text="${comm.descript}"></td>
                                     <td th:text="${comm.score}"></td>
                                 </tr>
                             </tbody>
@@ -240,11 +242,13 @@
                                 <tr>
                                     <th>자격명</th>
                                     <th>인증기준</th>
+                                    <th>점수</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="foreign : ${foreign_cert_list}">
                                     <td th:text="${foreign.name}"></td>
+                                    <td th:text="${foreign.descript}"></td>
                                     <td th:text="${foreign.score}"></td>
                                 </tr>
                             </tbody>
@@ -252,137 +256,162 @@
                     </details>
                 </div>
             </div>
-        </div>
-        <!-- 모달 팝업 -->
-         <!-- 1교양 기초 -->
-        <div class="modal" id="modal1">
-            <div class="modal-body" id="edit_pilgyo">
-                <button class="btn-clo-mod" id="btn-clo-mod1">X</button>
-                <h2>과목 편집</h2>
-                <form class="search_style" id="pilgyo_search">
-                    <div>
-                        <p class="input_name">강의명</p>
-                        <input type="text" id="pilgyo_name">
-                    </div>
-                    <div>
-                        <p class="input_name">학정번호</p>
-                        <input type="text" id="pilgyo_code">
-                    </div>
-                </form>
-                <div class="table_box_mod">
-                    <div class="table_title">
-                        <p>교양기초</p>
-                    </div>
-                    <table class="tbl">
-                        <thead>
-                            <tr>
-                                <th>edit</th>
-                                <th>학정번호</th>
-                                <th>학점</th>
-                                <th>단위</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- 팝업 -->
+            <!-- 1교양 기초 -->
+            <div class="modal" id="modal1">
+                <div class="modal-body" id="edit_pilgyo">
+                    <button class="btn-clo-mod" id="btn-clo-mod1">X</button>
+                    <h2>과목 편집</h2>
+                    <form class="search_style" id="pilgyo_search">
+                        <div>
+                            <p class="input_name">강의명</p>
+                            <input type="text" id="pilgyo_name">
+                        </div>
+                        <div>
+                            <p class="input_name">학정번호</p>
+                            <input type="text" id="pilgyo_code">
+                        </div>
+                    </form>
+                    <div id="mod_edit_pilgyo" th:insert="this :: edit_pilgyo"></div>
                 </div>
             </div>
-        </div>
-        <!-- 5영역별 이수학점 -->
-        <div class="modal" id="modal5">
-            <div class="modal-body-a" id="modal-body5">
-                <button class="btn-clo-mod" id="btn-clo-mod5">X</button>
-                <h2>편집</h2>
-                <form id="edit_credit">
-                    <div class="num-box">
-                        <div class="nnl">
-                            <div class="namenum">
-                                <p class="numtitle">필수교양</p>
-                                <input class="numbox" id="pilgyo_edit" th:value="${pilgyo_req_credit}">
-                            </div>
-                            <div class="namenum">
-                                <p class="numtitle">대학교양</p>
-                                <input class="numbox" id="daegyo_edit" th:value="${daegyo_req_credit}">
-                            </div>
-                            <div class="namenum">
-                                <p class="numtitle">3000단위 이상</p>
-                                <input class="numbox" id="advanced_edit" th:value="${advanced_req_credit}">
-                            </div>
-                        </div>
-                        <div class="nnl">
-                            <div class="namenum">
-                                <p class="numtitle">전공필수</p>
-                                <input class="numbox" id="jeonpil_edit" th:value="${jeonpil_req_credit}">
-                            </div>
-                            <div class="namenum">
-                                <p class="numtitle">전공탐색</p>
-                                <input class="numbox" id="jeontam_edit" th:value="${jeontam_req_credit}">
-                            </div>
-                            <div class="namenum">
-                                <p class="numtitle">전공선택</p>
-                                <input class="numbox" id="jeonseon_edit" th:value="${jeonseon_req_credit}">
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <button type="submit">저장</button>
-                </form>
+            <!-- 5영역별 이수학점 -->
+            <div class="modal" id="modal5">
+                <div class="modal-body-a" id="modal-body5">
+                    <button class="btn-clo-mod" id="btn-clo-mod5">X</button>
+                    <h2>편집</h2>
+                    <div id="mod_edit_credit" th:insert="this :: edit_credit"></div>
+                </div>
             </div>
-        </div>
-        <!-- 6대학교양 이수영역 -->
-        <div class="modal" id="modal6">
-            <div class="modal-body-b" id="modal-body6">
-                <button class="btn-clo-mod" id="btn-clo-mod6">X</button>
-                <h2>대학교양 이수영역 편집</h2>
-                <div class="area-box-mod">
-                    <br>
-                    <div class="area-table">
-                        <table>
-                            <tbody>
+            <!-- 6대학교양 이수영역 -->
+            <div class="modal" id="modal6">
+                <div class="modal-body-b" id="modal-body6">
+                    <button class="btn-clo-mod" id="btn-clo-mod6">X</button>
+                    <h2>대학교양 이수영역 편집</h2>
+                    <div class="area-box-mod">
+                        <br>
+                        <div class="area-table">
+                            <table>
+                                <tbody>
                                 <tr th:each="slist : ${seongyo_number_list}">
                                     <td></td>
                                     <td th:text="${slist.number + '. ' + slist.name}"></td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- 7자격증 -->
-        <div class="modal" id="modal7">
-            <div class="modal-body" id="modal-body7">
-                <button class="btn-clo-mod" id="btn-clo-mod7">X</button>
-                <h2>자격증 편집</h2>
-                <form class="search_style" id="insert_comm">
-                    <div>
-                        <p class="input_name">자격명</p>
-                        <input type="text" id="comm_name">
-                    </div>
-                    <div>
-                        <p class="input_name">인증기준</p>
-                        <input type="text" id="comm_score">
-                    </div>
-                </form>
-                <div class="table_box_mod">
-                    <table class="tbl">
-                        <thead>
-                            <tr>
-                                <th>작격명</th>
-                                <th>인증기준</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- 7자격증 -->
+            <div class="modal" id="modal7">
+                <div class="modal-body" id="modal-body7">
+                    <button class="btn-clo-mod" id="btn-clo-mod7">X</button>
+                    <h2>자격증 편집</h2>
+                    <div id="mod_edit_comm" th:insert="this :: edit_comm"></div>
                 </div>
             </div>
         </div>
-        <script src="/src/main/resources/static/js/academy_dashboard.js"></script>
+        <!-- 1mod -->
+        <div th:fragment="edit_pilgyo">
+            <div class="table_box_mod">
+                <div class="table_title">
+                    <p>교양기초</p>
+                </div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>교과명</th>
+                            <th>학정번호</th>
+                            <th>학점</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pilgyo : ${pilgyo_list}" th:attr="data-uid=${pilgyo.UID}">
+                            <td th:text="${pilgyo.name}"></td>
+                            <td th:text="${pilgyo.code}"></td>
+                            <td th:text="${pilgyo.credit}"></td>
+                            <td><button id="delete_pilgyo">del</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 5mod -->
+        <div th:fragment="edit_credit">
+            <form id="edit_credit">
+                <div class="num-box">
+                    <div class="nnl">
+                        <div class="namenum">
+                            <p class="numtitle">필수교양</p>
+                            <input class="numbox" id="pilgyo_cr_edit" th:value="${pilgyo_req_credit}">
+                        </div>
+                        <div class="namenum">
+                            <p class="numtitle">대학교양</p>
+                            <input class="numbox" id="daegyo_cr_edit" th:value="${daegyo_req_credit}">
+                        </div>
+                        <div class="namenum">
+                            <p class="numtitle">3000단위 이상</p>
+                            <input class="numbox" id="advanced_cr_edit" th:value="${advanced_req_credit}">
+                        </div>
+                    </div>
+                    <div class="nnl">
+                        <div class="namenum">
+                            <p class="numtitle">전공필수</p>
+                            <input class="numbox" id="jeonpil_cr_edit" th:value="${jeonpil_req_credit}">
+                        </div>
+                        <div class="namenum">
+                            <p class="numtitle">전공탐색</p>
+                            <input class="numbox" id="jeontam_cr_edit" th:value="${jeontam_req_credit}">
+                        </div>
+                        <div class="namenum">
+                            <p class="numtitle">전공선택</p>
+                            <input class="numbox" id="jeonseon_cr_edit" th:value="${jeonseon_req_credit}">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button type="submit">저장</button>
+            </form>
+        </div>
+        <!-- 7mod -->
+        <div th:fragment="edit_comm">
+            <form class="search_style" id="insert_comm">
+                <div>
+                    <p class="input_name">자격명</p>
+                    <input type="text" id="comm_name">
+                </div>
+                <div>
+                    <p class="input_name">인증기준</p>
+                    <input type="text" id="comm_descript">
+                </div>
+                <div>
+                    <p class="input_name">점수</p>
+                    <input type="text" id="comm_score">
+                </div>
+                <button type="submit" style="display: none;"></button>
+            </form>
+            <div class="table_box_mod">
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>작격명</th>
+                            <th>인증기준</th>
+                            <th>점수</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="comm : ${comm_cert_list}" th:attr="data-uid=${comm.UID}">
+                            <td th:text="${comm.name}"></td>
+                            <td th:text="${comm.descript}"></td>
+                            <td><button id="delete_comm">del</button>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="@{js/academy_dashboard.js}"></script>
     </body>
 </html>
