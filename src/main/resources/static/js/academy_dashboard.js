@@ -205,6 +205,44 @@ document.getElementById("edit_credit").addEventListener("submit", function(e) {
     });
 });
 
+// edit number
+document.getElementById("edit_num").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const checked = this.querySelectorAll("input[type='checkbox']:checked");
+
+    const formData = new URLSearchParams();
+
+    formData.append("year", document.getElementById("year").value);
+    formData.append("department", document.getElementById("department").value);
+    formData.append("major", document.getElementById("major").value);
+
+    checked.forEach(cb => {
+        formData.append("numbers", cb.value);
+    });
+
+    fetch("/edit-number", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData.toString()
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            return response.text();
+        }
+    })
+    .then(html => {
+        if (html) {
+            document.getElementById("mod_edit_number").innerHTML = html;
+        }
+    })
+    .catch(err => {
+        console.error("영역 수정 실패:", err);
+    });
+});
+
 // add comm
 document.getElementById("insert_comm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -238,25 +276,25 @@ document.getElementById("insert_comm").addEventListener("submit", function(e) {
     formData.append("cert_type", 2);
 
     fetch("/add-cert", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formData.toString()
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            } else {
-                return response.text();
-            }
-        })
-        .then(html => {
-            if (html) {
-                document.getElementById("mod_edit_comm").innerHTML = html;
-            }
-        })
-        .catch(err => {
-            console.error("수정 실패:", err);
-        });
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData.toString()
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            return response.text();
+        }
+    })
+    .then(html => {
+        if (html) {
+            document.getElementById("mod_edit_comm").innerHTML = html;
+        }
+    })
+    .catch(err => {
+        console.error("수정 실패:", err);
+    });
 });
 
 // exit modal and refresh

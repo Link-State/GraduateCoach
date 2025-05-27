@@ -3,6 +3,7 @@
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="@{css/academy_dashboard.css}">
+        <title>학사관리 시스템</title>
     </head>
     <body>
         <!-- nav -->
@@ -288,19 +289,7 @@
                 <div class="modal-body-b" id="modal-body6">
                     <button class="btn-clo-mod" id="btn-clo-mod6">X</button>
                     <h2>대학교양 이수영역 편집</h2>
-                    <div class="area-box-mod">
-                        <br>
-                        <div class="area-table">
-                            <table>
-                                <tbody>
-                                <tr th:each="slist : ${seongyo_number_list}">
-                                    <td></td>
-                                    <td th:text="${slist.number + '. ' + slist.name}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div id="mod_edit_number" th:insert="this :: edit_number"></div>
                 </div>
             </div>
             <!-- 7자격증 -->
@@ -373,6 +362,64 @@
                 </div>
                 <br>
                 <button type="submit">저장</button>
+            </form>
+        </div>
+        <!-- 6mod -->
+        <div th:fragment="edit_number">
+            <form id="edit_num">
+                <div class="area-box-mod">
+                    <div class="area-table">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td><input type="checkbox" name="num1" value="1" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 1], true)}"></td>
+                                <td>1. 문학과예술</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num2" value="2" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 2], true)}"></td>
+                                <td>2. 인간과역사</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num3" value="3" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 3], true)}"></td>
+                                <td>3. 언어와표현</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num4" value="4" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 4], true)}"></td>
+                                <td>4. 가치와윤리</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num5" value="5" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 5], true)}"></td>
+                                <td>5. 국가와사회</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num6" value="6" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 6], true)}"></td>
+                                <td>6. 지역과세계</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num7" value="7" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 7], true)}"></td>
+                                <td>7. 논리와수리</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num8" value="8" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 8], true)}"></td>
+                                <td>8. 자연과우주</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num9" value="9" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 9], true)}"></td>
+                                <td>9. 생명과환경</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num10" value="10" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 10], true)}"></td>
+                                <td>10. 정보와기술</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" name="num11" value="11" th:attr="checked=${#lists.contains(seongyo_number_list.?[number == 11], true)}"></td>
+                                <td>11. 체육과건강</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit">저장</button>
+                </div>
             </form>
         </div>
         <!-- 7mod -->
