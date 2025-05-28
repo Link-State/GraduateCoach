@@ -32,29 +32,21 @@
               </div>
             </div>
 
-           <div class="mb-3">
-             <label class="form-label">소속학교</label>
-             <select class="form-control" name="university" required>
-               <option value="">학교 선택</option>
-               <option value="1">서울대학교</option>
-               <option value="2">고려대학교</option>
-               <option value="3">연세대학교</option>
-             </select>
-           </div>
-            <!-- <div class="mb-3">
+            <div class="mb-3">
               <label class="form-label">소속학교</label>
               <select class="form-control" name="university" required>
                 <option value="">학교 선택</option>
-                <option th:each="univ : ${university_list}" th:value="${univ.uid}" th:text="${univ.name}"></option>
+                <option th:each="univ : ${university_list}" th:value="${univ.UID}" th:text="${univ.name}"></option>
               </select>
-            </div> -->
+            </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">학과</label>
                  <select class="form-control" name="major" required>
                     <option value="">학과 선택</option>
-                    <option value="1">소프트웨어학부</option>
+                    <option value="1">소프트웨어 기본전공</option>
+                    <option value="2">소프트웨어 심화전공</option>
                   </select>
               </div>
               <!-- <div class="col-md-6 mb-3">

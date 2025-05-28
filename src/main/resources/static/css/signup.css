@@ -11,7 +11,13 @@ html, body {
   width: 100vw;
 }
 
-.signup-layout input {
+.signup-layout input, select {
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 12px 20px;
+}
+
+.signup-layout select {
   border-radius: 15px;
   font-size: 16px;
   padding: 12px 20px;

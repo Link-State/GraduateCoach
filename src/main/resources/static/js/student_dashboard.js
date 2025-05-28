@@ -10,6 +10,7 @@ const baseOptions = {
   hover: { mode: null }
 };
 
+
 // 학점 이수 현황
 function creditCenterTextPlugin(label, percent) {
   return {
@@ -88,12 +89,42 @@ function renderDonutChart(id, data, plugin) {
   });
 }
 
+// window.addEventListener('DOMContentLoaded', () => {
+//   // 학점 이수 현황
+//   const totalCredits = 135;
+//   const earnedCredits = 95;
+//   const remainingCredits = totalCredits - earnedCredits;
+//   const percent = Math.round((earnedCredits / totalCredits) * 100);
+
+//   renderDonutChart(
+//     'creditDonutChart',
+//     [earnedCredits, remainingCredits],
+//     creditCenterTextPlugin('이수 학점 비율', percent)
+//   );
+
+//   // 전공/3000단위 이수 차트들
+//   renderDonutChart('majorRequiredChart', [7, 2], centerTextPlugin('이수율', 78));
+//   renderDonutChart('majorElectiveChart', [24, 3], centerTextPlugin('이수율', 88));
+//   renderDonutChart('level3000Chart', [31, 14], centerTextPlugin('이수율', 68));
+
+//   // 교양 이수 현황 차트들
+//   renderDonutChart('basicElectiveChart', [22, 0], centerTextPlugin('이수율', 100));
+//   renderDonutChart('generalElectiveChart', [15, 5], centerTextPlugin('이수율', 75)); 
+//   renderDonutChart('explorationElectiveChart', [12, 9], centerTextPlugin('이수율', 57));
+
+// });
+
+function safePercent(earned, required) {
+  return required > 0 ? Math.round((earned / required) * 100) : 0;
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  // 학점 이수 현황
-  const totalCredits = 135;
-  const earnedCredits = 95;
+  const d = dashboardData;
+
+  const earnedCredits = d.earnedCredits;
+  const totalCredits = d.totalCredits;
   const remainingCredits = totalCredits - earnedCredits;
-  const percent = Math.round((earnedCredits / totalCredits) * 100);
+  const percent = safePercent(earnedCredits, totalCredits);
 
   renderDonutChart(
     'creditDonutChart',
@@ -101,14 +132,40 @@ window.addEventListener('DOMContentLoaded', () => {
     creditCenterTextPlugin('이수 학점 비율', percent)
   );
 
-  // 전공/3000단위 이수 차트들
-  renderDonutChart('majorRequiredChart', [7, 2], centerTextPlugin('이수율', 78));
-  renderDonutChart('majorElectiveChart', [24, 3], centerTextPlugin('이수율', 88));
-  renderDonutChart('level3000Chart', [31, 14], centerTextPlugin('이수율', 68));
+  renderDonutChart(
+    'majorRequiredChart',
+    [d.majorRequired.earned, d.majorRequired.required - d.majorRequired.earned],
+    centerTextPlugin('이수율', safePercent(d.majorRequired.earned, d.majorRequired.required))
+  );
 
-  // 교양 이수 현황 차트들
-  renderDonutChart('basicElectiveChart', [22, 0], centerTextPlugin('이수율', 100));
-  renderDonutChart('generalElectiveChart', [15, 5], centerTextPlugin('이수율', 75)); 
-  renderDonutChart('explorationElectiveChart', [12, 9], centerTextPlugin('이수율', 57));
+  renderDonutChart(
+    'majorElectiveChart',
+    [d.majorElective.earned, d.majorElective.required - d.majorElective.earned],
+    centerTextPlugin('이수율', safePercent(d.majorElective.earned, d.majorElective.required))
+  );
 
+  renderDonutChart(
+    'level3000Chart',
+    [d.level3000.earned, d.level3000.required - d.level3000.earned],
+    centerTextPlugin('이수율', safePercent(d.level3000.earned, d.level3000.required))
+  );
+
+  renderDonutChart(
+    'basicElectiveChart',
+    [d.basicElective.earned, d.basicElective.required - d.basicElective.earned],
+    centerTextPlugin('이수율', safePercent(d.basicElective.earned, d.basicElective.required))
+  );
+
+  renderDonutChart(
+    'generalElectiveChart',
+    [d.generalElective.earned, d.generalElective.required - d.generalElective.earned],
+    centerTextPlugin('이수율', safePercent(d.generalElective.earned, d.generalElective.required))
+  );
+
+  renderDonutChart(
+    'explorationElectiveChart',
+    [d.explorationElective.earned, d.explorationElective.required - d.explorationElective.earned],
+    centerTextPlugin('이수율', safePercent(d.explorationElective.earned, d.explorationElective.required))
+  );
 });
+
