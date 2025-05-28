@@ -77,6 +77,10 @@ public class UserService implements UserDetailsService {
                 .build();
         std_major = studentsMajorRepository.save(std_major);
 
+
+        //
+        studentService.addTemporaryData(user.getUID());
+
         return true;
     }
 
