@@ -1,6 +1,7 @@
 package com.webservice.graduate_coach.service;
 
 import com.webservice.graduate_coach.entity.*;
+import com.webservice.graduate_coach.entity.id.StudentsCourseId;
 import com.webservice.graduate_coach.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final ForeignCertRepository foreignCertRepository;
     private final CommunicationCertRepository communicationCertRepository;
+    private final StudentsCourseRepository studentsCourseRepository;
 
     private final UniversityService universityService;
     private final DepartmentService departmentService;
@@ -30,6 +32,112 @@ public class StudentService {
     private final FoundationEducationService foundationEducationService;
     private final EssentialGeneralEducationService essentialGeneralEducationService;
     private final OptionalGeneralEducationService optionalGeneralEducationService;
+
+    // 회원가입한 학생에 대한 강의정보 임시 생성용 (MVP)
+    public Boolean addTemporaryData(Integer user_uid) {
+        // 유저 정보 로드
+        Optional<UserEntity> result_user = userRepository.findById(user_uid);
+        if (result_user.isEmpty()) {
+            return false;
+        }
+        UserEntity user = result_user.get();
+        int rand = 1;
+
+        // 학생 정보 로드
+        StudentEntity std = studentRepository.findByUser(user.getUID());
+
+        // 전공 정보 로드
+        MajorEntity mj = studentsMajorService.getFirstMajor(std.getUID());
+
+        // 학부 정보 로드
+        DepartmentEntity dept = departmentService.getDepartment(mj.getDepartment());
+
+        // 외국어인증 여부 (50% 확률로 인증처리)
+        rand = (int) ((Math.random()*100)+1);
+        if (rand <= 50) {
+            std.setForeignCert(1);
+            std = studentRepository.save(std);
+        }
+
+        // 정보인증 여부 (50% 확률로 인증처리)
+        rand = (int) ((Math.random()*100)+1);
+        if (rand <= 50) {
+            std.setCommunicationCert(1);
+            std = studentRepository.save(std);
+        }
+
+        // 이수 필요한 필수교양 과목목록 (각 과목별 75% 확률로 이수처리)
+        List<CourseEntity> pilgyo = foundationEducationService.getPilgyos(dept.getUID(), std.getYear());
+        for (CourseEntity e : pilgyo) {
+            rand = (int) ((Math.random()*100)+1);
+            if (rand <= 75) {
+                StudentsCourseEntity sce = StudentsCourseEntity.builder()
+                        .id(new StudentsCourseId(std.getUID(), e.getUID()))
+                        .grade(0.0f)
+                        .state(0)
+                        .build();
+                sce = studentsCourseRepository.save(sce);
+            }
+        }
+
+        // 이수 필요한 대학교양(필수) 과목목록 (75% 확률로 이수처리)
+        List<CourseEntity> daegyo = essentialGeneralEducationService.getDaegyos(dept.getUID(), std.getYear());
+        for (CourseEntity e : daegyo) {
+            rand = (int) ((Math.random()*100)+1);
+            if (rand <= 75) {
+                StudentsCourseEntity sce = StudentsCourseEntity.builder()
+                        .id(new StudentsCourseId(std.getUID(), e.getUID()))
+                        .grade(0.0f)
+                        .state(0)
+                        .build();
+                sce = studentsCourseRepository.save(sce);
+            }
+        }
+
+        // 이수 필요한 전공탐색 과목목록 (75% 확률로 이수처리)
+        List<CourseEntity> jeontam = foundationMajorService.getJeontams(dept.getUID(), std.getYear());
+        for (CourseEntity e : jeontam) {
+            rand = (int) ((Math.random()*100)+1);
+            if (rand <= 75) {
+                StudentsCourseEntity sce = StudentsCourseEntity.builder()
+                        .id(new StudentsCourseId(std.getUID(), e.getUID()))
+                        .grade(0.0f)
+                        .state(0)
+                        .build();
+                sce = studentsCourseRepository.save(sce);
+            }
+        }
+
+        // 이수 필요한 전공필수 과목목록 (75% 확률로 이수처리)
+        List<CourseEntity> jeonpil = courseTypeService.getCoursesDetail(mj.getUID(), std.getYear(), 3);
+        for (CourseEntity e : jeonpil) {
+            rand = (int) ((Math.random()*100)+1);
+            if (rand <= 75) {
+                StudentsCourseEntity sce = StudentsCourseEntity.builder()
+                        .id(new StudentsCourseId(std.getUID(), e.getUID()))
+                        .grade(0.0f)
+                        .state(0)
+                        .build();
+                sce = studentsCourseRepository.save(sce);
+            }
+        }
+
+        // 전공선택 과목목록 (20% 확률로 이수처리)
+        List<CourseEntity> jeonseon = courseTypeService.getCoursesDetail(mj.getUID(), std.getYear(), 2);
+        for (CourseEntity e : jeonseon) {
+            rand = (int) ((Math.random()*100)+1);
+            if (rand <= 20) {
+                StudentsCourseEntity sce = StudentsCourseEntity.builder()
+                        .id(new StudentsCourseId(std.getUID(), e.getUID()))
+                        .grade(0.0f)
+                        .state(0)
+                        .build();
+                sce = studentsCourseRepository.save(sce);
+            }
+        }
+
+        return true;
+    }
 
     public Boolean getDashBoard(Integer user_uid, Model model) {
         // 유저 정보 로드
@@ -76,7 +184,7 @@ public class StudentService {
         }
 
         // 졸업 요건 로드
-        GraduateEntity graduate = graduateService.getGraduate(student.getUID(), student.getYear());
+        GraduateEntity graduate = graduateService.getGraduate(dept.getUID(), student.getYear());
         if (graduate == null) {
             return false;
         }
