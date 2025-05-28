@@ -43,19 +43,11 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">학과</label>
-                 <select class="form-control" name="major" required>
-                    <option value="">학과 선택</option>
-                    <option value="1">소프트웨어 기본전공</option>
-                    <option value="2">소프트웨어 심화전공</option>
-                  </select>
-              </div>
-              <!-- <div class="col-md-6 mb-3">
-                <label class="form-label">학과</label>
                 <select class="form-control" name="major" required>
                   <option value="">학과 선택</option>
-                  <option th:each="major : ${major_list}" th:value="${major.uid}" th:text="${major.name}"></option>
+                  <option th:each="major : ${major_list}" th:value="${major.UID}" th:text="${major.name}"></option>
                 </select>
-              </div> -->
+              </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label">학번</label>
                 <input type="text" class="form-control" name="id" placeholder="학번 입력" required />
