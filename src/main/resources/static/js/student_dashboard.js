@@ -89,31 +89,6 @@ function renderDonutChart(id, data, plugin) {
   });
 }
 
-// window.addEventListener('DOMContentLoaded', () => {
-//   // 학점 이수 현황
-//   const totalCredits = 135;
-//   const earnedCredits = 95;
-//   const remainingCredits = totalCredits - earnedCredits;
-//   const percent = Math.round((earnedCredits / totalCredits) * 100);
-
-//   renderDonutChart(
-//     'creditDonutChart',
-//     [earnedCredits, remainingCredits],
-//     creditCenterTextPlugin('이수 학점 비율', percent)
-//   );
-
-//   // 전공/3000단위 이수 차트들
-//   renderDonutChart('majorRequiredChart', [7, 2], centerTextPlugin('이수율', 78));
-//   renderDonutChart('majorElectiveChart', [24, 3], centerTextPlugin('이수율', 88));
-//   renderDonutChart('level3000Chart', [31, 14], centerTextPlugin('이수율', 68));
-
-//   // 교양 이수 현황 차트들
-//   renderDonutChart('basicElectiveChart', [22, 0], centerTextPlugin('이수율', 100));
-//   renderDonutChart('generalElectiveChart', [15, 5], centerTextPlugin('이수율', 75)); 
-//   renderDonutChart('explorationElectiveChart', [12, 9], centerTextPlugin('이수율', 57));
-
-// });
-
 function safePercent(earned, required) {
   return required > 0 ? Math.round((earned / required) * 100) : 0;
 }
@@ -167,5 +142,64 @@ window.addEventListener('DOMContentLoaded', () => {
     [d.explorationElective.earned, d.explorationElective.required - d.explorationElective.earned],
     centerTextPlugin('이수율', safePercent(d.explorationElective.earned, d.explorationElective.required))
   );
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const foreignCertInput = document.getElementById("foreignCertFile");
+  const commCertInput = document.getElementById("commCertFile");
+  const uploadBtn = document.getElementById("uploadCertBtn");
+  const foreignStatus = document.getElementById("foreignCertStatus");
+  const foreignFileName = document.getElementById("foreignCertFileName");
+  const commFileName = document.getElementById("commCertFileName");
+  const commStatus = document.getElementById("commCertStatus");
+  const uploadStatus = document.getElementById("uploadStatus");
+
+  const foreignBlock = document.querySelector("label[for='foreignCertFile']").closest("div.border");;
+  const commBlock = document.querySelector("label[for='commCertFile']").closest("div.border");;
+
+  uploadBtn.addEventListener("click", () => {
+    const hasForeign = foreignCertInput.files.length > 0;
+    const hasComm = commCertInput.files.length > 0;
+
+    if (!hasForeign && !hasComm) {
+      alert("업로드할 파일을 선택해주세요.");
+      return;
+    }
+
+    // 외국어 인증 업로드 처리
+    if (hasForeign) {
+      foreignStatus.textContent = "외국어 인증 (확인 중) …";
+      foreignStatus.classList.remove("text-muted");
+      foreignStatus.style.color = "#FF0000";
+      foreignBlock.style.backgroundColor = "#f0f0f0";
+    }
+
+    // 정보 인증 업로드 처리
+    if (hasComm) {
+      commStatus.textContent = "정보 인증 (확인 중) …";
+      commStatus.classList.remove("text-muted");
+      commStatus.style.color = "#FF0000";
+      commBlock.style.backgroundColor = "#f0f0f0";
+    }
+
+    // 업로드 완료 메시지
+    uploadStatus.style.display = "block";
+
+    // 입력 초기화
+    foreignCertInput.value = "";
+    commCertInput.value = "";
+  });
+
+  foreignCertInput.addEventListener("change", () => {
+    foreignFileName.textContent = foreignCertInput.files.length > 0
+      ? foreignCertInput.files[0].name
+      : '';
+  });
+
+  commCertInput.addEventListener("change", () => {
+    commFileName.textContent = commCertInput.files.length > 0
+      ? commCertInput.files[0].name
+      : '';
+  });
 });
 

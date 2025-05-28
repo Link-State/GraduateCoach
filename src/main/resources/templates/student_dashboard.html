@@ -7,8 +7,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-   <link rel="stylesheet" th:href="@{/css/student_dashboard.css}" />
-<!--  <link rel="stylesheet" href="/src/main/resources/static/css/student_dashboard.css" />-->
+  <link rel="stylesheet" th:href="@{/css/student_dashboard.css}" />
 </head>
 
 <body>
@@ -18,8 +17,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <!-- 로고 -->
         <div class="d-flex align-items-center">
-           <img th:src="@{/images/logo3.png}" alt="로고" class="logo-img me-2" />
-<!--          <img src="/src/main/resources/static/images/logo3.png" alt="로고" class="logo-img me-2" />-->
+           <img th:src="@{/images/logo3.png}" alt="로고" class="brand-logo me-2" />
         </div>
         <!-- 메뉴 -->
         <nav class="nav-links d-flex gap-3">
@@ -45,8 +43,9 @@
                 </div>
               </div>
               <div class="text-muted" th:text="${univ}">소속대학</div>
-              <h5 class="fw-bold mb-2" th:text="${id}">사용자ID</h5>
               <div class="text-muted" th:text="${major}">전공명</div>
+              <h5 class="fw-bold mb-2" th:text="${id} + ' 학번'">사용자ID</h5>
+              <hr>
             </div>
             <div class="settings-icon">
               <i class="fa-solid fa-gear fa-lg text-secondary"></i>
@@ -70,14 +69,12 @@
 
               <!-- 학점 정보 -->
               <div class="col-md-6">
-                <div class="mb-3 col-md-6">
+                <div class="mb-3">
                   <label class="form-label">전체 이수 학점</label>
-                  <!-- <input type="text" class="form-control" value="95" disabled /> -->
                   <input type="text" class="form-control" th:value="${total_credit ?: 0}" disabled />
                 </div>
                 <div class="mb-3 col-md-6">
                   <label class="form-label">졸업 기준 학점</label>
-                  <!-- <input type="text" class="form-control" value="135" disabled /> -->
                   <input type="text" class="form-control" th:value="${total_req_credit ?: 0}" disabled />
                 </div>
                 <div class="row mb-3">
@@ -86,7 +83,6 @@
                       <label class="form-label">졸업 인증 (외국어)</label>
                       <button class="btn btn-sm cert-btn" data-bs-toggle="modal" data-bs-target="#graduationModal">+</button>
                     </div>
-                    <!-- <input type="text" class="form-control" value="Y/N" disabled /> -->
                     <input type="text" class="form-control" th:value="${foreign_cert != null ? 'Y' : 'N'}" disabled />
                   </div>
                   <div class="col-md-6">
@@ -94,7 +90,6 @@
                       <label class="form-label">졸업 인증 (정보)</label>
                       <button class="btn btn-sm cert-btn" data-bs-toggle="modal" data-bs-target="#graduationModal">+</button>
                     </div>
-                    <!-- <input type="text" class="form-control" value="Y/N" disabled /> -->
                     <input type="text" class="form-control" th:value="${comm_cert != null ? 'Y' : 'N'}" disabled />
                   </div>
                 </div>
@@ -116,7 +111,6 @@
                             <div class="mini-chart-wrapper">
                                 <canvas id="majorRequiredChart"></canvas>
                             </div>
-                            <!-- <div class="mt-2 small text-muted">전공필수 (7/9)</div> -->
                              <div class="mt-2 small text-muted" th:text="'전공필수 (' + ${jeonpil_credit ?: 0} + '/' + ${jeonpil_req_credit ?: 0} + ')'">전공필수</div>
                         </div>
                             
@@ -125,7 +119,6 @@
                             <div class="mini-chart-wrapper">
                                 <canvas id="majorElectiveChart"></canvas>
                             </div>
-                            <!-- <div class="mt-2 small text-muted">전공선택 (24/27)</div> -->
                             <div class="mt-2 small text-muted" th:text="'전공선택 (' + ${jeonseon_credit ?: 0} + '/' + ${jeonseon_req_credit ?: 0} + ')'">전공선택</div>
                         </div>
 
@@ -134,7 +127,6 @@
                             <div class="mini-chart-wrapper">
                                 <canvas id="level3000Chart"></canvas>
                             </div>
-                            <!-- <div class="mt-2 small text-muted">3000단위 이상 (31/45)</div> -->
                             <div class="mt-2 small text-muted" th:text="'3000단위 이상 (' + ${advanced_credit ?: 0} + '/' + ${advanced_req_credit ?: 0} + ')'">3000단위 이상</div>
                         </div>
                     </div>
@@ -151,7 +143,6 @@
                     <div class="mini-chart-wrapper">
                       <canvas id="basicElectiveChart"></canvas>
                     </div>
-                    <!-- <div class="mt-2 small text-muted">교양기초 (22/22)</div> -->
                     <div class="mt-2 small text-muted" th:text="'교양기초 (' + ${pilgyo_credit ?: 0} + '/' + ${pilgyo_req_credit ?: 0} + ')'">교양기초</div>
                   </div>
 
@@ -160,7 +151,6 @@
                     <div class="mini-chart-wrapper">
                       <canvas id="generalElectiveChart"></canvas>
                     </div>
-                    <!-- <div class="mt-2 small text-muted">대학교양 (15/20)</div> -->
                     <div class="mt-2 small text-muted" th:text="'대학교양 (' + ${daegyo_credit ?: 0} + '/' + ${daegyo_req_credit ?: 0} + ')'">대학교양</div>
                   </div>
 
@@ -169,7 +159,6 @@
                     <div class="mini-chart-wrapper">
                       <canvas id="explorationElectiveChart"></canvas>
                     </div>
-                    <!-- <div class="mt-2 small text-muted">전공탐색 (12/21)</div> -->
                     <div class="mt-2 small text-muted" th:text="'전공탐색 (' + ${jeontam_credit ?: 0} + '/' + ${jeontam_req_credit ?: 0} + ')'">전공탐색</div>
                   </div>
                 </div>
@@ -186,25 +175,35 @@
                 <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="닫기"></button>
               </div>
               <div class="modal-body">
-
                 <!-- 외국어 인증 -->
                 <div class="border rounded-3 p-3 mb-3 text-center">
-                  <div class="fw-bold mb-2">외국어 인증</div>
-                  <!-- <div class="cert-pass-text">교양영어 4개학기 이수 (완료) ✔</div> -->
-                  <div class="cert-pass-text" th:if="${foreign_cert != null}">외국어 인증 완료 ✔</div>
-                  <div class="cert-error-text" th:if="${foreign_cert == null}">외국어 인증 미완료 ⏳</div>
+                  <label for="foreignCertFile" class="cert-block" style="cursor: pointer;">
+                    <div class="fw-bold mb-2">외국어 인증</div>
+                    <div id="foreignCertStatus">
+                      <div class="cert-pass-text" th:if="${foreign_cert != null}">외국어 인증 완료 ✔</div>
+                      <div class="cert-error-text" th:if="${foreign_cert == null}">외국어 인증 미완료 ✖</div>
+                    </div>
+                    <span id="foreignCertFileName" class="mt-2 d-block text-muted small"></span>
+                  </label>
+                  <input type="file" id="foreignCertFile" class="form-control d-none" accept=".png,.jpg,.jpeg,.pdf" />
                 </div>
 
-                <!-- 정보인증 -->
+                <!-- 정보 인증 -->
                 <div class="border rounded-3 p-3 mb-3 text-center">
-                  <div class="fw-bold mb-2">정보인증 / 산업실무역량인증</div>
-                  <!-- <div class="cert-error-text">정보처리기사 (확인중) ⏳</div> -->
-                  <div class="cert-pass-text" th:if="${comm_cert != null}">정보인증 완료 ✔</div>
-                  <div class="cert-error-text" th:if="${comm_cert == null}">정보인증 미완료 ⏳</div>
+                  <label for="commCertFile" class="cert-block" style="cursor: pointer;">
+                    <div class="fw-bold mb-2">정보인증 / 산업실무역량인증</div>
+                    <div id="commCertStatus">
+                      <div class="cert-pass-text" th:if="${comm_cert != null}">정보인증 완료 ✔</div>
+                      <div class="cert-error-text" th:if="${comm_cert == null}">정보인증 미완료 ✖</div>
+                    </div>
+                    <span id="commCertFileName" class="mt-2 d-block text-muted small"></span>
+                  </label>
+                  <input type="file" id="commCertFile" class="form-control d-none" accept=".png,.jpg,.jpeg,.pdf" />
                 </div>
-
+                <!-- 업로드 버튼 -->
                 <div class="text-center mt-3">
-                  <button class="btn custom-upload-btn">자격증 업로드</button>
+                  <div id="uploadStatus" class="mt-2 mb-2 fw-bold" style="display: none; color: #04B385;">업로드 완료 ✔</div>
+                  <button type="button" class="btn custom-upload-btn" id="uploadCertBtn">자격증 업로드</button>
                 </div>
               </div>
             </div>
@@ -237,41 +236,6 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <!-- <tr>
-                            <td>전필</td>
-                            <td>운영체제</td>
-                            <td>SWE3001</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">완료</span></td>
-                          </tr>
-                          <tr>
-                            <td>전필</td>
-                            <td>데이터베이스</td>
-                            <td>SWE3017</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">완료</span></td>
-                          </tr>
-                          <tr>
-                            <td>전선</td>
-                            <td>회로이론</td>
-                            <td>SWE3010</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">재수강완</span></td>
-                          </tr>
-                          <tr>
-                            <td>전필</td>
-                            <td>운영체제</td>
-                            <td>SWE3001</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">완료</span></td>
-                          </tr>
-                          <tr>
-                            <td>전필</td>
-                            <td>운영체제</td>
-                            <td>SWE3001</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">완료</span></td>
-                          </tr> -->
                           <tr th:each="course : ${jeonpil_list}">
                             <td>전필</td>
                             <td th:text="${course.name}">교과명</td>
@@ -308,27 +272,6 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <!-- <tr>
-                            <td>전필</td>
-                            <td>운영체제</td>
-                            <td>SWE3001</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">완료</span></td>
-                          </tr>
-                          <tr>
-                            <td>전필</td>
-                            <td>데이터베이스</td>
-                            <td>SWE3017</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">완료</span></td>
-                          </tr>
-                          <tr>
-                            <td>전선</td>
-                            <td>회로이론</td>
-                            <td>SWE3010</td>
-                            <td>3000</td>
-                            <td><span class="badge bg-light text-dark">재수강완</span></td>
-                          </tr> -->
                           <tr th:each="course : ${recom_jeonpil_list}">
                             <td>전필</td>
                             <td th:text="${course.name}">교과명</td>
@@ -341,48 +284,44 @@
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
-
-
     </main>
   </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:inline="javascript">
-  const dashboardData = {
-    totalCredits: [[${total_req_credit} ?: 0]],
-    earnedCredits: [[${total_credit} ?: 0]],
-    majorRequired: {
-      earned: [[${jeonpil_credit} ?: 0]],
-      required: [[${jeonpil_req_credit} ?: 0]]
-    },
-    majorElective: {
-      earned: [[${jeonseon_credit} ?: 0]],
-      required: [[${jeonseon_req_credit} ?: 0]]
-    },
-    level3000: {
-      earned: [[${advanced_credit} ?: 0]],
-      required: [[${advanced_req_credit} ?: 0]]
-    },
-    basicElective: {
-      earned: [[${pilgyo_credit} ?: 0]],
-      required: [[${pilgyo_req_credit} ?: 0]]
-    },
-    generalElective: {
-      earned: [[${daegyo_credit} ?: 0]],
-      required: [[${daegyo_req_credit} ?: 0]]
-    },
-    explorationElective: {
-      earned: [[${jeontam_credit} ?: 0]],
-      required: [[${jeontam_req_credit} ?: 0]]
-    }
-  };
-</script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:src="@{/js/student_dashboard.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:inline="javascript">
+    const dashboardData = {
+      totalCredits: [[${total_req_credit} ?: 0]],
+      earnedCredits: [[${total_credit} ?: 0]],
+      majorRequired: {
+        earned: [[${jeonpil_credit} ?: 0]],
+        required: [[${jeonpil_req_credit} ?: 0]]
+      },
+      majorElective: {
+        earned: [[${jeonseon_credit} ?: 0]],
+        required: [[${jeonseon_req_credit} ?: 0]]
+      },
+      level3000: {
+        earned: [[${advanced_credit} ?: 0]],
+        required: [[${advanced_req_credit} ?: 0]]
+      },
+      basicElective: {
+        earned: [[${pilgyo_credit} ?: 0]],
+        required: [[${pilgyo_req_credit} ?: 0]]
+      },
+      generalElective: {
+        earned: [[${daegyo_credit} ?: 0]],
+        required: [[${daegyo_req_credit} ?: 0]]
+      },
+      explorationElective: {
+        earned: [[${jeontam_credit} ?: 0]],
+        required: [[${jeontam_req_credit} ?: 0]]
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script th:src="@{/js/student_dashboard.js}"></script>
 </body>
 </html>

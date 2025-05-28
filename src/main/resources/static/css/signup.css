@@ -9,14 +9,10 @@ html, body {
 .signup-layout {
   height: 100vh;
   width: 100vw;
+  display: flex;
 }
 
-.signup-layout input, select {
-  border-radius: 15px;
-  font-size: 16px;
-  padding: 12px 20px;
-}
-
+.signup-layout input,
 .signup-layout select {
   border-radius: 15px;
   font-size: 16px;
@@ -40,42 +36,25 @@ html, body {
   padding: 0 10px;
 }
 
-.logo-img {
+.brand-logo {
   width: 120px;
   display: block;
-  margin-bottom: 0;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1DCD9F;
-}
-
-.subtitle {
-  color: #1DCD9F;
-  margin-bottom: 30px;
-}
-
-.next-step-btn, .signup-btn {
+.step-btn {
   background-color: #1DCD9F;
-  border: #1DCD9F solid 2px;
+  color: #fff;
+  border: 2px solid #1DCD9F;
   padding: 12px;
   border-radius: 12px;
-}
-
-.signup-btn:hover, .next-step-btn:hover {
-  background-color: #fff;
-  border: #1DCD9F solid 2px;
-  padding: 12px;
-  border-radius: 12px;
-  color: #1DCD9F;
   font-weight: 500;
 }
 
-#step1-error {
-  font-size: 0.9rem;
-  color: #FF0000;
+.step-btn:hover {
+  background-color: #fff;
+  color: #1DCD9F;
+  border: 2px solid #1DCD9F;
+  font-weight: 500;
 }
 
 .goback-btn {
@@ -83,23 +62,25 @@ html, body {
   justify-content: center;
   align-items: center;
   color: #1DCD9F;
-  border: #1DCD9F solid 2px;
+  border: 2px solid #1DCD9F;
   border-radius: 12px;
+  font-weight: 500;
   gap: 6px;
   padding: 12px;
 }
 
 .goback-btn:hover {
   background-color: #1DCD9F;
-  color: white;
-  border: #1DCD9F solid 2px;
+  color: #fff;
+  border: 2px solid #1DCD9F;
+  font-weight: 500;
 }
 
-.google-btn{
+.google-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: #6C757D solid 2px;
+  border: 2px solid #6C757D;
   border-radius: 12px;
   gap: 6px;
   padding: 12px;
@@ -123,4 +104,37 @@ html, body {
 .signup-right img {
   height: 100vh;
   object-fit: cover;
+}
+
+.form-error {
+  font-size: 0.9rem;
+  color: #FF0000;
+}
+
+.step-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.step-section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: translateX(50px);
+  z-index: 0;
+}
+
+.step-section.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+}
+
+.step-section.hidden {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
 }

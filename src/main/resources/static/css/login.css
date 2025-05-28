@@ -8,32 +8,26 @@ html, body {
 }
 
 .login-layout {
-  height: 100vh;
-  width: 100vw;
-  flex-direction: row;
   display: flex;
-}
-
-.login-layout input {
-  border-radius: 15px;
-  font-size: 16px;
-  padding: 12px 20px;
-}
-
-.login-layout input::placeholder {
-  color: #A0AEC0;
-}
-
-.subtitle {
-  color: #1DCD9F;
-  font-weight: 600;
-  margin-bottom: 30px;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
 }
 
 .login-left {
   flex: 1;
   padding: 60px 40px;
   overflow: auto;
+}
+
+.login-right {
+  flex: 1;
+  overflow: hidden;
+}
+
+.login-right img {
+  height: 100vh;
+  object-fit: cover;
 }
 
 .login-box {
@@ -44,36 +38,49 @@ html, body {
 .logo-img {
   width: 120px;
   display: block;
-  margin-bottom: 0;
+}
+
+.login-subtitle {
+  color: #1DCD9F;
+  font-weight: 600;
+  margin-bottom: 30px;
 }
 
 .form-label {
   font-size: 16px;
-  font-weight: normal;
   color: #2D3748;
+}
+
+.login-layout input,
+.login-layout select {
+  border-radius: 15px;
+  font-size: 16px;
+  padding: 12px 20px;
+}
+
+.login-layout input::placeholder {
+  color: #A0AEC0;
 }
 
 .login-btn {
   background-color: #1DCD9F;
-  border: #1DCD9F solid 2px;
+  border: 2px solid #1DCD9F;
   padding: 12px;
   border-radius: 12px;
 }
 
 .login-btn:hover {
   background-color: #fff;
-  border: #1DCD9F solid 2px;
-  padding: 12px;
-  border-radius: 12px;
   color: #1DCD9F;
+  border: 2px solid #1DCD9F;
   font-weight: 500;
 }
 
-.google-btn{
+.google-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: #6C757D solid 2px;
+  border: 2px solid #6C757D;
   border-radius: 12px;
   padding: 12px;
   gap: 6px;
@@ -91,15 +98,4 @@ html, body {
 
 .link:hover {
   text-decoration: underline;
-}
-
-/* 오른쪽 이미지 */
-.login-right {
-  flex: 1;
-  overflow: hidden;
-}
-
-.login-right img {
-  height: 100vh;
-  object-fit: cover;
 }
