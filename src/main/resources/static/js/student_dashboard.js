@@ -10,8 +10,6 @@ const baseOptions = {
   hover: { mode: null }
 };
 
-
-// 학점 이수 현황
 function creditCenterTextPlugin(label, percent) {
   return {
     id: 'creditChartPlugin',
@@ -21,7 +19,6 @@ function creditCenterTextPlugin(label, percent) {
 
       const percentText = `${percent}%`;
 
-      // label
       ctx.font = `${(height / 20).toFixed(2)}px Pretendard, sans-serif`;
       ctx.fillStyle = '#333';
       ctx.textBaseline = 'middle';
@@ -29,7 +26,6 @@ function creditCenterTextPlugin(label, percent) {
       const labelX = (width - ctx.measureText(label).width) / 2;
       ctx.fillText(label, labelX, labelY);
 
-      // percent
       ctx.font = `bold ${(height / 10).toFixed(2)}px Pretendard, sans-serif`;
       ctx.fillStyle = '#1DCD9F';
       const percentY = height / 2 + 12;
@@ -41,7 +37,6 @@ function creditCenterTextPlugin(label, percent) {
   };
 }
 
-// 작은 도넛 차트 텍스트
 function centerTextPlugin(label, percent) {
   return {
     id: `centerText_${label}`,
@@ -49,7 +44,6 @@ function centerTextPlugin(label, percent) {
       const { width, height, ctx } = chart;
       ctx.save();
 
-      // label
       ctx.font = `${(height / 12).toFixed(2)}px Pretendard`;
       ctx.fillStyle = '#666';
       ctx.textBaseline = 'middle';
@@ -57,7 +51,6 @@ function centerTextPlugin(label, percent) {
       const labelX = (width - ctx.measureText(label).width) / 2;
       ctx.fillText(label, labelX, labelY);
 
-      // percent
       ctx.font = `bold ${(height / 8).toFixed(2)}px Pretendard`;
       ctx.fillStyle = '#666';
       const percentY = height / 2 + 14;
@@ -69,7 +62,6 @@ function centerTextPlugin(label, percent) {
   };
 }
 
-// 공통 차트 렌더링 함수
 function renderDonutChart(id, data, plugin) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -96,16 +88,51 @@ function safePercent(earned, required) {
 window.addEventListener('DOMContentLoaded', () => {
   const d = dashboardData;
 
-  const earnedCredits = d.earnedCredits;
   const totalCredits = d.totalCredits;
-  const remainingCredits = totalCredits - earnedCredits;
-  const percent = safePercent(earnedCredits, totalCredits);
+  const earnedCredits = d.earnedCredits;
 
-  renderDonutChart(
-    'creditDonutChart',
-    [earnedCredits, remainingCredits],
-    creditCenterTextPlugin('이수 학점 비율', percent)
-  );
+  const majorEarned = d.majorRequired.earned + d.majorElective.earned;
+  const majorRequired = d.majorRequired.required + d.majorElective.required;
+
+  const electiveEarned = d.basicElective.earned + d.generalElective.earned + d.explorationElective.earned;
+  const electiveRequired = d.basicElective.required + d.generalElective.required + d.explorationElective.required;
+
+  const etcEarned = Math.max(0, earnedCredits - majorEarned - electiveEarned);
+  const etcRequired = Math.max(0, totalCredits - majorRequired - electiveRequired);
+
+  const totalPercent = safePercent(earnedCredits, totalCredits);
+  const majorPercent = safePercent(majorEarned, totalCredits);
+  const electivePercent = safePercent(electiveEarned, totalCredits);
+  const etcPercent = safePercent(etcEarned, totalCredits);
+
+  const el = document.getElementById('creditDonutChart');
+  if (el) {
+    new Chart(el.getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['전공', '교양', '기타', '남은 학점'],
+        datasets: [{
+          data: [majorPercent, electivePercent, etcPercent, (100 - majorPercent - electivePercent - etcPercent)],
+          backgroundColor: ['#4DD4B0', '#6EC7F0', '#FFD17C', '#CCCCCC'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        ...baseOptions,
+        plugins: {
+          ...baseOptions.plugins,
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${context.label}: ${context.raw}%`;
+              }
+            }
+          }
+        }
+      },
+      plugins: [creditCenterTextPlugin('전체 이수율', totalPercent)]
+    });
+  }
 
   renderDonutChart(
     'majorRequiredChart',
@@ -154,8 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const commStatus = document.getElementById("commCertStatus");
   const uploadStatus = document.getElementById("uploadStatus");
 
-  const foreignBlock = document.querySelector("label[for='foreignCertFile']").closest("div.border");;
-  const commBlock = document.querySelector("label[for='commCertFile']").closest("div.border");;
+  const foreignBlock = document.querySelector("label[for='foreignCertFile']").closest("div.border");
+  const commBlock = document.querySelector("label[for='commCertFile']").closest("div.border");
 
   uploadBtn.addEventListener("click", () => {
     const hasForeign = foreignCertInput.files.length > 0;
@@ -166,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 외국어 인증 업로드 처리
     if (hasForeign) {
       foreignStatus.textContent = "외국어 인증 (확인 중) …";
       foreignStatus.classList.remove("text-muted");
@@ -174,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
       foreignBlock.style.backgroundColor = "#f0f0f0";
     }
 
-    // 정보 인증 업로드 처리
     if (hasComm) {
       commStatus.textContent = "정보 인증 (확인 중) …";
       commStatus.classList.remove("text-muted");
@@ -182,10 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
       commBlock.style.backgroundColor = "#f0f0f0";
     }
 
-    // 업로드 완료 메시지
     uploadStatus.style.display = "block";
-
-    // 입력 초기화
     foreignCertInput.value = "";
     commCertInput.value = "";
   });
@@ -202,4 +224,3 @@ document.addEventListener("DOMContentLoaded", () => {
       : '';
   });
 });
-
