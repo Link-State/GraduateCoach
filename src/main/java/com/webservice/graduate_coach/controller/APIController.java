@@ -108,24 +108,25 @@ public class APIController {
 
     @PostMapping("/academy_dashboard")
     public String academyDashboardPage(
-            @RequestParam(name="department") Integer dept,
-            @RequestParam(name="year") Integer year,
-            @RequestParam(name="major") Integer major,
+            @RequestParam(name="department", required = false, defaultValue="1") Integer dept,
+            @RequestParam(name="year", required = false, defaultValue="2022") Integer year,
+            @RequestParam(name="major", required = false, defaultValue="1") Integer major,
             HttpSession session,
-            RedirectAttributes model
+            Model model,
+            RedirectAttributes attr
     ) {
         // 로그인 세션 확인
         Integer user_uid = (Integer) session.getAttribute("user");
         UserType user_type = (UserType) session.getAttribute("user_type");
 
         if (user_uid == null || user_type == null) {
-            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            attr.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "redirect:login";
         }
 
         academyService.getDashBoard(user_uid, dept, year, major, model);
 
-        return "academy_dashboard";
+        return "academy_dashboard :: search_result";
     }
 
     @PostMapping("/exclude-course")
@@ -136,20 +137,32 @@ public class APIController {
             @RequestParam Integer major,
             @RequestParam(required = false) List<Integer> courses,
             HttpSession session,
-            RedirectAttributes model
+            Model model,
+            RedirectAttributes attr
     ) {
         Integer user_uid = (Integer) session.getAttribute("user");
         if (user_uid == null) {
-            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            attr.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "redirect:login";
         }
 
-        model.addFlashAttribute("redirected", true);
+        String type_str = switch (type) {
+            case 1 -> "pilgyo";
+            case 2 -> "daedyo";
+            case 3 -> "jeontam";
+            case 4 -> "jeonpil";
+            default -> "";
+        };
+
+        if (type_str.isEmpty()) {
+            attr.addFlashAttribute("msg", "타입오류");
+            return "redirect:academy_dashboard";
+        }
 
         if (courses == null) {
-            model.addFlashAttribute("exclude_course_msg", "삭제할 과목을 선택해주세요.");
+            model.addAttribute("exclude_course_msg", "삭제할 과목을 선택해주세요.");
             academyService.getDashBoard(user_uid, department, year, major, model);
-            return "redirect:academy_dashboard";
+            return "academy_dashboard :: edit_" + type_str;
         }
 
         String complete_msg = switch (type) {
@@ -169,10 +182,10 @@ public class APIController {
             default -> "존재하지 않는 type 입니다.";
         };
 
-        model.addFlashAttribute("exclude_course_msg", complete_msg);
+        model.addAttribute("exclude_course_msg", complete_msg);
         academyService.getDashBoard(user_uid, department, year, major, model);
 
-        return "redirect:academy_dashboard";
+        return "academy_dashboard :: edit_" + type_str;
     }
 
     @PostMapping("/edit-credit")
@@ -187,24 +200,23 @@ public class APIController {
             @RequestParam Integer jeonpil_credit,
             @RequestParam Integer jeonseon_credit,
             HttpSession session,
-            RedirectAttributes model
+            Model model,
+            RedirectAttributes attr
             ) {
         Integer user_uid = (Integer) session.getAttribute("user");
         if (user_uid == null) {
-            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            attr.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "redirect:login";
         }
-
-        model.addFlashAttribute("redirected", true);
 
         String complete_msg1 = graduateService.editCredit(department, year, pilgyo_credit, daegyo_credit, jeontam_credit, advanced_credit);
         String complete_msg2 = earnMajorService.editCredit(major, year, jeonpil_credit, jeonseon_credit);
         String complete_msg = complete_msg1 + complete_msg2;
 
-        model.addFlashAttribute("edit_credit_msg", complete_msg);
+        model.addAttribute("edit_credit_msg", complete_msg);
         academyService.getDashBoard(user_uid, department, year, major, model);
 
-        return "redirect:academy_dashboard";
+        return "academy_dashboard :: edit_credit";
     }
 
     @PostMapping("/edit-number")
@@ -214,27 +226,26 @@ public class APIController {
             @RequestParam Integer major,
             @RequestParam(required = false) List<Integer> numbers,
             HttpSession session,
-            RedirectAttributes model
+            Model model,
+            RedirectAttributes attr
     ) {
         Integer user_uid = (Integer) session.getAttribute("user");
         if (user_uid == null) {
-            model.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
+            attr.addFlashAttribute("msg", "로그인이 필요한 서비스 입니다.");
             return "redirect:login";
         }
 
-        model.addFlashAttribute("redirected", true);
-
         if (numbers == null) {
-            model.addFlashAttribute("edit_number_msg", "허용할 이수영역번호를 선택해주세요.");
+            model.addAttribute("edit_number_msg", "허용할 이수영역번호를 선택해주세요.");
             academyService.getDashBoard(user_uid, department, year, major, model);
-            return "redirect:academy_dashboard";
+            return "academy_dashboard :: edit_number";
         }
 
         String complete_msg = optionalGeneralEducationService.editNumbers(department, year, numbers);
-        model.addFlashAttribute("edit_number_msg", complete_msg);
+        model.addAttribute("edit_number_msg", complete_msg);
         academyService.getDashBoard(user_uid, department, year, major, model);
 
-        return "redirect:academy_dashboard";
+        return "academy_dashboard :: edit_number";
     }
 
     @PostMapping("/add-cert")
@@ -247,12 +258,24 @@ public class APIController {
             @RequestParam String descript,
             @RequestParam Float score,
             HttpSession session,
-            RedirectAttributes model
+            Model model,
+            RedirectAttributes attr
     ) {
         Integer userUid = (Integer) session.getAttribute("user");
         if (userUid == null) {
-            model.addFlashAttribute("msg", "로그인이 필요합니다.");
+            attr.addFlashAttribute("msg", "로그인이 필요합니다.");
             return "redirect:login";
+        }
+
+        String type_str = switch (certType) {
+            case 1 -> "foreign";
+            case 2 -> "comm";
+            default -> "";
+        };
+
+        if (type_str.isEmpty()) {
+            attr.addFlashAttribute("msg", "타입오류");
+            return "redirect:academy_dashboard";
         }
 
         String completeMsg;
@@ -268,11 +291,10 @@ public class APIController {
                     : "정보 인증 추가 실패";
         }
 
-        model.addFlashAttribute("add_cert_msg", completeMsg);
-        model.addFlashAttribute("redirected", true);
+        model.addAttribute("add_cert_msg", completeMsg);
         // 다시 대시보드 로드
         academyService.getDashBoard(userUid, department, year, major, model);
-        return "redirect:academy_dashboard";
+        return "academy_dashboard :: edit_" + type_str;
     }
 
     // --- 인증 삭제 ---
@@ -284,20 +306,30 @@ public class APIController {
             @RequestParam("type") Integer certType,
             @RequestParam(name="certs", required=false) List<Integer> certs,
             HttpSession session,
-            RedirectAttributes model
+            Model model,
+            RedirectAttributes attr
     ) {
         Integer userUid = (Integer) session.getAttribute("user");
         if (userUid == null) {
-            model.addFlashAttribute("msg", "로그인이 필요합니다.");
+            attr.addFlashAttribute("msg", "로그인이 필요합니다.");
             return "redirect:login";
         }
 
-        model.addFlashAttribute("redirected", true);
+        String type_str = switch (certType) {
+            case 1 -> "foreign";
+            case 2 -> "comm";
+            default -> "";
+        };
+
+        if (type_str.isEmpty()) {
+            attr.addFlashAttribute("msg", "타입오류");
+            return "redirect:academy_dashboard";
+        }
 
         if (certs == null || certs.isEmpty()) {
-            model.addFlashAttribute("delete_cert_msg", "삭제할 인증을 선택해주세요.");
+            model.addAttribute("delete_cert_msg", "삭제할 인증을 선택해주세요.");
             academyService.getDashBoard(userUid, department, year, major, model);
-            return "redirect:academy_dashboard";
+            return "academy_dashboard :: edit_" + type_str;
         }
 
         String completeMsg;
@@ -311,8 +343,8 @@ public class APIController {
                     : "정보 인증 삭제 실패";
         }
 
-        model.addFlashAttribute("delete_cert_msg", completeMsg);
+        model.addAttribute("delete_cert_msg", completeMsg);
         academyService.getDashBoard(userUid, department, year, major, model);
-        return "redirect:academy_dashboard";
+        return "academy_dashboard :: edit_" + type_str;
     }
 }
