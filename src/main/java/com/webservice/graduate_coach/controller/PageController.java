@@ -92,11 +92,6 @@ public class PageController {
             return "login";
         }
 
-        // 리다이렉트 시, 기존 대시보드 사용
-        if (model.getAttribute("redirected") != null) {
-            return "academy_dashboard";
-        }
-
         // 1) 새로운 대시보드 데이터
         Boolean result = academyService.getDashBoard(user_uid, model);
 
