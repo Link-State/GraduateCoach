@@ -38,16 +38,16 @@
         <!-- 사용자 프로필 카드 -->
         <div class="col-md-4">
           <div class="card profile-card h-100 p-4 text-center">
-            <div class="profile-icon mb-3 d-flex justify-content-center">
-              <div th:if="${user?.profileImage == null}" class="profile-placeholder rounded-circle d-flex justify-content-center align-items-center">
-                <i class="fa-solid fa-user fa-2x text-secondary"></i>
+            <div>
+              <div class="profile-icon mb-3 d-flex justify-content-center">
+                <div th:if="${user?.profileImage == null}" class="profile-placeholder rounded-circle d-flex justify-content-center align-items-center">
+                  <i class="fa-solid fa-user fa-2x text-secondary"></i>
+                </div>
               </div>
+              <div class="text-muted" th:text="${univ}">소속대학</div>
+              <h5 class="fw-bold mb-2" th:text="${id}">사용자ID</h5>
+              <div class="text-muted" th:text="${major}">전공명</div>
             </div>
-            <h5 class="fw-bold" th:text="${id}">사용자ID</h5>
-            <div class="text-muted mb-3" th:text="${univ}">소속대학</div>
-<!--            <div class="text-muted" th:text="${selected_dept.name}">소속학부</div>-->
-            <div class="text-muted" th:text="${major}">전공명</div>
-            <div class="text-muted mb-3" th:text="${id}">학번</div>
             <div class="settings-icon">
               <i class="fa-solid fa-gear fa-lg text-secondary"></i>
             </div>
@@ -188,7 +188,7 @@
               <div class="modal-body">
 
                 <!-- 외국어 인증 -->
-                <div class="foreign-cert p-3 mb-3 text-center rounded-3">
+                <div class="border rounded-3 p-3 mb-3 text-center">
                   <div class="fw-bold mb-2">외국어 인증</div>
                   <!-- <div class="cert-pass-text">교양영어 4개학기 이수 (완료) ✔</div> -->
                   <div class="cert-pass-text" th:if="${foreign_cert != null}">외국어 인증 완료 ✔</div>
