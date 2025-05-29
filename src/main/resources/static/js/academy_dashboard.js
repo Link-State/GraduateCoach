@@ -12,6 +12,39 @@ document.addEventListener("click", function (e) {
         closeModal();
     }
 
+    // mod2
+    if (target.matches("#btn-opn-mod2")) {
+        document.querySelector("#modal2").style.display = "flex";
+        document.body.classList.add('modal-open');
+    }
+    if (target.matches("#btn-clo-mod2")) {
+        document.querySelector("#modal2").style.display = "none";
+        document.body.classList.remove('modal-open');
+        closeModal();
+    }
+
+    // mod3
+    if (target.matches("#btn-opn-mod3")) {
+        document.querySelector("#modal3").style.display = "flex";
+        document.body.classList.add('modal-open');
+    }
+    if (target.matches("#btn-clo-mod3")) {
+        document.querySelector("#modal3").style.display = "none";
+        document.body.classList.remove('modal-open');
+        closeModal();
+    }
+
+    // mod4
+    if (target.matches("#btn-opn-mod4")) {
+        document.querySelector("#modal4").style.display = "flex";
+        document.body.classList.add('modal-open');
+    }
+    if (target.matches("#btn-clo-mod4")) {
+        document.querySelector("#modal4").style.display = "none";
+        document.body.classList.remove('modal-open');
+        closeModal();
+    }
+
     // mod5
     if (target.matches("#btn-opn-mod5")) {
         document.querySelector("#modal5").style.display = "flex";
@@ -56,6 +89,17 @@ document.addEventListener("click", function (e) {
         closeModal();
     }
 
+    // mod9
+    if (target.matches("#btn-opn-mod9")) {
+        document.querySelector("#modal9").style.display = "flex";
+        document.body.classList.add('modal-open');
+    }
+    if (target.matches("#btn-clo-mod9")) {
+        document.querySelector("#modal9").style.display = "none";
+        document.body.classList.remove('modal-open');
+        closeModal();
+    }
+
     // delete pilgyo
     if (target.classList.contains("delete_pilgyo")) {
         const row = e.target.closest("tr");
@@ -92,6 +136,114 @@ document.addEventListener("click", function (e) {
         .catch(err => console.error("삭제 실패:", err));
     }
 
+    // delete_daegyo
+    if (target.classList.contains("delete_daegyo")) {
+        const row = e.target.closest("tr");
+        const uid = row.dataset.uid;
+
+        const year = document.getElementById("year").value;
+        const department = document.getElementById("department").value;
+        const major = document.getElementById("major").value;
+
+        const formData = new URLSearchParams();
+        formData.append("type", 2);
+        formData.append("year", year);
+        formData.append("department", department);
+        formData.append("major", major);
+        formData.append("courses", uid);
+
+        fetch("/exclude-course", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(html => {
+            if (html) {
+                document.getElementById("mod_edit_daegyo").innerHTML = html;
+            }
+        })
+        .catch(err => console.error("삭제 실패:", err));
+    }
+
+    // delete_jeontam
+    if (target.classList.contains("delete_jeontam")) {
+        const row = e.target.closest("tr");
+        const uid = row.dataset.uid;
+
+        const year = document.getElementById("year").value;
+        const department = document.getElementById("department").value;
+        const major = document.getElementById("major").value;
+
+        const formData = new URLSearchParams();
+        formData.append("type", 3);
+        formData.append("year", year);
+        formData.append("department", department);
+        formData.append("major", major);
+        formData.append("courses", uid);
+
+        fetch("/exclude-course", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(html => {
+            if (html) {
+                document.getElementById("mod_edit_jeontam").innerHTML = html;
+            }
+        })
+        .catch(err => console.error("삭제 실패:", err));
+    }
+
+    // delete_jeonpil
+    if (target.classList.contains("delete_jeonpil")) {
+        const row = e.target.closest("tr");
+        const uid = row.dataset.uid;
+
+        const year = document.getElementById("year").value;
+        const department = document.getElementById("department").value;
+        const major = document.getElementById("major").value;
+
+        const formData = new URLSearchParams();
+        formData.append("type", 4);
+        formData.append("year", year);
+        formData.append("department", department);
+        formData.append("major", major);
+        formData.append("courses", uid);
+
+        fetch("/exclude-course", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(html => {
+            if (html) {
+                document.getElementById("mod_edit_jeonpil").innerHTML = html;
+            }
+        })
+        .catch(err => console.error("삭제 실패:", err));
+    }
+
     // delete comm
     if (target.classList.contains("delete_comm")) {
         const row = e.target.closest("tr");
@@ -123,6 +275,42 @@ document.addEventListener("click", function (e) {
         .then(html => {
             if (html) {
                 document.getElementById("mod_edit_comm").innerHTML = html;
+            }
+        })
+        .catch(err => console.error("삭제 실패:", err));
+    }
+
+    // delete foreign
+    if (target.classList.contains("delete_foreign")) {
+        const row = e.target.closest("tr");
+        const uid = row.dataset.uid;
+
+        const year = document.getElementById("year").value;
+        const department = document.getElementById("department").value;
+        const major = document.getElementById("major").value;
+
+        const formData = new URLSearchParams();
+        formData.append("year", year);
+        formData.append("department", department);
+        formData.append("major", major);
+        formData.append("type", 1);
+        formData.append("certs", uid);
+
+        fetch("/delete-cert", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(html => {
+            if (html) {
+                document.getElementById("mod_edit_foreign").innerHTML = html;
             }
         })
         .catch(err => console.error("삭제 실패:", err));
@@ -295,6 +483,57 @@ document.addEventListener("submit", function (e) {
         .then(html => {
             if (html) {
                 document.getElementById("mod_edit_comm").innerHTML = html;
+            }
+        })
+        .catch(err => {
+            console.error("수정 실패:", err);
+        });
+    }
+    // add foreign
+    else if (id === "insert_foreign") {
+        const requiredFields = form.querySelectorAll("input[required]");
+        let hasEmpty = false;
+
+        for (const field of requiredFields) {
+            if (!field.value.trim()) {
+                field.classList.add("input-warning");
+                hasEmpty = true;
+            } else {
+                field.classList.remove("input-warning");
+            }
+        }
+
+        if (hasEmpty) return;
+
+        const year = document.getElementById("year").value;
+        const department = document.getElementById("department").value;
+        const major = document.getElementById("major").value;
+
+        const formData = new URLSearchParams();
+        formData.append("year", year);
+        formData.append("department", department);
+        formData.append("major", major);
+
+        formData.append("name", document.getElementById("foreign_name").value);
+        formData.append("descript", document.getElementById("foreign_descript").value);
+        formData.append("score", document.getElementById("foreign_score").value);
+        formData.append("cert_type", 1);
+
+        fetch("/add-cert", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(html => {
+            if (html) {
+                document.getElementById("mod_edit_foreign").innerHTML = html;
             }
         })
         .catch(err => {
