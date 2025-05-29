@@ -161,8 +161,8 @@ public class AcademyService {
         params.put("seongyo_req_credit", graduate.getOptionalEdu());
         params.put("jeontam_req_credit", graduate.getFoundationMajor());
         params.put("advanced_req_credit", graduate.getTotalLevel());
-        params.put("jeonpil_req_credit", earn_major.getReqMajorCredit());
-        params.put("jeonseon_req_credit", earn_major.getOptMajorCredit());
+        params.put("jeonpil_req_credit", earn_major.getReqMajorCredit().intValue());
+        params.put("jeonseon_req_credit", earn_major.getOptMajorCredit().intValue());
         params.put("foreign_cert_list", foreign_certs);
         params.put("comm_cert_list", comm_certs);
 
