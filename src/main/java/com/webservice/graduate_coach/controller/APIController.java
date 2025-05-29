@@ -148,7 +148,7 @@ public class APIController {
 
         String type_str = switch (type) {
             case 1 -> "pilgyo";
-            case 2 -> "daedyo";
+            case 2 -> "daegyo";
             case 3 -> "jeontam";
             case 4 -> "jeonpil";
             default -> "";
