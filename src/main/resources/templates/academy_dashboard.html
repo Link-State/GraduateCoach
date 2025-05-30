@@ -11,11 +11,15 @@
             <nav>
                 <img id="top_logo" th:src="@{/images/logo.png}" />
                 <ul class="user-info">
-                    <li>uid</li>
-                    <li>1234</li>
-                    <li></li>
-                    <li></li>
-                    <li><a th:href="@{/logout}"><input type="button" name="btn" value="logout"></a></li>
+                    <li class="profile-li">
+                        <div th:if="${user?.profileImage == null}" class="profile-placeholder rounded-circle d-flex justify-content-center align-items-center">
+                            <i class="fa-solid fa-user fa-2x text-secondary"></i>
+                        </div>
+                    </li>
+                    <li>Y100000</li>
+                    <li><a href="#" class="nav-item">커뮤니티</a></li>
+                    <li><a href="#" class="nav-item">마이페이지</a></li>
+                    <li><a th:href="@{/logout}" class="nav-item logout">로그아웃</a></li>
                 </ul>
             </nav>
         </div>
@@ -165,7 +169,7 @@
                 <div class="big_box">
                     <h3 class="title">졸업요건 - 영역별 이수학점</h3>
                     <div class="num-box">
-                        <button id="btn-opn-mod5">편집</button>
+                        <button class="btn-opn-mod" id="btn-opn-mod5">편집</button>
                         <div class="nnl">
                             <div class="namenum">
                                 <p class="numtitle">필수교양</p>
@@ -197,7 +201,7 @@
                         <div class="area-box">
                             <div class="area-title">
                                 <p class="numtitle">대학교양 이수영역</p>
-                                <button id="btn-opn-mod6">편집</button>
+                                <button class="btn-opn-mod" id="btn-opn-mod6">편집</button>
                             </div>
                             <div class="area-table">
                                 <table>
@@ -507,7 +511,7 @@
                         </div>
                     </div>
                     <br>
-                    <button type="submit">저장</button>
+                    <button class="edit-ok" type="submit">저장</button>
                 </form>
             </div>
             <!-- 6mod -->
@@ -564,9 +568,9 @@
                                 </tbody>
                             </table>
                         </div>
-                        <br>
-                        <button type="submit">저장</button>
                     </div>
+                    <br>
+                    <button class="edit-ok" type="submit">저장</button>
                 </form>
             </div>
             <!-- 7mod -->
