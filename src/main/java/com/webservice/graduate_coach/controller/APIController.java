@@ -31,8 +31,8 @@ public class APIController {
     private final StudentService studentService;
     private final AcademyService academyService;
 
-    private GraduateService graduateService;
-    private EarnMajorService earnMajorService;
+    private final GraduateService graduateService;
+    private final EarnMajorService earnMajorService;
     private final FoundationEducationService foundationEducationService;
     private final EssentialGeneralEducationService essentialGeneralEducationService;
     private final OptionalGeneralEducationService optionalGeneralEducationService;
@@ -148,7 +148,7 @@ public class APIController {
 
         String type_str = switch (type) {
             case 1 -> "pilgyo";
-            case 2 -> "daedyo";
+            case 2 -> "daegyo";
             case 3 -> "jeontam";
             case 4 -> "jeonpil";
             default -> "";
@@ -193,12 +193,12 @@ public class APIController {
             @RequestParam Integer department,
             @RequestParam Integer year,
             @RequestParam Integer major,
-            @RequestParam Integer pilgyo_credit,
-            @RequestParam Integer daegyo_credit,
-            @RequestParam Integer jeontam_credit,
-            @RequestParam Integer advanced_credit,
-            @RequestParam Integer jeonpil_credit,
-            @RequestParam Integer jeonseon_credit,
+            @RequestParam Float pilgyo_credit,
+            @RequestParam Float daegyo_credit,
+            @RequestParam Float jeontam_credit,
+            @RequestParam Float advanced_credit,
+            @RequestParam Float jeonpil_credit,
+            @RequestParam Float jeonseon_credit,
             HttpSession session,
             Model model,
             RedirectAttributes attr
@@ -209,8 +209,8 @@ public class APIController {
             return "redirect:login";
         }
 
-        String complete_msg1 = graduateService.editCredit(department, year, pilgyo_credit, daegyo_credit, jeontam_credit, advanced_credit);
-        String complete_msg2 = earnMajorService.editCredit(major, year, jeonpil_credit, jeonseon_credit);
+        String complete_msg1 = graduateService.editCredit(department, year, pilgyo_credit.intValue(), daegyo_credit.intValue(), jeontam_credit.intValue(), advanced_credit.intValue());
+        String complete_msg2 = earnMajorService.editCredit(major, year, jeonpil_credit.intValue(), jeonseon_credit.intValue());
         String complete_msg = complete_msg1 + complete_msg2;
 
         model.addAttribute("edit_credit_msg", complete_msg);

@@ -10,11 +10,17 @@ nav{
     display:block;
 }
 nav>ul{
-    text-align: right; 
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
 }
 nav>ul>li{
     display:flex;
     list-style: none;
+    align-items: center;
     display:inline;
     margin: 0 15px;
 }
@@ -22,7 +28,7 @@ nav>ul>li{
 
 /* 상자 */
 .big_box{
-    border: 1px solid lightgray;
+    border: 1px solid lightgrey;
     border-radius: 10px;
     margin: 30px 15px;
     padding: 15px;
@@ -31,27 +37,28 @@ nav>ul>li{
     text-align: center;
 }
 .table_box{
-    background-color: lightgray;
-    border-top: 3px solid green;
+    background-color: #EDEDED;
+    border-top: 4px solid green;
     width: 70%;
     margin: 60px auto 0 auto;
     padding-bottom: 10px;
 }
 .table_box_s{
-    background-color: lightgray;
-    border-top: 3px solid green;
+    background-color: #EDEDED;
+    border-top: 4px solid green;
     width: 50%;
     margin: 60px auto 0 auto;
     padding-bottom: 10px;
 }
 .table_box_mod{
-    background-color: lightgray;
-    border-top: 3px solid green;
+    background-color: #EDEDED;
+    border-top: 4px solid green;
     width: 95%;
     margin: 60px auto 0 auto;
     padding-bottom: 10px;
-    max-height: 60%;
+    max-height: 350px;
     overflow-y: auto;
+    min-height: 0;
 }
 
 
@@ -72,7 +79,7 @@ nav>ul>li{
 }
 .search_style>div>input{
     padding: 5px 15px;
-    border: 1px solid lightgray;
+    border: 1px solid lightgrey;
     border-radius: 20px;
 }
 .input-warning::placeholder {
@@ -112,7 +119,7 @@ nav>ul>li{
     border: 1px solid black;
 }
 .tbl>thead{
-    background-color: lightgray;
+    background-color: #EDEDED;
 }
 .tbl>tbody{
     background-color: white;
@@ -144,7 +151,7 @@ nav>ul>li{
     padding: 10px 0;
     vertical-align: middle;
     border: 1px solid black;
-    background-color: lightgrey;
+    background-color: #EDEDED;
     font-size: 25px;
 }
 .area-box{
@@ -164,8 +171,8 @@ nav>ul>li{
     margin-bottom: 5px;
 }
 .area-table{
-    width: 300px;
-    background-color: lightgray;
+    width: 320px;
+    background-color: #EDEDED;
     padding: 10px;
 }
 
@@ -201,7 +208,7 @@ body.modal-open {
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
 
-    transform:translateY(-50%); 
+    transform:translateY(-50%);
 }
 .modal-body-a{
     position:absolute;
@@ -224,7 +231,7 @@ body.modal-open {
     top:50%;
 
     width:60%;
-    height:50%;
+    height:63%;
 
     padding:5px;
 
@@ -240,4 +247,95 @@ body.modal-open {
 }
 .modal_table{
 
+}
+
+
+/* btn's style */
+button[class^="delete_"] {
+    margin: 2px 0;
+    padding: 3px 10px;
+    background-color: white;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+button[class^="delete_"]:hover {
+    background-color: #dc3545;
+    color: white;
+}
+.btn-clo-mod {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    color: #b0b0b0;
+    border: 2px solid #b0b0b0;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 26px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    padding: 0;
+}
+.btn-clo-mod:hover {
+    border-color: #888888;
+    color: #888888;
+}
+.btn-opn-mod {
+    background-color: #76C5A2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-opn-mod:hover {
+    background-color: #64b491;
+}
+.edit-ok {
+    background-color: #76C5A2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.edit-ok:hover {
+    background-color: #64b491;
+}
+
+
+/**/
+.profile-placeholder {
+  width: 30px;
+  height: 30px;
+  background-color: #ced4da;
+}
+.nav-item{
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid #d4d4d4;
+  border-radius: 12px;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+.nav-item:hover {
+  background-color: #f3f3f3;
+}
+.logout {
+  color: white;
+  font-weight: 600;
+  background-color: #1DCD9F;
+  border: none;
 }
