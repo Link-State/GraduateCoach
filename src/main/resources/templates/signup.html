@@ -1,70 +1,102 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- 문자 인코딩 및 반응형 설정 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Signup</title>
+
+  <!-- Bootstrap 및 FontAwesome 스타일 로드 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- 회원가입 페이지 전용 커스텀 CSS -->
   <link rel="stylesheet" th:href="@{/css/signup.css}" />
 </head>
 
 <body class="d-flex h-100">
 
+  <!-- 전체 회원가입 페이지 컨테이너 -->
   <div class="container-fluid signup-layout d-flex p-0">
 
-    <!-- 왼쪽 회원가입 폼 -->
+    <!-- 왼쪽 회원가입 폼 영역-->
     <div class="signup-left d-flex flex-column justify-content-center align-items-center">
       <div class="signup-box">
+
+        <!-- 로고 이미지 -->
+        <!-- Thymeleaf로 리소스 경로 지정 -->
         <img th:src="@{/images/logo.png}" alt="로고" class="brand-logo mb-3" />
-
+        
+        <!-- 회원가입 폼 -->
+        <!-- POST 요청으로 /signup에 전송, Spring 컨트롤러 처리 -->
         <form id="signup-form" th:action="@{/signup}" method="post" class="w-100 mt-4" novalidate>
+          <!-- 사용자 유형 히든 필드 (STUDENT로 고정됨) -->
           <input type="hidden" name="type" value="STUDENT" />
-
+          
+          <!-- 단계 전환을 위한 래퍼 -->
           <div class="step-wrapper position-relative" style="min-height: 400px;">
-            <!-- STEP 1 -->
+            
+            <!-- STEP 1 : 기본 정보 입력 -->
             <div id="step-1" class="step-section active">
               <div class="row">
+
+                <!-- 이름 입력 필드 -->
+                <!-- name="name"은 서버에서 name 파라미터로 수신됨 -->
                 <div class="col-md-6 mb-3">
                   <label class="form-label">이름</label>
                   <input type="text" class="form-control" name="name" placeholder="이름 입력" required />
                 </div>
+
+                <!-- 이메일 입력 필드 -->
+                <!-- name="email"은 서버에서 email 파라미터로 수신됨 -->
                 <div class="col-md-6 mb-3">
                   <label class="form-label">이메일</label>
                   <input type="email" class="form-control" name="email" placeholder="이메일 주소 입력" required />
                 </div>
               </div>
-
+              
+              <!-- 학교 선택 필드 -->
               <div class="mb-3">
                 <label class="form-label">소속학교</label>
                 <select class="form-control" name="university" required>
                   <option value="">학교 선택</option>
+                  <!-- 학교 리스트를 서버에서 받아와 동적으로 <option> 태그로 반복 출력 -->
+                  <!-- univ.UID → value 속성으로, univ.name → 사용자에게 보이는 텍스트로 사용 -->
                   <option th:each="univ : ${university_list}" th:value="${univ.UID}" th:text="${univ.name}"></option>
                 </select>
               </div>
-
+              
+              <!-- 학과 선택 및 학번 입력 필드 -->
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">학과</label>
                   <select class="form-control" name="major" required>
                     <option value="">학과 선택</option>
+                    <!-- 학과 리스트를 서버에서 받아와 동적으로 <option> 태그로 반복 출력 -->
+                    <!-- major.UID → value 속성으로, major.name → 사용자에게 보이는 텍스트로 사용 -->
                     <option th:each="major : ${major_list}" th:value="${major.UID}" th:text="${major.name}"></option>
                   </select>
                 </div>
+
                 <div class="col-md-6 mb-3">
                   <label class="form-label">학번</label>
                   <input type="text" class="form-control" name="id" placeholder="학번 입력" required />
                 </div>
               </div>
-
+              
+              <!-- 다음 단계로 이동 버튼 -->
               <button type="button" class="btn w-100 step-btn next-step-btn" onclick="goToStep2()">다음</button>
+
+              <!-- 에러 메시지 출력 -->
               <div id="step1-error" class="form-error d-none"></div>
             </div>
 
-            <!-- STEP 2 -->
+            <!-- STEP 2 : 비밀번호 설정 -->
             <div id="step-2" class="step-section hidden">
+              
+              <!-- 비밀번호 입력 필드 -->
               <div class="mb-3 position-relative">
                 <label class="form-label">비밀번호</label>
+                <!-- name="pwd"은 서버에서 pwd 파라미터로 수신됨 -->
                 <input type="password" class="form-control" name="pwd" id="password" placeholder="비밀번호 입력" required />
                 <button type="button" class="btn btn-sm position-absolute top-50 end-0 me-2 pe-4 border-0 text-black-50"
                         onclick="togglePasswordVisibility('password', this)">
@@ -72,8 +104,10 @@
                 </button>
               </div>
 
+              <!-- 비밀번호 확인 필드 -->
               <div class="mb-4 position-relative">
                 <label class="form-label">비밀번호 확인</label>
+                <!-- name="pwd_check"은 서버에서 pwd_check 파라미터로 수신됨 -->
                 <input type="password" class="form-control" name="pwd_check" id="passwordConfirm" placeholder="비밀번호 입력" required style="padding-right: 2.75rem"/>
                 <button type="button" class="btn btn-sm position-absolute top-50 end-0 me-2 pe-4 border-0 text-black-50"
                         onclick="togglePasswordVisibility('passwordConfirm', this)">
@@ -81,14 +115,22 @@
                 </button>
               </div>
 
+              <!-- 이전 단계로 돌아가기 버튼 -->
               <button type="button" class="btn btn-outline-secondary w-100 goback-btn" onclick="goToStep1()">이전</button>
+              
+              <!-- 최종 회원가입 제출 버튼 -->
+              <!-- 회원가입 요청을 서버로 POST 전송 -->
               <button type="submit" class="btn w-100 step-btn signup-btn mt-2">회원가입</button>
+              
+              <!-- 에러 메시지 영역 -->
               <div id="step2-error" class="form-error d-none"></div>
 
+              <!-- 소셜 로그인 (Google) 버튼 (구현 X) -->
               <button type="button" class="btn btn-outline-secondary w-100 google-btn mt-3">
                 <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Icon" />
                 구글 계정으로 가입
               </button>
+              <!-- 로그인 링크 (Thymeleaf 경로 처리) -->
               <p class="mt-4 text-muted small">
                 이미 계정이 있으신가요? <a th:href="@{/login}" class="link">로그인</a> 
               </p>
@@ -98,13 +140,15 @@
       </div>
     </div>
 
-    <!-- 오른쪽 이미지 -->
+    <!-- 오른쪽 인트로 이미지 영역 -->
     <div class="signup-right">
       <img th:src="@{/images/intro.jpg}" alt="인트로 이미지" />
     </div>
   </div>
 
+  <!-- 단계 전환 및 비밀번호 토글 스크립트 -->
   <script>
+    // STEP 1 → STEP 2 이동
     function goToStep2() {
     const step1 = document.getElementById("step-1");
     const step2 = document.getElementById("step-2");
@@ -127,14 +171,16 @@
       return;
     }
 
+    // step1 숨기고 step2 표시
     step1.classList.remove("active");
     step1.classList.add("hidden");
     step2.classList.remove("hidden");
     setTimeout(() => {
       step2.classList.add("active");
-    }, 10);
+    }, 10); // 애니메이션 효과용 약간의 지연
   }
 
+  // STEP 2 → STEP 1 이동
   function goToStep1() {
     const step1 = document.getElementById("step-1");
     const step2 = document.getElementById("step-2");
@@ -146,18 +192,20 @@
       step1.classList.add("active");
     }, 10);
 
+    // 이전 단계로 돌아갈 때는 step1 에러도 초기화
     document.getElementById("step1-error").classList.add("d-none");
   }
 
-    function togglePasswordVisibility(inputId, button) {
-      const input = document.getElementById(inputId);
-      const icon = button.querySelector("i");
-      const isPassword = input.type === "password";
+  // 비밀번호 보기 토글 함수
+  function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector("i");
+    const isPassword = input.type === "password";
 
-      input.type = isPassword ? "text" : "password";
-      icon.classList.toggle("fa-eye", !isPassword);
-      icon.classList.toggle("fa-eye-slash", isPassword);
-    }
+    input.type = isPassword ? "text" : "password";
+    icon.classList.toggle("fa-eye", !isPassword);
+    icon.classList.toggle("fa-eye-slash", isPassword);
+  }
   </script>
 </body>
 </html>
