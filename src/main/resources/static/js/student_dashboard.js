@@ -155,37 +155,37 @@ window.addEventListener('DOMContentLoaded', () => {
   // 하단 세부 도넛 차트 일괄 렌더링
   renderDonutChart(
     'majorRequiredChart',
-    [d.majorRequired.earned, d.majorRequired.required - d.majorRequired.earned],
+    [d.majorRequired.earned, d.majorRequired.required - d.majorRequired.earned > 0 ? d.majorRequired.required - d.majorRequired.earned : 0],
     centerTextPlugin('이수율', safePercent(d.majorRequired.earned, d.majorRequired.required))
   );
 
   renderDonutChart(
     'majorElectiveChart',
-    [d.majorElective.earned, d.majorElective.required - d.majorElective.earned],
+    [d.majorElective.earned, d.majorElective.required - d.majorElective.earned > 0 ? d.majorElective.required - d.majorElective.earned : 0],
     centerTextPlugin('이수율', safePercent(d.majorElective.earned, d.majorElective.required))
   );
 
   renderDonutChart(
     'level3000Chart',
-    [d.level3000.earned, d.level3000.required - d.level3000.earned],
+    [d.level3000.earned, d.level3000.required - d.level3000.earned > 0 ? d.level3000.required - d.level3000.earned : 0],
     centerTextPlugin('이수율', safePercent(d.level3000.earned, d.level3000.required))
   );
 
   renderDonutChart(
     'basicElectiveChart',
-    [d.basicElective.earned, d.basicElective.required - d.basicElective.earned],
+    [d.basicElective.earned, d.basicElective.required - d.basicElective.earned > 0 ? d.basicElective.required - d.basicElective.earned : 0],
     centerTextPlugin('이수율', safePercent(d.basicElective.earned, d.basicElective.required))
   );
 
   renderDonutChart(
     'generalElectiveChart',
-    [d.generalElective.earned, d.generalElective.required - d.generalElective.earned],
+    [d.generalElective.earned, d.generalElective.required - d.generalElective.earned > 0 ? d.generalElective.required - d.generalElective.earned : 0],
     centerTextPlugin('이수율', safePercent(d.generalElective.earned, d.generalElective.required))
   );
 
   renderDonutChart(
     'explorationElectiveChart',
-    [d.explorationElective.earned, d.explorationElective.required - d.explorationElective.earned],
+    [d.explorationElective.earned, d.explorationElective.required - d.explorationElective.earned > 0 ? d.explorationElective.required - d.explorationElective.earned : 0],
     centerTextPlugin('이수율', safePercent(d.explorationElective.earned, d.explorationElective.required))
   );
 });
