@@ -1,46 +1,54 @@
+/* 전체 페이지 기본 스타일 초기화 및 폰트 설정 */
 html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: 'Pretendard', sans-serif;
+  height: 100%;         /* 브라우저 전체 높이 채움 */
+  margin: 0;            /* 바깥 여백 제거 */
+  padding: 0;           /* 안쪽 여백 제거 */
+  overflow: hidden;     /* 전체 스크롤 비활성화 */
+  font-family: 'Pretendard', sans-serif;    /* 기본 폰트 설정 */
 }
 
+/* 전체 회원가입 페이지 레이아웃 */
 .signup-layout {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
+  height: 100vh;        /* 뷰포트 높이 전체 */
+  width: 100vw;         /* 뷰포트 너비 전체 */
+  display: flex;        /* 좌우 배치 플렉스 */
 }
 
+/* 모든 input, select 요소 공통 스타일 */
 .signup-layout input,
 .signup-layout select {
-  border-radius: 15px;
+  border-radius: 15px;   /* 둥근 테두리 */
   font-size: 16px;
-  padding: 12px 20px;
+  padding: 12px 20px;    /* 내부 여백 */
 }
 
+/* placeholder 텍스트 색상 지정 */
 .signup-layout input::placeholder {
   color: #A0AEC0;
 }
 
+/* 왼쪽 회원가입 입력 폼 영역 */
 .signup-left {
-  flex: 1;
-  padding: 60px 40px;
+  flex: 1;              /* 전체의 절반 너비 */
+  padding: 60px 40px;   /* 안쪽 여백 */
   background-color: white;
-  overflow-y: auto;
+  overflow-y: auto;     /* 세로 스크롤 허용 */
 }
 
+/* 내부 폼 박스 크기 제한 및 가운데 정렬 */
 .signup-box {
   max-width: 500px;
   width: 100%;
   padding: 0 10px;
 }
 
+/* 브랜드 로고 이미지 크기 설정 */
 .brand-logo {
   width: 120px;
   display: block;
 }
 
+/* 다음 버튼 스타일 */
 .step-btn {
   background-color: #1DCD9F;
   color: #fff;
@@ -50,6 +58,7 @@ html, body {
   font-weight: 500;
 }
 
+/* step-btn 마우스 오버 시 반전 효과 */
 .step-btn:hover {
   background-color: #fff;
   color: #1DCD9F;
@@ -57,6 +66,7 @@ html, body {
   font-weight: 500;
 }
 
+/* 이전 버튼 스타일 */
 .goback-btn {
   display: flex;
   justify-content: center;
@@ -69,6 +79,7 @@ html, body {
   padding: 12px;
 }
 
+/* 이전 버튼 hover 시 배경 반전 */
 .goback-btn:hover {
   background-color: #1DCD9F;
   color: #fff;
@@ -76,6 +87,7 @@ html, body {
   font-weight: 500;
 }
 
+/* 구글 회원가입 버튼 스타일 */
 .google-btn {
   display: flex;
   justify-content: center;
@@ -86,53 +98,62 @@ html, body {
   padding: 12px;
 }
 
+/* 회원가입 링크 스타일 */
 .link {
   color: #1DCD9F;
   font-weight: 500;
   text-decoration: none;
 }
 
+/* 링크 hover 시 밑줄 표시 */
 .link:hover {
   text-decoration: underline;
 }
 
+/* 오른쪽 이미지 영역 (인트로 이미지) */
 .signup-right {
   flex: 1;
   overflow: hidden;
 }
 
+/* 인트로 이미지 스타일 */
 .signup-right img {
   height: 100vh;
   object-fit: cover;
 }
 
+/* 에러 메시지 스타일 */
 .form-error {
   font-size: 0.9rem;
   color: #FF0000;
 }
 
+/* 단계 구간 전체 래퍼 */
 .step-wrapper {
   position: relative;
   width: 100%;
 }
 
+/* 단계별(step) 공통 스타일 */
 .step-section {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  transition: all 0.4s ease;
+  transition: all 0.4s ease;      /* 부드러운 전환 */
   opacity: 0;
-  transform: translateX(50px);
+  transform: translateX(50px);    /* 오른쪽에서 들어오는 효과 */
   z-index: 0;
 }
 
+/* 현재 활성화된 단계 */
 .step-section.active {
   opacity: 1;
   transform: translateX(0);
   z-index: 1;
 }
 
+/* 숨김 처리된 단계 */
 .step-section.hidden {
   opacity: 0;
   pointer-events: none;
