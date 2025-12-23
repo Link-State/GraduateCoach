@@ -12,7 +12,7 @@
   - 학생 대시보드 : 이수 학점, 졸업 인증, 과목별 이수 현황 시각화
   - 학사팀 대시보드 : 학부/전공별 졸업요건 관리, 과목/인증 추가 및 삭제
 - **기술 스택**
-  - Backend : Spring Boot, Java
+  - Backend(담당) : Spring Boot, Java
   - Frontend : HTML, CSS, JS, Thymeleaf, Bootstrap
   - Database : MySQL
   - 기타 : Gradle, Docker (개발환경)
